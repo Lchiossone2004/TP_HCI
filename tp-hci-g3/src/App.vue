@@ -1,13 +1,15 @@
 <template>
-  <v-app>
-    <v-main>
-      <HelloWorld />
-    </v-main>
-
-    <AppFooter />
-  </v-app>
+  <Sidebar/>
 </template>
 
 <script setup>
-  //
+
+import Sidebar from './components/Sidebar.vue'
+
 </script>
+
+<style>
+.app {
+  display: flex;
+}
+</style>
