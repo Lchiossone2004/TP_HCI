@@ -24,14 +24,7 @@
   </script>
   
   <style scoped>
-  .sidebar {
-    width: 220px;
-    height: 100vh;
-    background-color: #01080f; /* azul oscuro */
-    color: white;
-    padding: 1.5rem;
-    box-sizing: border-box;
-  }
+
   
   .title {
     font-size: 1.5rem;
@@ -42,7 +35,7 @@
   .menu {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 5rem;
   }
   
   .menu-btn {
@@ -51,15 +44,15 @@
     background: none;
     border: none;
     color: white;
-    font-size: 1rem;
+    font-size: 1.3rem;
     cursor: pointer;
     padding: 0.5rem;
     transition: background 0.2s ease;
-    border-radius: 6px;
+    border-radius: 2px;
   }
   
   .menu-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #093256;
   }
   
   .icon {
