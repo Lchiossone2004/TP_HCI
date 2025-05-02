@@ -1,10 +1,10 @@
-import Sidebar from 'src/components/Sidebar.vue'
-import Card from 'src/components/Card.vue'
+
 <template>
     <div class="layout">
        <Sidebar />
        <main class="main-content">
-         <Card bgColor="#03192c" width="300px" height="250px">
+        <div class = "card-row">
+         <Card bgColor="#03192c" width="350px" height="300px">
            <div class="grid-container">
              <div class="grid-item">
            <button> 
@@ -32,13 +32,24 @@ import Card from 'src/components/Card.vue'
          </div>
            </div>
          </Card>
+         <Card bgColor="#03192c" width="750px" height="300px"> 
+          <Swiper> 
+            <div>Contenido 1</div>
+            <div>Contenido 2</div>
+            <div>Contenido 3</div>
+          </Swiper>
+        <span class="material-symbols-outlined top-right-icon left-offset">notifications</span>
+        <span class="material-symbols-outlined top-right-icon">help</span>
+       </Card>
+       </div>
        </main>
      </div>
    </template>
    
    <script setup>
-   
-   
+  import Sidebar from '@/components/Sidebar.vue'
+  import Card from '@/components/Card.vue'
+  import Swiper from '@/components/Swiper.vue'
    </script>
    
    <style>
@@ -56,7 +67,11 @@ import Card from 'src/components/Card.vue'
      text-align: center;
      color: white;
    }
-   
+   .card-row {
+  display: flex;
+  gap: 2rem; /* espacio entre las cards */
+  margin-left: 2rem;
+}
    
    .grid-item button {
      width: 60px;
@@ -95,13 +110,24 @@ import Card from 'src/components/Card.vue'
      position: fixed;
      top: 0;
      left: 0;
-     width: 220px;
+     width: 250px;
      height: 100vh;
      background-color: #03192C;
      color: white;
      padding: 1.5rem;
      box-sizing: border-box;
    }
+   .top-right-icon {
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    font-size: 24px; /* ajustalo si querés */
+    cursor: pointer;
+    z-index: 1000; /* para que no lo tape nada */
+  }
+  .top-right-icon.left-offset {
+    right: 70px;
+  }
    
    
    </style>
