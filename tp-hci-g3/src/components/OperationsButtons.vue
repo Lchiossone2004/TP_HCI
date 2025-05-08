@@ -30,7 +30,7 @@
   </script>
   
   <style scoped>
- .card {
+  .card {
   width: var(--card-width, 300px);
   height: var(--card-height, 250px);
   background-color: var(--card-bg-color, #fff);
@@ -41,8 +41,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-
+  }
+  
+  
   </style>
   
