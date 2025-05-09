@@ -37,9 +37,11 @@
       </div>
 
       <div class="balance-and-cards">
-        <BalanceCard />
-        <AddCardButton />
-      </div>
+          <Swiper>
+            <BalanceCard />
+            <AddCardButton />
+          </Swiper>
+        </div>
     </div>
         <div class="bottom-section">
         <!-- Actividad reciente -->
@@ -123,6 +125,7 @@ import OperationsButtons from '@/components/OperationsButtons.vue';
 import BalanceCard from '@/components/BalanceCard.vue';
 import AddCardButton from '@/components/AddCardButton.vue';
 import MonthlyExpensesChart from '@/components/MonthlyExpensesChart.vue';
+import Swiper from '@/components/Swiper.vue';
 import { ref, onMounted } from 'vue';
 import { Chart } from 'chart.js/auto';
 
@@ -169,29 +172,29 @@ onMounted(() => {
     align-items: center;
     justify-items: center;
     row-gap: 0.8rem;
-  column-gap: 0.4rem;
+    column-gap: 0.4rem;
     text-align: center;
     color: white;
     box-sizing: border-box;
   }
 
   .operation-button .material-symbols-rounded {
-  font-size: clamp(30px, 5vw, 40px); 
-  color: white;
-}
+    font-size: clamp(30px, 5vw, 40px); 
+    color: white;
+  }
 
-.grid-item button {
-  width: clamp(60px, 7vw, 80px); 
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  background-color: #093256;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  font-size: inherit; /* para no sobreescribir el tamaño del ícono */
-}
+  .grid-item button {
+    width: clamp(60px, 7vw, 80px); 
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background-color: #093256;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: inherit; /* para no sobreescribir el tamaño del ícono */
+  }
 
   .grid-item button:hover {
     background-color: #0a4b85; 
@@ -219,53 +222,50 @@ onMounted(() => {
     box-sizing: border-box;
 }
 
-.operations-buttons {
-  width: 360px;
-  height: 300px;
-  margin: 0;
-}
-.balance-and-cards {
-  width: 660px; 
-  height: 300px;
-  display: flex;
-  gap: 1rem;
-  background-color: #03192C;
-  border-radius: 20px;
-  align-items: center;
-  justify-content: center;
-}
-
-.top-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  padding-right: 1rem;
-}
-
-.bottom-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: center;
-}
-
-
-
-@media (max-width: 768px) {
-  .top-section,
-  .bottom-section {
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+  .operations-buttons {
+    width: 360px;
+    height: 300px;
+    margin: 0;
   }
+  .balance-and-cards {
+    width: 660px; 
+    height: 300px;
+    display: flex;
+    gap: 1rem;
+    background-color: #03192C;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    padding-right: 1rem;
+  }
+
+  .bottom-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    .top-section,
+    .bottom-section {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
 
   .balance-and-cards {
     width: 100%;
-    max-width: 90vw;
-    height: auto;
-    flex-direction: column;
-    padding: 1rem;
+    height: 300px; /* Igual que OperationsButtons */
+    border-radius: 20px;
+    background-color: #03192C;
   }
 
   .activity-section,
@@ -347,8 +347,5 @@ onMounted(() => {
   .chart-placeholder {
     height: 150px;
   }
- 
-
-
 </style>
 

@@ -1,45 +1,46 @@
 <template>
-    <div class="add-card">
-      <button class="add-icon">
-        <span class="material-symbols-rounded icon">add</span>
-      </button>
-      <span>Agregar tarjeta</span>
-    </div>
-  </template>
+  <div class="add-card">
+    <button class="add-button">
+      <span class="material-symbols-rounded icon">add</span>
+    </button>
+    <span class="add-label">Agregar tarjeta</span>
+  </div>
+</template>
 
-  <script setup>
-  </script>
-  
-  <style scoped> 
-  .add-card {
-    border: 3px solid white;
-    border-radius: 20px;
-    background-color: #03192C;
-    color: white;
-    padding: 1rem;
-    width: 372px;
-    height: 207px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 14px;
-  }
+<style scoped>
+.add-card {
+  background-color: #03192c;
+  border: 3px solid white;
+  border-radius: 20px;
+  width: 360px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  gap: 0.2rem;
+}
 
-  .add-icon{
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    color: #FFFF;
-  }
-  
-  .add-card-btn:hover {
-    background-color: #cececf;
-  }
-  
-  .icon {
-    font-size: 18px;
-    color: #03192C
-  }
-  </style>
-  
+.add-button {
+  background-color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.icon {
+  font-size: 24px;
+  color: #03192c;
+}
+
+.add-label {
+  font-size: 0.8rem;
+  text-align: center;
+}
+</style>
