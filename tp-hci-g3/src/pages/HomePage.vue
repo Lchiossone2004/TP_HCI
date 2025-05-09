@@ -1,3 +1,4 @@
+
 <template>
   <div class="layout">
     <Sidebar /> <!-- aca llamo al sidebar, ya esta definido como componente-->

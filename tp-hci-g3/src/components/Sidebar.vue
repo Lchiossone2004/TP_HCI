@@ -1,71 +1,70 @@
 <template>
-    <aside class="sidebar">
-      <h2 class="title">Hola, Usuario</h2>
-      <nav class="menu">
-        <button v-for="item in menuItems" :key="item.text" class="menu-btn">
-          <span class="material-symbols-outlined icon">{{ item.icon }}</span>
-          <span class="text">{{ item.text }}</span>
-        </button>
-        <button class="menu-btn danger">
-          <span class="material-symbols-outlined icon">logout</span>
-          <span class="text">Cerrar sesión</span>
-        </button>
-      </nav>
-    </aside>
-  </template>
-  
-  <script setup>
-  const menuItems = [
-    { text: 'Inicio', icon: 'home' },
-    { text: 'Actividad', icon: 'description' },
-    { text: 'Inversiones', icon: 'finance_mode' },
-    { text: 'Perfil', icon: 'account_circle' }
-  ]
-  </script>
-  
-  <style scoped>
+  <aside class="sidebar">
+    <h2 class="title">Hola, Usuario</h2>
+    <nav class="menu">
+      <button v-for="item in menuItems" :key="item.text" class="menu-btn">
+        <span class="material-symbols-rounded icon">{{ item.icon }}</span>
+        <span class="text">{{ item.text }}</span>
+      </button>
+      <button class="menu-btn danger">
+        <span class="material-symbols-rounded icon">logout</span>
+        <span class="text">Cerrar sesión</span>
+      </button>
+    </nav>
+  </aside>
+</template>
 
-  
-  .title {
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
-    color: white;
-  }
-  
-  .menu {
-    display: flex;
-    flex-direction: column;
-    gap: 5rem;
-  }
-  
-  .menu-btn {
-    display: flex;
-    align-items: center;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.3rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    transition: background 0.2s ease;
-    border-radius: 2px;
-  }
-  
-  .menu-btn:hover {
-    background-color: #093256;
-  }
-  
-  .icon {
-    margin-right: 0.5rem;
-    font-size: 1.5rem;
-  }
-  
-  .menu-btn.danger {
-    color: #ff4d4d;
-  }
-  
-  .menu-btn.danger:hover {
-    background-color: rgba(255, 77, 77, 0.1);
-  }
-  </style>
-  
+<script setup>
+const menuItems = [
+  { text: 'Inicio', icon: 'home' },
+  { text: 'Actividad', icon: 'description' },
+  { text: 'Inversiones', icon: 'finance_mode' },
+  { text: 'Perfil', icon: 'account_circle' }
+]
+</script>
+
+<style scoped>
+.title {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4.5rem; /* Reduje el gap para un diseño más compacto */
+}
+
+.menu-btn {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: background 0.2s ease, border-radius 0.2s ease;
+  border-radius: 2px;
+}
+
+.menu-btn:hover {
+  background-color: #093256;
+  border-radius: 10px; /* Esquinas redondeadas en hover */
+}
+
+.icon {
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.menu-btn.danger {
+  color: #ff4d4d;
+}
+
+.menu-btn.danger:hover {
+  background-color: rgba(255, 77, 77, 0.1);
+  border-radius: 10px; /* Esquinas redondeadas en hover */
+}
+</style>
