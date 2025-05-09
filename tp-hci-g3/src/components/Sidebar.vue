@@ -27,24 +27,28 @@ const menuItems = [
 
 <style scoped>
 .title {
-  font-size: 1.5rem;
-  margin-bottom: 2rem; /* Ajuste más razonable para el espaciado */
+  font-size: clamp(1.7rem, 2.3vw, 2.8rem);
+  margin-bottom: 2rem; 
   color: white;
   margin-bottom: 5rem;
+  white-space: nowrap;        /* No hacer saltos de línea */
+  overflow: hidden;           /* Ocultar el exceso de texto */
+  text-overflow: ellipsis;    /* Mostrar "..." al final si se corta */
+  max-width: 100%;            /* Respetar el ancho del contenedor */
   
 }
 
 .menu-container {
   display: flex;
   flex-direction: column;
-  height: 100%; /* Ocupa toda la altura del sidebar */
-  justify-content: space-between; /* Separa los elementos del menú y el botón de cerrar sesión */
+  height: 100%; 
+  justify-content: space-between; 
 }
 
 .menu {
   display: flex;
   flex-direction: column;
-  gap: 4rem; /* Espaciado entre los botones del menú */
+  gap: 4rem; 
 }
 
 .menu-btn {
@@ -53,7 +57,7 @@ const menuItems = [
   background: none;
   border: none;
   color: white;
-  font-size: 1.2rem;
+  font-size: clamp(1.2rem, 1.5vw, 2rem);
   cursor: pointer;
   padding: 0.5rem;
   transition: background 0.2s ease, border-radius 0.2s ease;
@@ -67,7 +71,7 @@ const menuItems = [
 
 .icon {
   margin-right: 0.5rem;
-  font-size: 1.5rem;
+  font-size: clamp(2rem, 3vw, 3.2rem);
 }
 
 .menu-btn.danger {
@@ -78,5 +82,12 @@ const menuItems = [
 .menu-btn.danger:hover {
   background-color: rgba(255, 77, 77, 0.1);
   border-radius: 10px; /* Esquinas redondeadas en hover */
+}
+.text {
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  white-space: nowrap;        /* No hacer saltos de línea */
+  overflow: hidden;           /* Ocultar el exceso de texto */
+  text-overflow: ellipsis;    /* Mostrar "..." al final si se corta */
+  max-width: 100%;            /* Respetar el ancho del contenedor */
 }
 </style>

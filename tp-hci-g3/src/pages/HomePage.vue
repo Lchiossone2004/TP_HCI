@@ -3,9 +3,10 @@
   <div class="layout">
     <Sidebar /> <!-- aca llamo al sidebar, ya esta definido como componente-->
     <main class="main-content">
-      <div class="level1">
+      <div class="top-section">
       <!-- Sección de botones (ya existente) -->
-      <OperationsButtons bgColor="#03192c" width="300px" height="250px">
+      <div class="operations-buttons">
+      <OperationsButtons bgColor="#03192c" width="360px" height="300px">
         <div class="grid-container">
           <div class="grid-item">
             <button>
@@ -33,13 +34,14 @@
           </div>
         </div>
       </OperationsButtons>
+      </div>
 
       <div class="balance-and-cards">
         <BalanceCard />
         <AddCardButton />
       </div>
     </div>
-        <div class="level2"><
+        <div class="bottom-section">
         <!-- Actividad reciente -->
          <div class="inner1">
         <div class="activity-section">
@@ -197,38 +199,80 @@ onMounted(() => {
     margin: 0.3rem 0 0;
     font-size: 14px;
   }
-   
+  
   .main-content {
-    margin-left: 220px;
+    margin-left: 21vw;
     padding: 2rem;
     min-height: 100vh;
     background-color: #F1F1F1;
     display: flex;
     align-items: center;
     flex-direction: column;
+    gap: 1 rem;
+    box-sizing: border-box;
 }
-  .level1{
-    display: flex;
-    align-items: center;
-  }
-  .level2{
-    display: flex;
-    align-items: center;
-  }
-  .inner1{
-    display: flex;
-    align-items: center;
-  }
-  .inner2{
-    display: flex;
-    align-items: center;
+
+.operations-buttons {
+  width: 360px;
+  height: 300px;
+  margin: 0;
+}
+.balance-and-cards {
+  width: 660px; 
+  height: 300px;
+  display: flex;
+  gap: 1rem;
+  background-color: #03192C;
+  border-radius: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  padding-right: 1rem;
+}
+
+.bottom-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+
+
+@media (max-width: 768px) {
+  .top-section,
+  .bottom-section {
     flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
+
+  .balance-and-cards {
+    width: 100%;
+    max-width: 90vw;
+    height: auto;
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .activity-section,
+  .investments-section {
+    width: 100%;
+    max-width: 90vw;
+  }
+}
+
   .sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 220px;
+    width: 21vw;
     height: 100vh;
     background-color: #03192C;
     color: white;
@@ -236,16 +280,7 @@ onMounted(() => {
     box-sizing: border-box;
   }
 
-  .balance-and-cards{
-    background-color: #03192C;
-    width: 562px;
-    height: 310px;
-    border-radius: 20px;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    gap: 0
-  }
+  
   .activity-section {
     background-color: #fff;
     border-radius: 20px;
@@ -305,6 +340,8 @@ onMounted(() => {
   .chart-placeholder {
     height: 150px;
   }
+ 
+
 
 </style>
 
