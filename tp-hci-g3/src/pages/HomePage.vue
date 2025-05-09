@@ -44,60 +44,8 @@
     </div>
         <div class="bottom-section">
         <!-- Actividad reciente -->
-         <div class="inner1">
-        <div class="activity-section">
-          <h3>Actividad reciente</h3>
-          <div class="activity-list">
-            <div class="activity-item">
-              <span class="material-symbols-rounded icon">store</span>
-              <span>Prüne</span>
-              <span>Hoy 19:43</span>
-              <span class="amount negative">-$57.800</span>
-            </div>
-            <div class="activity-item">
-              <span class="material-symbols-rounded icon">restaurant</span>
-              <span>Pedidos Ya</span>
-              <span>Ayer 21:18</span>
-              <span class="amount negative">-$17.550</span>
-            </div>
-            <div class="activity-item">
-              <span class="material-symbols-rounded icon">swap_horiz</span>
-              <span>Pablo Gomez</span>
-              <span>19/9 10:25</span>
-              <span class="amount positive">+$57.800</span>
-            </div>
-            <div class="activity-item">
-              <span class="material-symbols-rounded icon">swap_horiz</span>
-              <span>Mónica Domínguez</span>
-              <span>17/9 15:56</span>
-              <span class="amount negative">-$1.525</span>
-            </div>
-            <div class="activity-item">
-              <span class="material-symbols-rounded icon">arrow_upward</span>
-              <span>Mateo Gorriti</span>
-              <span>17/9 09:28</span>
-              <span class="amount positive">+$100.000</span>
-            </div>
-            <div class="activity-item">
-              <span class="material-symbols-rounded icon">swap_horiz</span>
-              <span>Pablo Gomez</span>
-              <span>15/9 11:32</span>
-              <span class="amount positive">+$20.000</span>
-            </div>
-            <div class="activity-item">
-              <span class="material-symbols-rounded icon">shopping_cart</span>
-              <span>DISCO CENCOSUD</span>
-              <span>13/9 18:37</span>
-              <span class="amount negative">-$127.845</span>
-            </div>
-            <div class="activity-item">
-              <span class="material-symbols-rounded icon">swap_horiz</span>
-              <span>Pablo Gomez</span>
-              <span>12/9 08:01</span>
-              <span class="amount positive">+$463</span>
-            </div>
-          </div>
-        </div>
+        <div class="inner1">
+          <Activity/>
         </div>
 
         <!-- Gráfico de Gastos Mensuales -->
@@ -125,6 +73,7 @@ import BalanceCard from '@/components/BalanceCard.vue';
 import AddCardButton from '@/components/AddCardButton.vue';
 import MonthlyExpensesChart from '@/components/MonthlyExpensesChart.vue';
 import Swiper from '@/components/Swiper.vue';
+import Activity from '@/components/Activity.vue';
 import { ref, onMounted } from 'vue';
 import { Chart } from 'chart.js/auto';
 
@@ -256,12 +205,6 @@ onMounted(() => {
     width: 100%;
   }
 
-  .activity-section,
-  .investments-section {
-    width: 100%;
-    max-width: 360px;
-  }
-
   @media (max-width: 1024px) {
     .top-section {
       flex-direction: column;
@@ -283,7 +226,6 @@ onMounted(() => {
     }
 
     .balance-and-cards,
-    .activity-section,
     .investments-section,
     .inner1,
     .inner2 {
@@ -304,7 +246,6 @@ onMounted(() => {
   @media (max-width: 600px) {
     .operations-buttons,
     .balance-and-cards,
-    .activity-section,
     .investments-section,
     .inner1,
     .inner2 {
@@ -330,50 +271,6 @@ onMounted(() => {
     color: white;
     padding: 1.5rem;
     box-sizing: border-box;
-  }
-
-  
-  .activity-section {
-    background-color: #fff;
-    border-radius: 20px;
-    padding: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .activity-section h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    color: #1E3A8A;
-  }
-
-  .activity-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .activity-item {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr 1fr;
-    align-items: center;
-    font-size: 14px;
-  }
-
-  .activity-item .icon {
-    font-size: 18px;
-    color: #1E3A8A;
-  }
-
-  .amount {
-    text-align: right;
-  }
-
-  .amount.positive {
-    color: #22C55E;
-  }
-
-  .amount.negative {
-    color: #EF4444;
   }
 
   .investments-section {
