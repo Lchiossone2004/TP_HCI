@@ -49,18 +49,17 @@
         </div>
 
         <!-- Gráfico de Gastos Mensuales -->
-         <div class="inner2">
-        <MonthlyExpensesChart />
+        <div class="inner2">
+          <MonthlyExpensesChart />
 
-        <!-- Inversiones 2025 -->
-        <div class="investments-section">
-          <h3>Inversiones 2025</h3>
-          <div class="chart-placeholder">
-            <!-- Placeholder para gráfico de líneas (puedes usar Chart.js aquí también) -->
-            <canvas ref="investmentsChartRef"></canvas>
+          <!-- Inversiones 2025 -->
+          <div class="investments-section">
+            <h3>Inversiones 2025</h3>
+            <div class="chart-placeholder">
+              <canvas ref="investmentsChartRef"></canvas>
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </main>
   </div>
@@ -164,17 +163,18 @@ onMounted(() => {
     min-height: 100vh;
     background-color: #F1F1F1;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: column;
-    gap: 1 rem;
+    gap: 2rem;
     box-sizing: border-box;
-}
+  }
 
   .operations-buttons {
     width: 360px;
     height: 300px;
     margin: 0;
   }
+
   .balance-and-cards {
     width: 660px; 
     height: 300px;
@@ -201,8 +201,80 @@ onMounted(() => {
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
-    justify-content: center;
+    justify-content: flex-start;
     width: 100%;
+    max-width: 1100px;
+    margin-top: 1rem;
+  }
+
+  .inner1 {
+    width: 50%;
+  }
+
+  .inner2 {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+  }
+
+  .investments-section {
+    background-color: #03192C;
+    border-radius: 20px;
+    padding: 1rem;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .investments-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .chart-placeholder {
+    flex: 1;
+    min-height: 200px;
+  }
+
+  .chart-container {
+    height: 100%;
+    width: 100%;
+  }
+
+  .activity-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #1E3A8A;
+  }
+
+  .activity-item .icon {
+    font-size: 18px;
+    color: #1E3A8A;
+  }
+
+  .activity-card {
+    height: 100%;
+  }
+
+  .icon-wrapper {
+    width: 32px;
+    height: 32px;
+  }
+
+  .icon {
+    font-size: 18px;
+  }
+
+  .title {
+    font-size: 0.9rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
   }
 
   @media (max-width: 1024px) {
@@ -211,7 +283,7 @@ onMounted(() => {
       align-items: center;
       gap: 1rem;
       width: 100%;
-      padding-right: 0;
+      padding: 0;
     }
 
     .bottom-section {
@@ -219,6 +291,34 @@ onMounted(() => {
       align-items: center;
       gap: 1rem;
       width: 100%;
+      padding: 0;
+    }
+
+    .inner1,
+    .inner2 {
+      width: 500px !important;
+      max-width: 500px !important;
+      min-width: 500px !important;
+    }
+
+    .inner1 {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .inner2 {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
     }
 
     .operations-buttons {
@@ -226,6 +326,7 @@ onMounted(() => {
     }
 
     .balance-and-cards,
+    .activity-section,
     .investments-section,
     .inner1,
     .inner2 {
@@ -234,12 +335,11 @@ onMounted(() => {
       min-width: 500px !important;
     }
 
-    .inner1,
-    .inner2 {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 1rem;
+    .activity-section {
+      margin: 0;
+      padding: 1rem;
+      width: 500px !important;
+      box-sizing: border-box;
     }
   }
 
@@ -247,8 +347,7 @@ onMounted(() => {
     .operations-buttons,
     .balance-and-cards,
     .investments-section,
-    .inner1,
-    .inner2 {
+    .activity-section {
       width: 100% !important;
       max-width: 500px !important;
       min-width: unset !important;
@@ -271,23 +370,6 @@ onMounted(() => {
     color: white;
     padding: 1.5rem;
     box-sizing: border-box;
-  }
-
-  .investments-section {
-    background-color: #03192C;
-    border-radius: 20px;
-    padding: 1rem;
-    color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .investments-section h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
-
-  .chart-placeholder {
-    height: 150px;
   }
 </style>
 

@@ -59,11 +59,9 @@ function handleClick(item) {
   border-radius: 20px;
   padding: 1rem;
   box-sizing: border-box;
-  width: 100%;                /* Más ancho (ajustable) */
-  margin-left: 2rem;         /* Fijo desde el borde izquierdo */
-  max-width: 600px;          /* Máximo ancho si lo necesitás */
+  width: 100%;
+  max-width: 500px;
 }
-
 
 .header {
   display: flex;
