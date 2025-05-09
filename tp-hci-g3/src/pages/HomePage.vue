@@ -111,6 +111,41 @@ onMounted(() => {
     display: flex;
   }
 
+  .main-content {
+    margin-left: 21vw;
+    padding: 1rem;
+    min-height: 100vh;
+    background-color: #F1F1F1;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+    box-sizing: border-box;
+  }
+
+  .top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    padding-right: 1rem;
+    gap: 1rem;
+    max-width: 1100px;
+  }
+
+  .operations-buttons {
+    width: 360px;
+    height: 300px;
+    margin: 0;
+    min-width: 360px !important;
+    width: 500px !important;
+  }
+
+  .operation-button .material-symbols-rounded {
+    font-size: 40px; 
+    color: white;
+  }
+
   .grid-container {
     width: 100%;
     height: 100%;
@@ -123,11 +158,6 @@ onMounted(() => {
     text-align: center;
     color: white;
     box-sizing: border-box;
-  }
-
-  .operation-button .material-symbols-rounded {
-    font-size: 40px; 
-    color: white;
   }
 
   .grid-item button {
@@ -156,24 +186,6 @@ onMounted(() => {
     margin: 0.3rem 0 0;
     font-size: 14px;
   }
-  
-  .main-content {
-    margin-left: 21vw;
-    padding: 2rem;
-    min-height: 100vh;
-    background-color: #F1F1F1;
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 2rem;
-    box-sizing: border-box;
-  }
-
-  .operations-buttons {
-    width: 360px;
-    height: 300px;
-    margin: 0;
-  }
 
   .balance-and-cards {
     width: 660px; 
@@ -185,16 +197,6 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-  }
-
-  .top-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
-    padding-right: 1rem;
-    gap: 2rem;
-    max-width: 1100px;
   }
 
   .bottom-section {
@@ -243,26 +245,6 @@ onMounted(() => {
   .chart-container {
     height: 100%;
     width: 100%;
-  }
-
-  .activity-section h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    color: #1E3A8A;
-  }
-
-  .activity-item .icon {
-    font-size: 18px;
-    color: #1E3A8A;
-  }
-
-  .activity-card {
-    height: 100%;
-  }
-
-  .icon-wrapper {
-    width: 32px;
-    height: 32px;
   }
 
   .icon {
@@ -319,10 +301,6 @@ onMounted(() => {
       gap: 1rem;
       margin: 0;
       padding: 0;
-    }
-
-    .operations-buttons {
-      width: 500px !important;
     }
 
     .balance-and-cards,
