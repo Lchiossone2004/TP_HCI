@@ -44,12 +44,13 @@ export default {
 }
 
 .welcome-section {
-  flex: 1;
+  width: 40%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding: 2rem;
+  padding-top: 4rem;
   background-color: #F1F1F1;
   position: relative;
   overflow: hidden;
@@ -59,6 +60,7 @@ export default {
   font-size: 3rem;
   color: #03192C;
   margin-bottom: 1rem;
+  margin-top: 2rem;
 }
 
 .welcome-text {
@@ -71,12 +73,15 @@ export default {
   bottom: -50px;
   left: -50px;
   z-index: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .circle {
   position: absolute;
   border-radius: 50%;
   opacity: 1;
+  transition: all 0.3s ease;
 }
 
 .circle-1 {
@@ -103,22 +108,56 @@ export default {
   left: 250px;
 }
 
+@media (max-width: 1200px) {
+  .circle-1 {
+    width: 350px;
+    height: 350px;
+  }
+  .circle-2 {
+    width: 350px;
+    height: 350px;
+    left: 80px;
+  }
+  .circle-3 {
+    width: 250px;
+    height: 250px;
+    left: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .circle-1 {
+    width: 300px;
+    height: 300px;
+  }
+  .circle-2 {
+    width: 300px;
+    height: 300px;
+    left: 60px;
+  }
+  .circle-3 {
+    width: 200px;
+    height: 200px;
+    left: 150px;
+  }
+}
+
 .auth-section {
-  width: 50%;
+  width: 60%;
   background-color: #03192C;
-  padding: 2rem;
+  padding: 3rem;
   display: flex;
   flex-direction: row;
-  gap: 2rem;
+  gap: 3rem;
 }
 
 .auth-tabs {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   padding: 2rem 0;
   justify-content: center;
-  width: 200px;
+  width: 250px;
 }
 
 .auth-tabs button {
@@ -127,12 +166,13 @@ export default {
   cursor: pointer;
   font-weight: bold;
   color: #03192C;
-  padding: 1rem 2rem;
+  padding: 1.5rem 3rem;
   text-align: center;
   border-radius: 50px;
   transition: all 0.3s ease;
   white-space: nowrap;
   width: 100%;
+  font-size: 1.2rem;
 }
 
 .auth-tabs button.active {
@@ -147,6 +187,7 @@ export default {
   align-items: center;
   justify-content: center;
   border-left: 1px solid #093256;
-  padding-left: 2rem;
+  padding-left: 3rem;
+  min-width: 450px;
 }
 </style>
