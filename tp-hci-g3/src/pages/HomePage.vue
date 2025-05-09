@@ -6,28 +6,28 @@
       <div class="top-section">
       <!-- Sección de botones (ya existente) -->
       <div class="operations-buttons">
-      <OperationsButtons bgColor="#03192c" width="360px" height="300px">
+      <OperationsButtons bgColor="#03192c" width="350px" height="300px">
         <div class="grid-container">
           <div class="grid-item">
-            <button>
+            <button class="operation-button">
               <span class="material-symbols-rounded icon">add</span>
             </button>
             <h4>Ingresar</h4>
           </div>
           <div class="grid-item">
-            <button>
+            <button class="operation-button">
               <span class="material-symbols-rounded icon">sync_alt</span>
             </button>
             <h4>Transferir</h4>
           </div>
           <div class="grid-item">
-            <button>
+            <button class="operation-button">
               <span class="material-symbols-rounded icon">id_card</span>
             </button>
             <h4>Mis datos</h4>
           </div>
           <div class="grid-item">
-            <button>
+            <button class="operation-button">
               <span class="material-symbols-rounded icon">more_horiz</span>
             </button>
             <h4>Más</h4>
@@ -168,28 +168,35 @@ onMounted(() => {
     grid-template-columns: 1fr 1fr;
     align-items: center;
     justify-items: center;
-    gap: 1rem;
+    row-gap: 0.8rem;
+  column-gap: 0.4rem;
     text-align: center;
     color: white;
+    box-sizing: border-box;
   }
 
-  .grid-item button {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: #093256; 
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-   
+  .operation-button .material-symbols-rounded {
+  font-size: clamp(30px, 5vw, 40px); 
+  color: white;
+}
+
+.grid-item button {
+  width: clamp(60px, 7vw, 80px); 
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background-color: #093256;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: inherit; /* para no sobreescribir el tamaño del ícono */
+}
+
   .grid-item button:hover {
     background-color: #0a4b85; 
   }
-   
+  
   .grid-item .material-symbols-outlined {
     color: white;
     font-size: 28px;
