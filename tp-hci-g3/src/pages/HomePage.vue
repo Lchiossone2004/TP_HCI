@@ -179,12 +179,12 @@ onMounted(() => {
   }
 
   .operation-button .material-symbols-rounded {
-    font-size: clamp(30px, 5vw, 40px); 
+    font-size: 40px; 
     color: white;
   }
 
   .grid-item button {
-    width: clamp(60px, 7vw, 80px); 
+    width: 80px; 
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     background-color: #093256;
@@ -236,6 +236,7 @@ onMounted(() => {
     border-radius: 20px;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
   }
 
   .top-section {
@@ -244,6 +245,9 @@ onMounted(() => {
     align-items: flex-start;
     width: 100%;
     padding-right: 1rem;
+    gap: 2rem;
+    max-width: 1100px;
+
   }
 
   .bottom-section {
@@ -253,7 +257,7 @@ onMounted(() => {
     justify-content: center;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     .top-section,
     .bottom-section {
       flex-direction: column;
