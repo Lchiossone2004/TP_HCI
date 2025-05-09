@@ -125,10 +125,9 @@ onMounted(() => {
 
   .top-section {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
-    padding-right: 1rem;
     gap: 1rem;
     max-width: 1100px;
   }
@@ -136,9 +135,9 @@ onMounted(() => {
   .operations-buttons {
     width: 360px;
     height: 300px;
-    margin: 0;
-    min-width: 360px !important;
-    width: 500px !important;
+    flex-shrink: 0;
+    background-color: #03192c;
+    border-radius: 20px;
   }
 
   .operation-button .material-symbols-rounded {
@@ -188,37 +187,36 @@ onMounted(() => {
   }
 
   .balance-and-cards {
-    width: 660px; 
+    flex: 1;
     height: 300px;
-    display: flex;
-    gap: 1rem;
     background-color: #03192C;
     border-radius: 20px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    min-width: 300px;
+    max-width: calc(100% - 380px);
   }
 
   .bottom-section {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    justify-content: flex-start;
+    gap: 1rem;
     width: 100%;
     max-width: 1100px;
-    margin-top: 1rem;
   }
 
   .inner1 {
-    width: 50%;
+    flex: 1;
+    min-width: 400px;
   }
 
   .inner2 {
     width: 45%;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    height: 100%;
+    gap: 1rem;
+    min-width: 300px;
+    max-width: calc(100% - 420px); /* 400px de Activity + 1rem de gap */
   }
 
   .investments-section {
@@ -268,6 +266,18 @@ onMounted(() => {
       padding: 0;
     }
 
+    .operations-buttons {
+      width: 360px;
+      height: 300px;
+      background-color: #03192c;
+      border-radius: 20px;
+    }
+
+    .balance-and-cards {
+      width: 100%;
+      max-width: 500px;
+    }
+
     .bottom-section {
       flex-direction: column;
       align-items: center;
@@ -278,63 +288,34 @@ onMounted(() => {
 
     .inner1,
     .inner2 {
-      width: 500px !important;
-      max-width: 500px !important;
-      min-width: 500px !important;
-    }
-
-    .inner1 {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      margin: 0;
-      padding: 0;
+      width: 100%;
+      max-width: 500px;
+      min-width: unset;
     }
 
     .inner2 {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
       gap: 1rem;
-      margin: 0;
-      padding: 0;
-    }
-
-    .balance-and-cards,
-    .activity-section,
-    .investments-section,
-    .inner1,
-    .inner2 {
-      width: 500px !important;
-      max-width: 500px !important;
-      min-width: 500px !important;
-    }
-
-    .activity-section {
-      margin: 0;
-      padding: 1rem;
-      width: 500px !important;
-      box-sizing: border-box;
     }
   }
 
   @media (max-width: 600px) {
-    .operations-buttons,
-    .balance-and-cards,
-    .investments-section,
-    .activity-section {
-      width: 100% !important;
-      max-width: 500px !important;
-      min-width: unset !important;
+    .main-content {
+      margin-left: 0;
+      padding: 0.5rem;
     }
 
-    .top-section,
-    .bottom-section {
+    .operations-buttons {
+      width: 360px;
+      height: 300px;
+      background-color: #03192c;
+      border-radius: 20px;
+    }
+
+    .balance-and-cards,
+    .inner1,
+    .inner2 {
       width: 100%;
-      padding: 0 1rem;
+      max-width: none;
     }
   }
 
