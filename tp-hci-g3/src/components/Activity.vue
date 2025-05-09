@@ -60,7 +60,7 @@ function handleClick(item) {
   padding: 1rem;
   box-sizing: border-box;
   width: 100%;
-  max-width: 500px;
+  max-width: 700px;
 }
 
 .header {
@@ -116,7 +116,7 @@ function handleClick(item) {
 
 .icon-wrapper {
   background-color: #0d2c4a;
-  border-radius: 50%;
+  border-radius: 10px;
   width: 36px;
   height: 36px;
   display: flex;

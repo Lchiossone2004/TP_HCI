@@ -200,6 +200,8 @@ onMounted(() => {
 
   .bottom-section {
     display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
     gap: 1rem;
     width: 100%;
     max-width: 1100px;
@@ -207,11 +209,11 @@ onMounted(() => {
 
   .inner1 {
     flex: 1;
-    min-width: 400px;
+    min-width: 500px;
   }
 
   .inner2 {
-    width: 45%;
+    width: 40%;
     display: flex;
     flex-direction: column;
     gap: 1rem;
