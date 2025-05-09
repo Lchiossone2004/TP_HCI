@@ -1,4 +1,3 @@
-
 <template>
   <div class="layout">
     <Sidebar /> <!-- aca llamo al sidebar, ya esta definido como componente-->
@@ -6,7 +5,7 @@
       <div class="top-section">
       <!-- Sección de botones (ya existente) -->
       <div class="operations-buttons">
-      <OperationsButtons bgColor="#03192c" width="350px" height="300px">
+      <OperationsButtons bgColor="#03192c" width="360px" height="300px">
         <div class="grid-container">
           <div class="grid-item">
             <button class="operation-button">
@@ -247,7 +246,6 @@ onMounted(() => {
     padding-right: 1rem;
     gap: 2rem;
     max-width: 1100px;
-
   }
 
   .bottom-section {
@@ -255,29 +253,72 @@ onMounted(() => {
     flex-wrap: wrap;
     gap: 1.5rem;
     justify-content: center;
-  }
-
-  @media (max-width: 1024px) {
-    .top-section,
-    .bottom-section {
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-    }
-
-  .balance-and-cards {
     width: 100%;
-    height: 300px; /* Igual que OperationsButtons */
-    border-radius: 20px;
-    background-color: #03192C;
   }
 
   .activity-section,
   .investments-section {
     width: 100%;
-    max-width: 90vw;
+    max-width: 360px;
   }
-}
+
+  @media (max-width: 1024px) {
+    .top-section {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+      padding-right: 0;
+    }
+
+    .bottom-section {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .operations-buttons {
+      width: 500px !important;
+    }
+
+    .balance-and-cards,
+    .activity-section,
+    .investments-section,
+    .inner1,
+    .inner2 {
+      width: 500px !important;
+      max-width: 500px !important;
+      min-width: 500px !important;
+    }
+
+    .inner1,
+    .inner2 {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .operations-buttons,
+    .balance-and-cards,
+    .activity-section,
+    .investments-section,
+    .inner1,
+    .inner2 {
+      width: 100% !important;
+      max-width: 500px !important;
+      min-width: unset !important;
+    }
+
+    .top-section,
+    .bottom-section {
+      width: 100%;
+      padding: 0 1rem;
+    }
+  }
 
   .sidebar {
     position: fixed;
