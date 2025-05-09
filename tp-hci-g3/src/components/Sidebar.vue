@@ -1,11 +1,13 @@
 <template>
   <aside class="sidebar">
     <h2 class="title">Hola, Usuario</h2>
-    <nav class="menu">
-      <button v-for="item in menuItems" :key="item.text" class="menu-btn">
-        <span class="material-symbols-rounded icon">{{ item.icon }}</span>
-        <span class="text">{{ item.text }}</span>
-      </button>
+    <nav class="menu-container">
+      <div class="menu">
+        <button v-for="item in menuItems" :key="item.text" class="menu-btn">
+          <span class="material-symbols-rounded icon">{{ item.icon }}</span>
+          <span class="text">{{ item.text }}</span>
+        </button>
+      </div>
       <button class="menu-btn danger">
         <span class="material-symbols-rounded icon">logout</span>
         <span class="text">Cerrar sesión</span>
@@ -26,14 +28,23 @@ const menuItems = [
 <style scoped>
 .title {
   font-size: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2rem; /* Ajuste más razonable para el espaciado */
   color: white;
+  margin-bottom: 5rem;
+  
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ocupa toda la altura del sidebar */
+  justify-content: space-between; /* Separa los elementos del menú y el botón de cerrar sesión */
 }
 
 .menu {
   display: flex;
   flex-direction: column;
-  gap: 4.5rem; /* Reduje el gap para un diseño más compacto */
+  gap: 4rem; /* Espaciado entre los botones del menú */
 }
 
 .menu-btn {
@@ -60,6 +71,7 @@ const menuItems = [
 }
 
 .menu-btn.danger {
+  margin-bottom: 10rem;
   color: #ff4d4d;
 }
 

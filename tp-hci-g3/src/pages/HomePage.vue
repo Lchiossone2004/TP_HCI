@@ -3,43 +3,45 @@
   <div class="layout">
     <Sidebar /> <!-- aca llamo al sidebar, ya esta definido como componente-->
     <main class="main-content">
-        <!-- Sección de botones (ya existente) -->
-        <OperationsButtons bgColor="#03192c" width="300px" height="250px">
-          <div class="grid-container">
-            <div class="grid-item">
-              <button>
-                <span class="material-symbols-rounded icon">add</span>
-              </button>
-              <h4>Ingresar</h4>
-            </div>
-            <div class="grid-item">
-              <button>
-                <span class="material-symbols-rounded icon">sync_alt</span>
-              </button>
-              <h4>Transferir</h4>
-            </div>
-            <div class="grid-item">
-              <button>
-                <span class="material-symbols-rounded icon">id_card</span>
-              </button>
-              <h4>Mis datos</h4>
-            </div>
-            <div class="grid-item">
-              <button>
-                <span class="material-symbols-rounded icon">more_horiz</span>
-              </button>
-              <h4>Más</h4>
-            </div>
+      <div class="level1">
+      <!-- Sección de botones (ya existente) -->
+      <OperationsButtons bgColor="#03192c" width="300px" height="250px">
+        <div class="grid-container">
+          <div class="grid-item">
+            <button>
+              <span class="material-symbols-rounded icon">add</span>
+            </button>
+            <h4>Ingresar</h4>
           </div>
-        </OperationsButtons>
+          <div class="grid-item">
+            <button>
+              <span class="material-symbols-rounded icon">sync_alt</span>
+            </button>
+            <h4>Transferir</h4>
+          </div>
+          <div class="grid-item">
+            <button>
+              <span class="material-symbols-rounded icon">id_card</span>
+            </button>
+            <h4>Mis datos</h4>
+          </div>
+          <div class="grid-item">
+            <button>
+              <span class="material-symbols-rounded icon">more_horiz</span>
+            </button>
+            <h4>Más</h4>
+          </div>
+        </div>
+      </OperationsButtons>
 
-        <!-- Tarjeta de Balance -->
+      <div class="balance-and-cards">
         <BalanceCard />
-
-        <!-- Botón Agregar Tarjeta -->
         <AddCardButton />
-
+      </div>
+    </div>
+        <div class="level2"><
         <!-- Actividad reciente -->
+         <div class="inner1">
         <div class="activity-section">
           <h3>Actividad reciente</h3>
           <div class="activity-list">
@@ -93,8 +95,10 @@
             </div>
           </div>
         </div>
+        </div>
 
         <!-- Gráfico de Gastos Mensuales -->
+         <div class="inner2">
         <MonthlyExpensesChart />
 
         <!-- Inversiones 2025 -->
@@ -105,6 +109,8 @@
             <canvas ref="investmentsChartRef"></canvas>
           </div>
         </div>
+      </div>
+      </div>
     </main>
   </div>
 </template>
@@ -197,6 +203,26 @@ onMounted(() => {
     padding: 2rem;
     min-height: 100vh;
     background-color: #F1F1F1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+  .level1{
+    display: flex;
+    align-items: center;
+  }
+  .level2{
+    display: flex;
+    align-items: center;
+  }
+  .inner1{
+    display: flex;
+    align-items: center;
+  }
+  .inner2{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
   }
   .sidebar {
     position: fixed;
@@ -209,9 +235,20 @@ onMounted(() => {
     padding: 1.5rem;
     box-sizing: border-box;
   }
+
+  .balance-and-cards{
+    background-color: #03192C;
+    width: 562px;
+    height: 310px;
+    border-radius: 20px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    gap: 0
+  }
   .activity-section {
     background-color: #fff;
-    border-radius: 10px;
+    border-radius: 20px;
     padding: 1rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
@@ -254,7 +291,7 @@ onMounted(() => {
 
   .investments-section {
     background-color: #03192C;
-    border-radius: 10px;
+    border-radius: 20px;
     padding: 1rem;
     color: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -268,5 +305,6 @@ onMounted(() => {
   .chart-placeholder {
     height: 150px;
   }
+
 </style>
 
