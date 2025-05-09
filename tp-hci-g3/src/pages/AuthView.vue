@@ -3,6 +3,10 @@
     <div class="welcome-section">
       <h1>WingPay</h1>
       <p class="welcome-text">Tu billetera digital segura y confiable</p>
+      <div class="auth-tabs-vertical">
+        <button @click="showLogin = true" :class="{ active: showLogin }">Iniciar sesión</button>
+        <button @click="showLogin = false" :class="{ active: !showLogin }">Registrarse</button>
+      </div>
       <div class="circles">
         <div class="circle circle-1"></div>
         <div class="circle circle-2"></div>
@@ -10,10 +14,6 @@
       </div>
     </div>
     <div class="auth-section">
-      <div class="auth-tabs">
-        <button @click="showLogin = true" :class="{ active: showLogin }">Iniciar sesión</button>
-        <button @click="showLogin = false" :class="{ active: !showLogin }">Registrarse</button>
-      </div>
       <div class="form-container">
         <LoginForm v-if="showLogin" @switch="showLogin = false" />
         <RegisterForm v-else @switch="showLogin = true" />
@@ -44,11 +44,11 @@ export default {
 }
 
 .welcome-section {
-  width: 40%;
+  width: 30%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   padding: 2rem;
   padding-top: 4rem;
   background-color: #F1F1F1;
@@ -103,7 +103,7 @@ export default {
 .circle-3 {
   width: 300px;
   height: 300px;
-  background-color: #0a4b85;
+  background-color: #073259;
   bottom: 40px;
   left: 250px;
 }
@@ -143,7 +143,7 @@ export default {
 }
 
 .auth-section {
-  width: 60%;
+  width: 70%;
   background-color: #03192C;
   padding: 3rem;
   display: flex;
@@ -151,34 +151,35 @@ export default {
   gap: 3rem;
 }
 
-.auth-tabs {
+.auth-tabs-vertical {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  padding: 2rem 0;
-  justify-content: center;
-  width: 250px;
+  position: absolute;
+  right: -60px;
+  top: 35%;
+  z-index: 2;
 }
 
-.auth-tabs button {
+.auth-tabs-vertical button {
   background: #F1F1F1;
   border: none;
   cursor: pointer;
   font-weight: bold;
   color: #03192C;
-  padding: 1.5rem 3rem;
-  text-align: center;
-  border-radius: 50px;
+  padding: 1.2rem 2rem 1.2rem 3rem;
+  text-align: left;
+  border-radius: 40px 0 0 40px;
   transition: all 0.3s ease;
-  white-space: nowrap;
-  width: 100%;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  min-width: 270px;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
 }
 
-.auth-tabs button.active {
+.auth-tabs-vertical button.active {
   background-color: #03192C;
   color: #F1F1F1;
-  border: 2px solid #F1F1F1;
+  border: 2px solid #03192C;
 }
 
 .form-container {
@@ -186,8 +187,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: 1px solid #093256;
-  padding-left: 3rem;
   min-width: 450px;
 }
 </style>

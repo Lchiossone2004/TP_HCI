@@ -8,7 +8,10 @@
     <input type="password" placeholder="Contraseña" v-model="password" />
     <input type="password" placeholder="Repita la contraseña" v-model="confirm" />
     <button @click="register">Aceptar</button>
-    <p>¿Ya tiene una cuenta? <a href="#" @click="$emit('switch')">Inicie sesión</a></p>
+    <div class="row-register">
+      <span class="register-text">¿Ya tiene una cuenta?</span>
+      <a href="#" class="register-link" @click="$emit('switch')">Inicie sesión</a>
+    </div>
   </div>
 </template>
 
@@ -36,57 +39,92 @@ export default {
 
 <style scoped>
 .auth-container {
-  background: #093256;
-  padding: 3rem;
-  border-radius: 12px;
+  /* background: #093256; */
+  padding: 4rem 3rem;
+  /* border-radius: 12px; */
   color: white;
   width: 100%;
-  max-width: 500px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+}
+
+h2, p {
+  text-align: center;
+  width: 100%;
 }
 
 h2 {
-  font-size: 2rem;
+  font-size: 4rem;
   margin-bottom: 0.5rem;
 }
 
 p {
-  color: #93C5FD;
+  font-size: 1.5rem;
+  color: #F1F1F1;
   margin-bottom: 2rem;
+}
+
+.row-register {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.register-text {
+  color: #F1F1F1;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.register-link {
+  color: #3B82F6;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.register-link:hover {
+  text-decoration: underline;
 }
 
 input {
   display: block;
   width: 100%;
-  padding: 1rem;
-  margin: 1rem 0;
+  padding: 1.3rem 2rem;
+  margin: 1.3rem 0;
   border: none;
-  border-radius: 8px;
-  background: #03192C;
-  color: white;
-  font-size: 1rem;
+  border-radius: 40px;
+  background: #F1F1F1;
+  color: #03192C;
+  font-size: 1.15rem;
+  box-shadow: none;
 }
 
 input::placeholder {
-  color: #93C5FD;
+  color: #666;
+  font-size: 1.1rem;
 }
 
 button {
   width: 100%;
-  padding: 1rem;
-  margin: 1.5rem 0;
-  background: #3B82F6;
-  color: white;
+  padding: 1.2rem;
+  margin: 2rem 0;
+  background: #F1F1F1;
+  color: #03192C;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 40px;
+  font-size: 1.15rem;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background: #2563EB;
+  background: #e0e0e0;
 }
 
 a {
