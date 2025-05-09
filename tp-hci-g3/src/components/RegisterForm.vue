@@ -36,34 +36,64 @@ export default {
 
 <style scoped>
 .auth-container {
-  background: #061d33;
-  padding: 2rem;
-  border-radius: 8px;
+  background: #093256;
+  padding: 3rem;
+  border-radius: 12px;
   color: white;
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-input, button {
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  color: #93C5FD;
+  margin-bottom: 2rem;
+}
+
+input {
   display: block;
-  margin: 1rem 0;
   width: 100%;
-  padding: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  background: #03192C;
+  color: white;
+  font-size: 1rem;
 }
+
+input::placeholder {
+  color: #93C5FD;
+}
+
 button {
+  width: 100%;
+  padding: 1rem;
+  margin: 1.5rem 0;
   background: #3B82F6;
   color: white;
-  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
   font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
+
 button:hover {
   background: #2563EB;
 }
+
 a {
   color: #93C5FD;
   text-decoration: none;
 }
+
 a:hover {
   text-decoration: underline;
 }
