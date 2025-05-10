@@ -7,7 +7,7 @@
           <TransferSearch @search="handleSearch" />
         </div>
         <div>
-          <RecentTransfers :transfers="transferenciasRecientes" />
+          <RecentTransfers :transfers="transferenciasRecientes" @select="handleTransferSelect"/>
         </div>
       </div>
       <div class="right">
@@ -23,15 +23,17 @@
 
 <script setup>
 import Sidebar from '@/components/Sidebar.vue'
-import Suggestions from '@/components/Suggestions.vue'
-import TransferSearch from '@/components/TransferSearch.vue'
-import RecentTransfers from '@/components/RecentTransfers.vue'
+import Suggestions from '@/components/transfer/Suggestions.vue'
+import TransferSearch from '@/components/transfer/TransferSearch.vue'
+import RecentTransfers from '@/components/transfer/RecentTransfers.vue'
 
 import avatarJuan from '@/assets/images/avatars/Avatar1.jpg'
 import avatarAna from '@/assets/images/avatars/Avatar2.jpg'
 import avatarCarlos from '@/assets/images/avatars/Avatar3.jpeg'
 import avatarLaura from '@/assets/images/avatars/Avatar4.jpg'
 import avatarPedro from '@/assets/images/avatars/Avatar5.jpeg'
+import avatarBenja from '@/assets/images/avatars/Avatar6.jpeg'
+import avatarHilario from '@/assets/images/avatars/Avatar7.jpeg'
 
 const contactosSugeridos = [
   { id: 1, name: 'Juan Pérez', alias: '@juanp', avatar: avatarJuan },
@@ -48,6 +50,8 @@ const transferenciasRecientes = [
   { id: 1, name: 'Juan Pérez', alias: '@juanp', avatar: avatarJuan, amount: '$100' },
   { id: 2, name: 'Ana Torres', alias: '@ana_t', avatar: avatarAna, amount: '$200' },
   { id: 3, name: 'Carlos Ruiz', alias: '@cruiz', avatar: avatarCarlos, amount: '$150' },
+  { id: 4, name: 'Benja Such', alias: '@ana_t', avatar: avatarBenja, amount: '$2000' },
+  { id: 5, name: 'Hilario Lagos', alias: '@cruiz', avatar: avatarHilario, amount: '$1530' },
 ]
 
 function manejarSeleccion(contacto) {
@@ -56,6 +60,10 @@ function manejarSeleccion(contacto) {
 
 function handleSearch(valor) {
   console.log('Buscar por:', valor)
+}
+function handleTransferSelect(transferencia) {
+  console.log('Transferencia seleccionada:', transferencia)
+  // Aquí puedes redirigir, abrir un modal, etc.
 }
 </script>
   

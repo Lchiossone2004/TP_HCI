@@ -2,7 +2,12 @@
     <div class="recent-transfers">
       <h2 class="title">Transferencias Recientes</h2>
       <ul class="transfer-list">
-        <li v-for="transfer in transfers" :key="transfer.id" class="transfer-item">
+        <li
+        v-for="transfer in transfers"
+        :key="transfer.id"
+        class="transfer-item"
+        @click="$emit('select', transfer)"
+      >
           <img :src="transfer.avatar" alt="avatar" class="avatar" />
           <div class="info">
             <span class="name">{{ transfer.name }}</span>

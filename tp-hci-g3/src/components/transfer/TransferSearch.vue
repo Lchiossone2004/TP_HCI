@@ -8,6 +8,7 @@
           placeholder="CBU o alias"
           class="input"
         />
+        <h2 class ="divider">o</h2>
         <input
           v-model="nameOrPhone"
           type="text"
@@ -19,23 +20,36 @@
     </div>
   </template>
   
-  <script setup>
-  import { ref } from 'vue'
-  
-  const cbuOrAlias = ref('')
-  const nameOrPhone = ref('')
-  
-  const emit = defineEmits(['search'])
-  
-  function emitSearch() {
-    if (cbuOrAlias.value.trim() || nameOrPhone.value.trim()) {
-      emit('search', {
-        cbuOrAlias: cbuOrAlias.value.trim(),
-        nameOrPhone: nameOrPhone.value.trim(),
-      })
-    }
+<script setup>
+import { ref, watch } from 'vue'
+
+const cbuOrAlias = ref('')
+const nameOrPhone = ref('')
+
+const emit = defineEmits(['search'])
+
+function emitSearch() {
+  if (cbuOrAlias.value.trim() || nameOrPhone.value.trim()) {
+    emit('search', {
+      cbuOrAlias: cbuOrAlias.value.trim(),
+      nameOrPhone: nameOrPhone.value.trim(),
+    })
   }
-  </script>
+}
+
+// Limpiar el otro campo si se escribe en uno
+watch(cbuOrAlias, (newVal) => {
+  if (newVal.trim() !== '') {
+    nameOrPhone.value = ''
+  }
+})
+
+watch(nameOrPhone, (newVal) => {
+  if (newVal.trim() !== '') {
+    cbuOrAlias.value = ''
+  }
+})
+</script>
   
   <style scoped>
   .transfer-card {
@@ -63,7 +77,7 @@
   .input-group {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
     margin-bottom: 1.5rem;
   }
   
@@ -87,6 +101,10 @@
   
   .transfer-button:hover {
     background-color: #1b5edb;
+  }
+  .divider{
+    align-self: center;
+    opacity: 70%;
   }
   </style>
   
