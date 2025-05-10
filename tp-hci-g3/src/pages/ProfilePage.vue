@@ -15,13 +15,16 @@
   </script>
   
   <style scoped>
-  .main-layout {
-    display: flex;
-  }
-  .main-content {
-    flex: 1;
-    padding: 2rem;
-    background-color: #f1f1f1;
-    min-height: 100vh;
-  }
+.main-layout {
+  display: flex;
+  min-height: 100vh; /* Asegura que la altura sea completa */
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 21vw; /* Esto hace que el contenido principal se mueva hacia la derecha */
+  padding: 2rem;
+  background-color: #f1f1f1;
+  min-height: 100vh;
+}
   </style>
