@@ -49,7 +49,15 @@
         <div class="bottom-section">
         <!-- Actividad reciente -->
         <div class="inner1">
-          <Activity/>
+          <div class="activity-card-outer">
+            <div class="header-activity-card">
+              <span>Actividad reciente</span>
+              <button class="more-activities">
+                <span class="material-symbols-rounded arrow">chevron_right</span>
+              </button>
+            </div>
+            <Activity />
+          </div>
         </div>
 
         <!-- Gráfico de Gastos Mensuales -->
@@ -239,6 +247,50 @@ onUnmounted(() => {
     max-width: calc(100% - 420px); /* 400px de Activity + 1rem de gap */
   }
 
+  .activity-card-outer {
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .header-activity-card {
+    background: #fff;
+    font-size: 25px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 1.5rem 1rem 0.1rem 1.7rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .more-activities {
+    background-color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .arrow {
+    font-size: 30px;
+    color: #03192C;
+  }
+
+  .more-activities:hover {
+    background-color: #eaeaea;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
   .investments-section {
     background-color: #03192C;
     border-radius: 20px;
@@ -372,6 +424,69 @@ onUnmounted(() => {
     .inner2 {
       width: 100%;
       max-width: none;
+    }
+  }
+
+  .activity-card {
+    background-color: #FFFF;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    padding: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .title {
+    font-weight: 600;
+    color: #001a33;
+    font-size: 1.05rem;
+    flex: 1 1 0;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .date-col {
+    flex: 0 0 auto;
+    font-size: 1rem;
+    color: #8ca0b3;
+    min-width: 90px;
+    text-align: right;
+    white-space: nowrap;
+    margin-left: 1.5rem;
+  }
+
+  @media (max-width: 700px) {
+    .info {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.1rem;
+    }
+    .title {
+      width: 100%;
+      text-align: left;
+      font-size: 1rem;
+      margin-bottom: 0.1rem;
+    }
+    .date-col {
+      min-width: unset;
+      width: 100%;
+      text-align: left;
+      font-size: 0.85rem;
+      margin-left: 0;
+      margin-top: 0;
     }
   }
 </style>
