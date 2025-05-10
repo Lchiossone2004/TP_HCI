@@ -1,9 +1,6 @@
 <template>
   <div class="slider-card">
-    <div class="top-icons">
-      <span class="material-symbols-rounded icon">notifications</span>
-      <span class="material-symbols-rounded icon">help</span>
-    </div>
+    
     <div class="slide-content" :style="{ transform: `translateX(-${activeSlide * 100}%)` }">
       <div
         v-for="(slide, index) in slots.default?.()"
