@@ -1,32 +1,37 @@
 <template>
-    <div class="profile-container">
-      <div class="top-bar">
-        <button class="back-btn"><  Volver</button>
-        <div>
+  <div class="profile-container">
+    <div class="top-bar">
+      <button class="back-btn"><  Volver</button>
+      <div>
         <button class="edit-btn">Editar perfil</button>
         <button class="help-btn">?</button>
-        </div>
-      </div>
-  
-      <div class="profile-box">
-        <div class="left">
-          <img class="avatar" src="/src//assets/images/FotoPerfil.jpeg" alt="Foto de perfil" />
-          <p class="name">Mateo</p>
-          <a href="mailto:mateo.go@gmail.com" class="email">mateo.go@gmail.com</a>
-        </div>
-  
-        <div class="right">
-          <p><strong>DNI:</strong> 40.527.004</p>
-          <p><strong>Nombre:</strong> Mateo Tomás</p>
-          <p><strong>Apellido:</strong> Gorriti</p>
-          <p><strong>Número:</strong> +54 11 7385-4992</p>
-        </div>
       </div>
     </div>
-  </template>
-  
+
+    <div class="profile-box">
+      <div class="left">
+        <img class="avatar" :src="perfil.avatar" alt="Foto de perfil" />
+        <p class="name">{{ perfil.nombre }}</p>
+        <a :href="`mailto:${perfil.email}`" class="email">{{ perfil.email }}</a>
+      </div>
+
+      <div class="right">
+        <p><strong>DNI:</strong> {{ perfil.dni }}</p>
+        <p><strong>Nombre:</strong> {{ perfil.nombre }}</p>
+        <p><strong>Apellido:</strong> {{ perfil.apellido }}</p>
+        <p><strong>Número:</strong> {{ perfil.telefono }}</p>
+      </div>
+    </div>
+  </div>
+</template>
+
   <script setup>
-  // Este componente aún no requiere lógica
+defineProps({
+  perfil: {
+    type: Object,
+    required: true,
+  }
+})
   </script>
   
   <style scoped>
