@@ -301,11 +301,5 @@ onMounted(() => {
       gap: 1rem;
     }
   }
-
-
-
-  .layout{
-    display: flex;
-  }
 </style>
 
