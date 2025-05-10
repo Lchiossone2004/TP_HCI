@@ -2,7 +2,6 @@
   <div class="balance-card">
     <div class="balance-header">
       <span>Balance</span>
-      <!-- Cambiar el ícono del ojo según el estado -->
       <span 
         class="material-symbols-rounded icon"
         @click="toggleVisibility"
