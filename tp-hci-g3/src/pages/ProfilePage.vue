@@ -2,7 +2,7 @@
     <div class="main-layout">
       <Sidebar />
       <div class="main-content">
-        <ProfileInfo />
+        <ProfileInfo :perfil="perfil"/>
         <ProfileActions />
       </div>
     </div>
@@ -12,6 +12,15 @@
   import Sidebar from '@/components/Sidebar.vue'
   import ProfileInfo from '@/components/ProfileInfo.vue'
   import ProfileActions from '@/components/ProfileActions.vue'
+
+  const perfil = {
+  nombre: 'Mateo Tomás',
+  apellido: 'Gorriti',
+  email: 'mateo.go@gmail.com',
+  dni: '40.527.004',
+  telefono: '+54 11 7385-4992',
+  avatar: '/src/assets/images/FotoPerfil.jpeg'
+}
   </script>
   
   <style scoped>
