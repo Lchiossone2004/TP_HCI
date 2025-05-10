@@ -3,7 +3,13 @@
     <h2 class="title">Hola, Usuario</h2>
     <nav class="menu-container">
       <div class="menu">
-        <button v-for="item in menuItems" :key="item.text" class="menu-btn">
+        <button
+          v-for="item in menuItems"
+          :key="item.text"
+          class="menu-btn"
+          :class="{ active: route.path === item.route }"
+          @click="goTo(item.route)"
+        >
           <span class="material-symbols-rounded icon">{{ item.icon }}</span>
           <span class="text">{{ item.text }}</span>
         </button>
@@ -17,12 +23,20 @@
 </template>
 
 <script setup>
+import { useRouter, useRoute } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
+
 const menuItems = [
-  { text: 'Inicio', icon: 'home' },
-  { text: 'Actividad', icon: 'description' },
-  { text: 'Inversiones', icon: 'finance_mode' },
-  { text: 'Perfil', icon: 'account_circle' }
+  { text: 'Inicio', icon: 'home', route: '/home' },
+  { text: 'Actividad', icon: 'description', route: '/actividad' },
+  { text: 'Inversiones', icon: 'finance_mode', route: '/inversiones' },
+  { text: 'Perfil', icon: 'account_circle', route: '/ProfilePAGE' }
 ]
+
+function goTo(route) {
+  router.push(route)
+}
 </script>
 
 <style scoped>
@@ -83,6 +97,12 @@ const menuItems = [
   background-color: rgba(255, 77, 77, 0.1);
   border-radius: 10px; /* Esquinas redondeadas en hover */
 }
+
+.menu-btn.active {
+  background-color: #093256;
+  border-radius: 10px;
+}
+
 .text {
   font-size: clamp(1rem, 1.5vw, 1.5rem);
   white-space: nowrap;        /* No hacer saltos de línea */
