@@ -332,5 +332,8 @@ onMounted(() => {
     padding: 1.5rem;
     box-sizing: border-box;
   }
+  .layout{
+    display: flex;
+  }
 </style>
 
