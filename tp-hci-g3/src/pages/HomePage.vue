@@ -277,10 +277,6 @@ onUnmounted(() => {
     font-size: 0.8rem;
   }
 
-  .layout {
-    display: flex;
-  }
-
   .top-icons {
     position: fixed;
     top: 1.5rem;
