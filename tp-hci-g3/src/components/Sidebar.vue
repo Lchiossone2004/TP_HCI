@@ -90,7 +90,15 @@ const menuItems = [
   text-overflow: ellipsis;    /* Mostrar "..." al final si se corta */
   max-width: 100%;            /* Respetar el ancho del contenedor */
 }
-.sidebar{
-  background-color: #03192C;
-}
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 21vw;
+    height: 100vh;
+    background-color: #03192C;
+    color: white;
+    padding: 1.5rem;
+    box-sizing: border-box;
+  }
 </style>
