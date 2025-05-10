@@ -9,7 +9,7 @@
         <input type="checkbox" v-model="remember" />
         <span>Recordar siempre</span>
       </div>
-      <a href="#" class="forgot-link">¿Olvidó su contraseña?</a>
+      <a href="#" class="forgot-link" >¿Olvidó su contraseña?</a>
     </div>
     <button @click="login">Aceptar</button>
     <div class="row-register">
@@ -46,6 +46,7 @@ export default {
   color: white;
   width: 100%;
   max-width: 600px;
+  align-items: center;
   /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
 }
 
@@ -68,14 +69,13 @@ p {
 input {
   display: block;
   width: 100%;
-  padding: 1.3rem 2rem;
-  margin: 1.3rem 0;
-  border: none;
+  height: 2.5rem;
+  padding: 0.5rem 1.5rem;
+  margin: 1rem 0;
   border-radius: 40px;
   background: #F1F1F1;
   color: #03192C;
   font-size: 1.15rem;
-  box-shadow: none;
 }
 
 input::placeholder {
@@ -86,7 +86,7 @@ input::placeholder {
 .row-remember {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 2rem;
   margin: 0.5rem 0 0.5rem 0;
   flex-wrap: nowrap;
@@ -113,23 +113,29 @@ input::placeholder {
   color: #3B82F6;
   text-decoration: none;
   font-size: 1rem;
-  margin: 0;
   white-space: nowrap;
   align-self: center;
 }
 
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
 button {
-  width: 100%;
-  padding: 1.2rem;
-  margin: 2rem 0;
+  width: 60%;
+  height: 2.5rem;
+  padding: 0;
+  margin: 2rem auto 0 auto;
   background: #F1F1F1;
   color: #03192C;
-  border: none;
   border-radius: 40px;
   font-size: 1.15rem;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 button:hover {

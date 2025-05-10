@@ -40,7 +40,7 @@ export default {
 .auth-wrapper {
   display: flex;
   height: 100vh;
-  background-color: #F1F1F1;
+  background-color: #FFFF;
 }
 
 .welcome-section {
@@ -51,13 +51,13 @@ export default {
   align-items: flex-start;
   padding: 2rem;
   padding-top: 4rem;
-  background-color: #F1F1F1;
+  background-color: #FFFF;
   position: relative;
   overflow: hidden;
 }
 
 .welcome-section h1 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   color: #03192C;
   margin-bottom: 1rem;
   margin-top: 2rem;
@@ -70,8 +70,8 @@ export default {
 
 .circles {
   position: absolute;
-  bottom: -50px;
-  left: -50px;
+  bottom: -160px;
+  left: -120px;
   z-index: 0;
   width: 100%;
   height: 100%;
@@ -162,7 +162,7 @@ export default {
 }
 
 .auth-tabs-vertical button {
-  background: #F1F1F1;
+  background: #FFFF;
   border: none;
   cursor: pointer;
   font-weight: bold;
@@ -173,12 +173,11 @@ export default {
   transition: all 0.3s ease;
   font-size: 1.3rem;
   min-width: 270px;
-  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
 }
 
 .auth-tabs-vertical button.active {
   background-color: #03192C;
-  color: #F1F1F1;
+  color: #FFFF;
   border: 2px solid #03192C;
 }
 

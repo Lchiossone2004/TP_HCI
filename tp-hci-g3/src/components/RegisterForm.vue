@@ -8,9 +8,9 @@
     <input type="password" placeholder="Contraseña" v-model="password" />
     <input type="password" placeholder="Repita la contraseña" v-model="confirm" />
     <button @click="register">Aceptar</button>
-    <div class="row-register">
-      <span class="register-text">¿Ya tiene una cuenta?</span>
-      <a href="#" class="register-link" @click="$emit('switch')">Inicie sesión</a>
+    <div class="row-login">
+      <span class="login-text">¿Ya tiene una cuenta?</span>
+      <a href="#" class="login-link" @click="$emit('switch')">Inicie sesión</a>
     </div>
   </div>
 </template>
@@ -64,7 +64,7 @@ p {
   margin-bottom: 2rem;
 }
 
-.row-register {
+.row-login {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,13 +73,13 @@ p {
   width: 100%;
 }
 
-.register-text {
+.login-text {
   color: #F1F1F1;
   font-size: 1rem;
   text-align: center;
 }
 
-.register-link {
+.login-link {
   color: #3B82F6;
   text-decoration: none;
   font-size: 1rem;
@@ -87,15 +87,16 @@ p {
   text-align: center;
 }
 
-.register-link:hover {
+.login-link:hover {
   text-decoration: underline;
 }
 
 input {
   display: block;
   width: 100%;
-  padding: 1.3rem 2rem;
-  margin: 1.3rem 0;
+  height: 2.5rem;
+  padding: 0.5rem 1.5rem;
+  margin: 1rem 0;
   border: none;
   border-radius: 40px;
   background: #F1F1F1;
@@ -110,9 +111,10 @@ input::placeholder {
 }
 
 button {
-  width: 100%;
-  padding: 1.2rem;
-  margin: 2rem 0;
+  width: 60%;
+  height: 2.5rem;
+  padding: 0;
+  margin: 2rem auto 0 auto;
   background: #F1F1F1;
   color: #03192C;
   border: none;
@@ -121,6 +123,9 @@ button {
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 button:hover {
