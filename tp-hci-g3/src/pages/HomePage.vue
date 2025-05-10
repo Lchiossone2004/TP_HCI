@@ -2,6 +2,10 @@
   <div class="layout">
     <Sidebar /> <!-- aca llamo al sidebar, ya esta definido como componente-->
     <main class="main-content">
+      <div class="top-icons" :class="{ 'mobile': isMobile && !isVerySmall && !isMedium }">
+        <span class="material-symbols-rounded icon">notifications</span>
+        <span class="material-symbols-rounded icon">help</span>
+      </div>
       <div class="top-section">
       <!-- Sección de botones (ya existente) -->
       <div class="operations-buttons">
@@ -73,13 +77,23 @@ import AddCardButton from '@/components/AddCardButton.vue';
 import MonthlyExpensesChart from '@/components/MonthlyExpensesChart.vue';
 import Swiper from '@/components/Swiper.vue';
 import Activity from '@/components/Activity.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { Chart } from 'chart.js/auto';
 
 const investmentsChartRef = ref(null);
 let investmentsChartInstance = null;
+const isMobile = ref(window.innerWidth <= 1024);
+const isVerySmall = ref(window.innerWidth <= 600);
+const isMedium = ref(window.innerWidth <= 800);
+
+const handleResize = () => {
+  isMobile.value = window.innerWidth <= 1024;
+  isVerySmall.value = window.innerWidth <= 600;
+  isMedium.value = window.innerWidth <= 800;
+};
 
 onMounted(() => {
+  window.addEventListener('resize', handleResize);
   const ctx = investmentsChartRef.value.getContext('2d');
   investmentsChartInstance = new Chart(ctx, {
     type: 'line',
@@ -103,6 +117,10 @@ onMounted(() => {
       },
     },
   });
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
 });
 </script>
 
@@ -259,6 +277,44 @@ onMounted(() => {
     font-size: 0.8rem;
   }
 
+  .layout {
+    display: flex;
+  }
+
+  .top-icons {
+    position: fixed;
+    top: 1.5rem;
+    right: 2rem;
+    display: flex;
+    gap: 1.5rem;
+    z-index: 1000;
+  }
+
+  .top-icons .material-symbols-rounded {
+    font-size: 28px;
+    cursor: pointer;
+    color: white;
+    transition: color 0.2s ease;
+  }
+
+  .top-icons .material-symbols-rounded:hover {
+    color: #A8A8A8;
+  }
+
+  .top-icons.mobile {
+    background-color: white;
+    padding: 0.5rem;
+    border-radius: 10px;
+  }
+
+  .top-icons.mobile .material-symbols-rounded {
+    color: #03192C;
+  }
+
+  .top-icons.mobile .material-symbols-rounded:hover {
+    color: #0a4b85;
+  }
+
   @media (max-width: 1024px) {
     .top-section {
       flex-direction: column;
@@ -299,6 +355,27 @@ onMounted(() => {
 
     .inner2 {
       gap: 1rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .main-content {
+      margin-left: 0;
+      padding: 0.5rem;
+    }
+
+    .operations-buttons {
+      width: 360px;
+      height: 300px;
+      background-color: #03192c;
+      border-radius: 20px;
+    }
+
+    .balance-and-cards,
+    .inner1,
+    .inner2 {
+      width: 100%;
+      max-width: none;
     }
   }
 </style>
