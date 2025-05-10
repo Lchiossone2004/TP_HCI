@@ -321,17 +321,7 @@ onMounted(() => {
     }
   }
 
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 21vw;
-    height: 100vh;
-    background-color: #03192C;
-    color: white;
-    padding: 1.5rem;
-    box-sizing: border-box;
-  }
+
   .layout{
     display: flex;
   }
