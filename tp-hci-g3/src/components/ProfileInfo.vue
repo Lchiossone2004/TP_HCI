@@ -40,6 +40,7 @@
   flex-direction: column;
   box-sizing: border-box;
   min-height: 25rem;
+  padding-top: 0.5rem;
   /* transition: transform 0.2s ease, box-shadow 0.2s ease; */
 }
 
@@ -52,7 +53,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0rem;
 }
 
 .back-btn{
