@@ -270,9 +270,11 @@ onMounted(() => {
 
     .operations-buttons {
       width: 360px;
-      height: 300px;
-      background-color: #03192c;
-      border-radius: 20px;
+      max-width: 360px;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      justify-content: center;
     }
 
     .balance-and-cards {
@@ -300,26 +302,6 @@ onMounted(() => {
     }
   }
 
-  @media (max-width: 600px) {
-    .main-content {
-      margin-left: 0;
-      padding: 0.5rem;
-    }
-
-    .operations-buttons {
-      width: 360px;
-      height: 300px;
-      background-color: #03192c;
-      border-radius: 20px;
-    }
-
-    .balance-and-cards,
-    .inner1,
-    .inner2 {
-      width: 100%;
-      max-width: none;
-    }
-  }
 
   .sidebar {
     position: fixed;
