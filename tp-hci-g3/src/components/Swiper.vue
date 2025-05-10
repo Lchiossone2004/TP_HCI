@@ -1,9 +1,5 @@
 <template>
   <div class="slider-card">
-    <div class="top-icons">
-      <span class="material-symbols-rounded icon">notifications</span>
-      <span class="material-symbols-rounded icon">help</span>
-    </div>
     <div class="slide-content" :style="{ transform: `translateX(-${activeSlide * 100}%)` }">
       <div
         v-for="(slide, index) in slots.default?.()"
@@ -47,26 +43,6 @@ const slideCount = computed(() => slots.default?.().length || 0)
   padding: 1rem;
   box-sizing: border-box;
   position: relative;
-}
-
-.top-icons {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  display: flex;
-  gap: 1.5rem;
-  z-index: 1;
-}
-
-.icon {
-  font-size: 28px;
-  cursor: pointer;
-  color: white;
-  transition: color 0.2s ease;
-}
-
-.icon:hover {
-  color: #A8A8A8;
 }
 
 .slide-content {
