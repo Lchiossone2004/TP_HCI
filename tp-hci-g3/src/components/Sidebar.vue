@@ -80,7 +80,7 @@ function goTo(route) {
 
 .menu-btn:hover {
   background-color: #093256;
-  border-radius: 10px; /* Esquinas redondeadas en hover */
+  border-radius: 15px; /* Esquinas redondeadas en hover */
 }
 
 .icon {
@@ -95,12 +95,12 @@ function goTo(route) {
 
 .menu-btn.danger:hover {
   background-color: rgba(255, 77, 77, 0.1);
-  border-radius: 10px; /* Esquinas redondeadas en hover */
+  border-radius: 15px; /* Esquinas redondeadas en hover */
 }
 
 .menu-btn.active {
   background-color: #093256;
-  border-radius: 10px;
+  border-radius: 15px;
 }
 
 .text {
