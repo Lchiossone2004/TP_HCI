@@ -425,7 +425,7 @@ onUnmounted(() => {
       width: 100%;
       max-width: none;
     }
-  }
+    }
 
   .activity-card {
     background-color: #FFFF;
@@ -433,8 +433,8 @@ onUnmounted(() => {
     border-bottom-right-radius: 20px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    padding: 1rem;
-    box-sizing: border-box;
+      padding: 1rem;
+      box-sizing: border-box;
     width: 100%;
     max-width: 700px;
   }

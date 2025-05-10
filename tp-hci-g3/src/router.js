@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from './pages/HomePage.vue'
 import AuthView from './pages/AuthView.vue'
 import ProfilePage from './pages/ProfilePage.vue'
+import MovementsAndSpendings from './pages/MovementsAndSpendings.vue'
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
     name: 'ProfilePage',
     component: ProfilePage
   },
+  {
+    path: '/actividad',
+    name: 'Actividad',
+    component: MovementsAndSpendings
+  },
 ]
 
 const router = createRouter({
@@ -28,3 +34,7 @@ const router = createRouter({
 })
 
 export default router
+
+function goTo(route) {
+  router.push(route)
+}
