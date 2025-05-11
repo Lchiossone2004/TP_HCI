@@ -118,8 +118,8 @@ function selectContact(contact) {
   }
   .divider {
     height: 1px;
-    background-color: rgba(0, 0, 0, 0.1); /* Gris semi-transparente */
-    margin: 0.5rem 1rem; /* Espaciado y no llega a los bordes */
+    background-color: rgba(0, 0, 0, 0.1);
+    margin: 0.5rem 1rem;
     border: none;
   }
   </style>

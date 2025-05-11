@@ -6,16 +6,22 @@
         <div>
           <TransferSearch @search="handleSearch" />
         </div>
-        <div>
-          <RecentTransfers :transfers="transferenciasRecientes" @select="handleTransferSelect"/>
+        <div class = "balance">
+          <p class = "title">Dinero Disponible</p>
+          <BalanceCard />
         </div>
       </div>
       <div class="right">
+        <div>
         <Suggestions
           :suggested="contactosSugeridos"
           :recent="contactosRecientes"
           @select="manejarSeleccion"
         />
+        </div>
+        <div>
+          <RecentTransfers :transfers="transferenciasRecientes" @select="handleTransferSelect"/>
+        </div>
       </div>
     </div>
   </div>
@@ -26,6 +32,7 @@ import Sidebar from '@/components/Sidebar.vue'
 import Suggestions from '@/components/transfer/Suggestions.vue'
 import TransferSearch from '@/components/transfer/TransferSearch.vue'
 import RecentTransfers from '@/components/transfer/RecentTransfers.vue'
+import BalanceCard from '@/components/BalanceCard.vue'
 
 import avatarJuan from '@/assets/images/avatars/Avatar1.jpg'
 import avatarAna from '@/assets/images/avatars/Avatar2.jpg'
@@ -88,5 +95,25 @@ function handleTransferSelect(transferencia) {
 .right {
   flex: 1;
   max-width: 60%; /* Por ejemplo */
+}
+.balance {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  justify-content: center;
+  align-items: center; 
+  min-height: 15rem;
+  border-radius: 12px;
+  padding: 2rem;
+}
+.title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #03192C;
+    text-align: center;
+    display: block;
+    width: 100%;
 }
   </style>

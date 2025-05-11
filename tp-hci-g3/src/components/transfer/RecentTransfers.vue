@@ -1,6 +1,7 @@
 <template>
     <div class="recent-transfers">
       <h2 class="title">Transferencias Recientes</h2>
+      <div class="divider"></div>
       <ul class="transfer-list">
         <li
         v-for="transfer in transfers"
@@ -66,31 +67,37 @@
   }
   
   .avatar {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
+    object-fit: cover;
     margin-right: 1rem;
   }
   
   .info {
-    flex: 1;
     display: flex;
     flex-direction: column;
   }
   
   .name {
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
   
   .alias {
     font-size: 0.9rem;
-    color: #888;
+    color: #666;
+    font-size: 1.5rem;
   }
-  
   .amount {
     font-size: 1rem;
     color: #666;
-    margin-left: auto; /* Alinea el monto al extremo derecho */
+    margin-left: auto; 
+  }
+  .divider {
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.1); 
+    margin: 0.5rem 1rem; 
+    border: none;
   }
   </style>
