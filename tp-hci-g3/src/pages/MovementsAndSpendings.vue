@@ -132,20 +132,105 @@ const filteredActivities = computed(() => {
 </script>
 
 <style scoped>
+.app{
+  display: flex
+}
 
-    .top-section {
-        background-color: #03192C;
-        border-radius: 20px;
-        color: white;
-        padding: 1.5rem 1.5rem 2.5rem 1.5rem;
-        margin-bottom: 1.5rem;
-        width: 100%;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-    }
+.main-content {
+    margin-left: 21vw;
+    padding: 1rem;
+    min-height: 100vh;
+    background-color: #F1F1F1;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+    box-sizing: border-box;
+  }
+
+.top-section {
+  background-color: #03192C;
+  border-radius: 20px;
+  padding: 1rem 1.5rem 1.5rem 1rem;
+  color: white;
+  width: 100%;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.top-header-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.3rem;
+  font-weight: bold;
+  padding: 0;
+}
+
+.help-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.main-title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 0.5rem 0 1.2rem 0;
+  width: 100%;
+}
+
+.switch-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  background: #e5e7eb;
+  border-radius: 20px;
+  overflow: hidden;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.switch-btn {
+  background: none;
+  border: none;
+  color: #03192C;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
+}
+
+.switch-btn.active {
+  background: #d1d5db;
+  color: #03192C;
+  border-radius: 20px;
+}
+
     .carousel-row {
         display: flex;
         align-items: center;
