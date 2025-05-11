@@ -49,15 +49,13 @@
         <div class="bottom-section">
         <!-- Actividad reciente -->
         <div class="inner1">
-          <div class="activity-card-outer">
-            <div class="header-activity-card">
-              <span>Actividad reciente</span>
-              <button class="more-activities">
-                <span class="material-symbols-rounded arrow">chevron_right</span>
-              </button>
-            </div>
-            <Activity />
+          <div class="header-activity-card">
+            <span>Actividad reciente</span>
+            <button class="more-activities">
+              <span class="material-symbols-rounded arrow">chevron_right</span>
+            </button>
           </div>
+          <Activity />
         </div>
 
         <!-- Gráfico de Gastos Mensuales -->
@@ -160,7 +158,7 @@ function irATransferencias() {
     margin-left: 21vw;
     padding: 1rem;
     min-height: 100vh;
-    background-color: #F1F1F1;
+    background-color: #e6e6e6;
     display: flex;
     align-items: flex-start;
     flex-direction: column;
@@ -174,7 +172,6 @@ function irATransferencias() {
     align-items: flex-start;
     width: 100%;
     gap: 1rem;
-    max-width: 1100px;
   }
 
   .operations-buttons {
@@ -249,12 +246,11 @@ function irATransferencias() {
     align-items: flex-start;
     gap: 1rem;
     width: 100%;
-    max-width: 1100px;
   }
 
   .inner1 {
     flex: 1;
-    min-width: 500px;
+    min-width: 300px;
   }
 
   .inner2 {
@@ -266,13 +262,9 @@ function irATransferencias() {
     max-width: calc(100% - 420px); /* 400px de Activity + 1rem de gap */
   }
 
-  .activity-card-outer {
-    width: 100%;
-    max-width: 700px;
-  }
-
   .header-activity-card {
     background: #fff;
+    height: 70px;
     font-size: 25px;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -281,6 +273,9 @@ function irATransferencias() {
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+    margin-bottom: -18px;
   }
 
   .more-activities {
@@ -437,18 +432,6 @@ function irATransferencias() {
       max-width: none;
     }
     }
-
-  .activity-card {
-    background-color: #FFFF;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-      padding: 1rem;
-      box-sizing: border-box;
-    width: 100%;
-    max-width: 700px;
-  }
 
   .info {
     flex-grow: 1;

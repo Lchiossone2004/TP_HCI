@@ -52,7 +52,7 @@
           <Activity :activities="filteredActivities" />
         </div>
         <div class="chart-col">
-          <MonthlyExpensesChart
+          <ExpensesChart
             :activities="filteredActivities"
             :mode="isMonth ? 'month' : 'year'"
             :month="selectedMonth"
@@ -139,7 +139,7 @@ const filteredActivities = computed(() => {
     margin-left: 21vw;
     padding: 1rem;
     min-height: 100vh;
-    background-color: #F1F1F1;
+    background-color: #e6e6e6;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -230,69 +230,72 @@ const filteredActivities = computed(() => {
   border-radius: 20px;
 }
 
-    .carousel-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1.5rem;
-        margin: 1.2rem 0 2rem 0;
-    }
-    .month-label {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #03192C;
-        min-width: 140px;
-        text-align: center;
-    }
-    .month-arrow {
-        background: none;
-        border: none;
-        color: #193a5e;
-        font-size: 2.2rem;
-        cursor: pointer;
-        border-radius: 50%;
-        padding: 0.2rem 0.5rem;
-        transition: background 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .month-arrow:disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
-    }
-    .search-row {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 1rem;
-    }
-    .search-input {
-        width: 100%;
-        max-width: 600px;
-        border-radius: 999px;
-        border: none;
-        padding: 0.7rem 1.5rem;
-        font-size: 1.1rem;
-        background: #fff;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-    }
-    .bottom-section {
-        display: flex;
-        gap: 1rem;
-        width: 100%;
-        max-width: 1200px;
-    }
-    .activity-col {
-        flex: 1.2;
-        min-width: 350px;
-        max-width: 600px;
-    }
-    .chart-col {
-        flex: 1;
-        min-width: 300px;
-        max-width: 500px;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
+.carousel-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 1.2rem 0 2rem 0;
+}
+.month-label {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #03192C;
+    min-width: 140px;
+    text-align: center;
+}
+.month-arrow {
+    background: none;
+    border: none;
+    color: #193a5e;
+    font-size: 2.2rem;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 0.2rem 0.5rem;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.month-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+.search-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+.search-input {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 999px;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    font-size: 1.1rem;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.bottom-section {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 1200px;
+    position: relative;
+
+
+}
+.activity-col {
+    flex: 1.2;
+    min-width: 350px;
+    max-width: 600px;
+}
+.chart-col {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
 </style>
