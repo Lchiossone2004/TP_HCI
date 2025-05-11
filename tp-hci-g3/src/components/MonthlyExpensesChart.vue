@@ -50,12 +50,13 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+
 .chart-container {
   width: 100%;
-  height: 200px;
+  height: 350px;
   background-color: #fff;
-  border-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
   padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 </style>

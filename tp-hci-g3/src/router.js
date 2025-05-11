@@ -5,6 +5,8 @@ import AuthView from './pages/AuthView.vue'
 import ProfilePage from './pages/ProfilePage.vue'
 import ActivityAndSpendings from './pages/ActivityAndSpendings.vue'
 import TransferPage from './pages/TransferPage.vue'
+import MovementsAndSpendings from './pages/MovementsAndSpendings.vue'
+
 
 const routes = [
   {
@@ -30,7 +32,7 @@ const routes = [
   {
     path: '/actividad',
     name: 'Actividad',
-    component: ActivityAndSpendings
+    component: MovementsAndSpendings
   },
 ]
 
@@ -40,3 +42,7 @@ const router = createRouter({
 })
 
 export default router
+
+function goTo(route) {
+  router.push(route)
+}

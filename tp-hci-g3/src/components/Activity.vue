@@ -1,46 +1,58 @@
 <template>
   <div class="activity-card">
-    <div class="header">
-      <h3>Actividad reciente</h3>
-      <button class="more-activities">
-        <span class="material-symbols-rounded arrow">chevron_right</span>
-      </button>
-    </div>
-
-    <div 
-      v-for="(item, index) in activities" 
-      :key="index" 
-      class="activity-item"
-      @click="handleClick(item)"
-    >
-      <div class="icon-wrapper">
-        <span class="material-symbols-rounded icon">{{ item.icon }}</span>
-      </div>
-      <div class="info">
-        <div class="title">{{ item.title }}</div>
-        <div class="subtitle">{{ item.subtitle }}</div>
-      </div>
+    <template v-if="filteredActivities.length > 0">
       <div 
-        class="amount"
-        :class="{ positive: item.amount > 0, negative: item.amount < 0 }"
+        v-for="(item, index) in filteredActivities" 
+        :key="index" 
+        class="activity-item"
+        @click="handleClick(item)"
       >
-        {{ formatAmount(item.amount) }}
+        <div class="icon-wrapper">
+          <span class="material-symbols-rounded icon">{{ item.icon }}</span>
+        </div>
+        <div class="info">
+          <div class="main-info">
+            <div class="title">{{ item.title }}</div>
+            <div class="date-col">{{ item.subtitle }}</div>
+          </div>
+        </div>
+        <div 
+          class="amount"
+          :class="{ positive: item.amount > 0, negative: item.amount < 0 }"
+        >
+          {{ formatAmount(item.amount) }}
+        </div>
       </div>
-    </div>
+    </template>
+    <template v-else>
+      <div class="no-activity">No hay actividad reciente.</div>
+    </template>
   </div>
 </template>
 
 <script setup>
-const activities = [
-  { icon: 'shopping_bag', title: 'Prüne', subtitle: 'Hoy 19:43', amount: -57800 },
-  { icon: 'restaurant', title: 'Pedidos Ya', subtitle: 'Ayer 21:18', amount: -17550 },
-  { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '19/9 10:25', amount: 57800 },
-  { icon: 'sync_alt', title: 'Mónica Domínguez', subtitle: '17/9 15:56', amount: -1525 },
-  { icon: 'event', title: 'Mateo Gorriti', subtitle: '17/9 09:28', amount: 100000 },
-  { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '15/9 11:32', amount: 20000 },
-  { icon: 'shopping_cart', title: 'DISCO CENCOSUD', subtitle: '13/9 18:37', amount: -127845 },
-  { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '12/9 08:01', amount: 463 },
-]
+import { computed } from 'vue'
+const props = defineProps({
+  activities: {
+    type: Array,
+    default: () => [
+      { icon: 'shopping_bag', title: 'Prüne', subtitle: 'Hoy 19:43', amount: -57800 },
+      { icon: 'restaurant', title: 'Pedidos Ya', subtitle: 'Ayer 21:18', amount: -17550 },
+      { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '19/9 10:25', amount: 57800 },
+      { icon: 'sync_alt', title: 'Mónica Domínguez', subtitle: '17/9 15:56', amount: -1525 },
+      { icon: 'event', title: 'Mateo Gorriti', subtitle: '17/9 09:28', amount: 100000 },
+      { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '15/9 11:32', amount: 20000 },
+      { icon: 'shopping_cart', title: 'DISCO CENCOSUD', subtitle: '13/9 18:37', amount: -127845 },
+      { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '12/9 08:01', amount: 463 },
+    ]
+  },
+  mode: {
+    type: String,
+    default: 'month'
+  },
+  month: Number,
+  year: Number
+})
 
 function formatAmount(value) {
   const formatted = Math.abs(value).toLocaleString('es-AR')
@@ -51,54 +63,18 @@ function handleClick(item) {
   // Podés emitir un evento o navegar si querés
   console.log('Actividad clickeada:', item)
 }
+
+const filteredActivities = computed(() => props.activities)
 </script>
 
 <style scoped>
 .activity-card {
-  background-color: #FFFF;
+  background-color: #fff;
   border-radius: 20px;
   padding: 1rem;
   box-sizing: border-box;
   width: 100%;
   max-width: 700px;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #001a33;
-}
-
-.more-activities{
-  background-color: white;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.arrow{
-  font-size: 30px;
-  color: #001a33;
-}
-
-.more-activities :hover{
-  background-color: #eaeaea;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
 }
 
 .activity-item {
@@ -132,21 +108,40 @@ function handleClick(item) {
 
 .info {
   flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 0;
+}
+
+.main-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
 }
 
 .title {
   font-weight: 600;
   color: #001a33;
+  font-size: 1.05rem;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.subtitle {
+.date-col {
   font-size: 0.85rem;
   color: #8ca0b3;
+  text-align: left;
+  margin-top: 0.1rem;
 }
 
 .amount {
   font-weight: bold;
   white-space: nowrap;
+  margin-left: auto;
 }
 
 .positive {
@@ -155,5 +150,36 @@ function handleClick(item) {
 
 .negative {
   color: #e74c3c;
+}
+
+.no-activity {
+  text-align: center;
+  color: #8ca0b3;
+  font-size: 1.1rem;
+  padding: 2rem 0;
+}
+
+@media (max-width: 700px) {
+  .info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+  }
+  .main-info {
+    width: 100%;
+    align-items: flex-start;
+  }
+  .title {
+    width: 100%;
+    text-align: left;
+    font-size: 1rem;
+    margin-bottom: 0.1rem;
+  }
+  .date-col {
+    width: 100%;
+    text-align: left;
+    font-size: 0.8rem;
+    margin-top: 0;
+  }
 }
 </style>
