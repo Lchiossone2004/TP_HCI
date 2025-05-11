@@ -4,7 +4,7 @@ import HomePage from './pages/HomePage.vue'
 import AuthView from './pages/AuthView.vue'
 import ProfilePage from './pages/ProfilePage.vue'
 import MovementsAndSpendings from './pages/MovementsAndSpendings.vue'
-import EnterMoney from './pages/EnterMoney.vue'
+
 
 const routes = [
   {
@@ -27,11 +27,7 @@ const routes = [
     name: 'Actividad',
     component: MovementsAndSpendings
   },
-  {
-    path: '/enter-money',
-    name: 'EnterMoney',
-    component: EnterMoney
-  },
+ 
 ]
 
 const router = createRouter({
