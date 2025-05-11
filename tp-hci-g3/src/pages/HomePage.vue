@@ -62,7 +62,15 @@
 
         <!-- Gráfico de Gastos Mensuales -->
         <div class="inner2">
-          <MonthlyExpensesChart />
+          <div class="activity-card-outer">
+            <div class="header-activity-card">
+              <span>Gastos mensuales</span>
+              <button class="more-activities" @click="goToMovements">
+                <span class="material-symbols-rounded arrow">chevron_right</span>
+              </button>
+            </div>
+            <MonthlyExpensesChart />
+          </div>
 
           <!-- Inversiones 2025 -->
           <div class="investments-section">
@@ -87,18 +95,24 @@ import Swiper from '@/components/Swiper.vue';
 import Activity from '@/components/Activity.vue';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Chart } from 'chart.js/auto';
+import { useRouter } from 'vue-router';
 
 const investmentsChartRef = ref(null);
 let investmentsChartInstance = null;
 const isMobile = ref(window.innerWidth <= 1024);
 const isVerySmall = ref(window.innerWidth <= 600);
 const isMedium = ref(window.innerWidth <= 800);
+const router = useRouter();
 
 const handleResize = () => {
   isMobile.value = window.innerWidth <= 1024;
   isVerySmall.value = window.innerWidth <= 600;
   isMedium.value = window.innerWidth <= 800;
 };
+
+function goToMovements() {
+  router.push('/actividad');
+}
 
 onMounted(() => {
   window.addEventListener('resize', handleResize);
@@ -266,13 +280,16 @@ onUnmounted(() => {
 
   .more-activities {
     background-color: white;
-    width: 30px;
-    height: 30px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    border: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    transition: background 0.2s;
   }
 
   .arrow {
@@ -282,13 +299,6 @@ onUnmounted(() => {
 
   .more-activities:hover {
     background-color: #eaeaea;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
   }
 
   .investments-section {
@@ -312,10 +322,6 @@ onUnmounted(() => {
     min-height: 200px;
   }
 
-  .chart-container {
-    height: 100%;
-    width: 100%;
-  }
 
   .icon {
     font-size: 18px;
@@ -488,6 +494,13 @@ onUnmounted(() => {
       margin-left: 0;
       margin-top: 0;
     }
+  }
+
+  canvas {
+    width: 100% !important;
+    height: 220px !important;
+    margin: 0 auto;
+    display: block;
   }
 </style>
 
