@@ -38,18 +38,17 @@
             <span class="material-symbols-rounded">arrow_forward</span>
           </button>
         </template>
-      </div>
-      <!-- Buscador (opcional, si lo quieres como en la imagen) -->
-      <div class="search-row">
-        <input
-          v-model="search"
-          class="search-input"
-          placeholder="Buscar por nombre, fecha, hora..."
-        />
-      </div>
+      </div>      
       <!-- Sección de actividades y gráfico -->
       <div class="bottom-section">
         <div class="activity-col">
+          <div class="search-row">
+            <input
+              v-model="search"
+              class="search-input"
+              placeholder="Buscar por nombre, fecha, hora..."
+            />
+          </div>
           <Activity :activities="filteredActivities" />
         </div>
         <div class="chart-col">
@@ -142,7 +141,7 @@ const filteredActivities = computed(() => {
     min-height: 100vh;
     background-color: #F1F1F1;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     flex-direction: column;
     gap: 1rem;
     box-sizing: border-box;
@@ -279,7 +278,7 @@ const filteredActivities = computed(() => {
     }
     .bottom-section {
         display: flex;
-        gap: 2rem;
+        gap: 1rem;
         width: 100%;
         max-width: 1200px;
     }
