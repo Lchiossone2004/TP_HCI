@@ -1,6 +1,5 @@
 <template>
   <div class="main-layout">
-    <Sidebar />
     <div class="main-content">
       <div class="left">
         <div>

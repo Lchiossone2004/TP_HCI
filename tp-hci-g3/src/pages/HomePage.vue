@@ -1,6 +1,5 @@
 <template>
   <div class="layout">
-    <Sidebar />
     <main class="main-content">
       <div class="top-section">
       <div class="operations-buttons">

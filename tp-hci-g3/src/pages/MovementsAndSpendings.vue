@@ -1,6 +1,5 @@
 <template>
   <div class="layout">
-    <Sidebar />
     <main class="main-content">
       <!-- Top section: header y switch -->
       <div class="top-section">
