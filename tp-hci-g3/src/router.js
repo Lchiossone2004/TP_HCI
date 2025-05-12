@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from './pages/HomePage.vue'
 import AuthView from './pages/AuthView.vue'
 import ProfilePage from './pages/ProfilePage.vue'
+import TransferPage from './pages/TransferPage.vue'
 import MovementsAndSpendings from './pages/MovementsAndSpendings.vue'
 
 
@@ -16,6 +17,11 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: HomePage
+  },
+  {
+    path: '/home/transfer',
+    name: 'Transfer',
+    component: TransferPage
   },
   {
     path: '/ProfilePAGE',

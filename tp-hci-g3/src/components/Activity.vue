@@ -74,7 +74,6 @@ const filteredActivities = computed(() => props.activities)
   padding: 1rem;
   box-sizing: border-box;
   width: 100%;
-  max-width: 700px;
 }
 
 .activity-item {
