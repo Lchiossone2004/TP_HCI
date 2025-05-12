@@ -33,6 +33,7 @@ const routes = [
     name: 'Actividad',
     component: MovementsAndSpendings
   },
+ 
 ]
 
 const router = createRouter({

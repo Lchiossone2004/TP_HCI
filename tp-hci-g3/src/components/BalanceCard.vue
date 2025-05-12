@@ -109,7 +109,7 @@ function toggleVisibility() {
 
 .balance-value {
   display: inline-block;
-  min-width: 140px; /* Ajustá este valor según el número más largo que uses */
+  min-width: 140px;
   text-align: left;
 }
 </style>
