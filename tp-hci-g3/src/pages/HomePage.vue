@@ -18,8 +18,8 @@
             <h4>Ingresar</h4>
           </div>
           <div class="grid-item">
-            <button class="operation-button" @click="irATransferencias" >
-              <span class="material-symbols-rounded icon ">sync_alt</span>
+            <button class="operation-button">
+              <span class="material-symbols-rounded icon">sync_alt</span>
             </button>
             <h4>Transferir</h4>
           </div>
@@ -95,7 +95,6 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { Chart } from 'chart.js/auto';
 import { useRouter } from 'vue-router';
 
-
 const investmentsChartRef = ref(null);
 let investmentsChartInstance = null;
 const isMobile = ref(window.innerWidth <= 1024);
@@ -143,10 +142,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
 });
-
-function irATransferencias() {
-  router.push('/home/transfer') // o el nombre de la ruta si usás rutas nombradas
-}
 </script>
 
 <style scoped>

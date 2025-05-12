@@ -3,7 +3,18 @@
     <div class="expenses-chart-header">
       <span class="total">${{ totalExpensesFormatted }}</span>
     </div>
-    <canvas ref="chartRef"></canvas>
+    <div class="chart-legend-row">
+      <div class="chart-wrapper">
+        <canvas ref="chartRef"></canvas>
+      </div>
+      <div class="custom-legend">
+        <div v-for="(cat, i) in categories" :key="cat.key" class="legend-row">
+          <span class="legend-color" :style="{ backgroundColor: chartColors[i] }"></span>
+          <span class="material-symbols-rounded legend-icon">{{ cat.icon }}</span>
+          <span class="legend-label">{{ cat.label }}</span>
+        </div>
+      </div>
+    </div>
     <div class="categories-list">
       <div
         v-for="cat in categories"
@@ -29,12 +40,14 @@ const props = defineProps({
 const chartRef = ref(null)
 let chartInstance = null
 
+const chartColors = ['#1E3A8A', '#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE']
+
 // Categorización
 const categoryMap = [
   { key: 'comida', label: 'Comida', icon: 'restaurant', match: ['restaurant', 'Pedidos Ya'] },
   { key: 'compras', label: 'Compras', icon: 'shopping_bag', match: ['shopping_bag'] },
   { key: 'supermercado', label: 'Supermercado', icon: 'shopping_cart', match: ['shopping_cart', 'supermercado'] },
-  { key: 'servicios', label: 'Servicios', icon: 'event', match: ['event', 'servicio', 'factura'] },
+  { key: 'servicios', label: 'Servicios', icon: 'receipt_long', match: ['event', 'servicio', 'factura'] },
   { key: 'varios', label: 'Varios', icon: 'list', match: [] }
 ]
 
@@ -79,7 +92,7 @@ function renderChart() {
       labels: categories.value.map(c => c.label),
       datasets: [{
         data: categories.value.map(c => c.amount),
-        backgroundColor: ['#1E3A8A', '#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE'],
+        backgroundColor: chartColors,
         borderWidth: 0,
       }]
     },
@@ -100,29 +113,77 @@ watch(categories, renderChart)
 .expenses-chart-container {
   background: #fff;
   border-radius: 20px;
-  padding: 1.2rem 1.2rem 1.5rem 1rem;
+  padding: 1.5rem;
   box-sizing: border-box;
   width: 100%;
+  min-width: 300px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* Centra todo horizontalmente */
   position: relative;
 }
+
 .expenses-chart-header {
   width: 100%;
   text-align: center;
   font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
-.total {
-  color: #03192C;
+
+.chart-legend-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center; /* ¡Esto centra el bloque chart+leyenda! */
+  gap: 2.2rem;
+  width: 100%;
 }
+
+.chart-wrapper {
+  max-width: 180px;
+  min-width: 150px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 canvas {
   width: 100% !important;
-  height: 220px !important;
-  margin: 0 auto 1rem auto;
+  height: 100% !important;
   display: block;
+}
+
+.custom-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem; /* Reduce el espacio entre los elementos */
+  font-size: 0.9rem; /* Reduce el tamaño de la fuente */
+  font-weight: 600;
+}
+
+.legend-color {
+  width: 14px; /* Reduce el tamaño del cuadro de color */
+  height: 14px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.legend-icon {
+  font-size: 1rem; /* Reduce el tamaño del ícono */
+  color: #1E3A8A;
+}
+
+.legend-label {
+  color: #03192C;
 }
 .categories-list {
   width: 100%;
@@ -133,7 +194,7 @@ canvas {
   align-items: center;
   background: #f3f6fa;
   border-radius: 999px;
-  padding: 0.6rem 1.2rem;
+  padding: 0.5rem 1rem;
   margin-bottom: 0.5rem;
   font-size: 1.1rem;
   font-weight: 600;
@@ -151,5 +212,24 @@ canvas {
 .category-amount {
   color: #03192C;
   font-weight: 700;
+}
+@media (max-width: 600px) {
+  .expenses-chart-container {
+    min-width: 300px; /* Mínimo ancho del contenedor */
+    margin: 0 auto; /* Centra el contenedor */
+  }
+
+  .chart-legend-row {
+    flex-direction: column; /* Cambia las leyendas a diseño vertical */
+    align-items: center;
+  }
+
+  .chart-wrapper {
+    max-width: 150px; /* Reduce el tamaño del gráfico */
+  }
+
+  .custom-legend {
+    align-items: center; /* Centra las leyendas */
+  }
 }
 </style>

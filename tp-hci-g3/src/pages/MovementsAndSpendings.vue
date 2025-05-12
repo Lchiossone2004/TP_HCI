@@ -235,7 +235,7 @@ const filteredActivities = computed(() => {
     align-items: center;
     justify-content: center;
     gap: 1.5rem;
-    margin: 1.2rem 0 2rem 0;
+    margin: 1rem 0 1rem 0;
 }
 .month-label {
     font-size: 2rem;
@@ -268,7 +268,7 @@ const filteredActivities = computed(() => {
 }
 .search-input {
     width: 100%;
-    max-width: 600px;
+    max-width: 750px;
     border-radius: 999px;
     border: none;
     padding: 0.7rem 1.5rem;
@@ -278,24 +278,41 @@ const filteredActivities = computed(() => {
 }
 .bottom-section {
     display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
     gap: 1rem;
     width: 100%;
-    max-width: 1200px;
     position: relative;
-
 
 }
 .activity-col {
-    flex: 1.2;
+    flex: 1;
     min-width: 350px;
-    max-width: 600px;
+    max-width: 750px;
 }
 .chart-col {
     flex: 1;
-    min-width: 300px;
-    max-width: 500px;
+    min-width: 350px;
+    max-width: 750px;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+}
+@media (max-width: 1024px) {
+  .bottom-section {
+    flex-direction: column; /* Cambia a diseño vertical */
+    align-items: center;
+  }
+
+  .activity-col {
+    width: 100%;
+    max-width: 750px;
+  }
+
+  .chart-col {
+    width: 100%;
+    max-width: 750px;
+    margin-top: 1rem; /* Agrega espacio entre Activity y el gráfico */
+  }
 }
 </style>
