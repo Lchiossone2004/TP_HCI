@@ -5,7 +5,7 @@
       <!-- Top section: header y switch -->
       <div class="top-section">
         <div class="top-header-row">
-          <button class="back-btn">
+          <button class="back-btn" @click="goBack">
             <span class="material-symbols-rounded">arrow_back</span> Volver
           </button>
           <button class="help-btn">
@@ -66,9 +66,16 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import Sidebar from '@/components/Sidebar.vue'
 import Activity from '@/components/Activity.vue'
-import MonthlyExpensesChart from '@/components/MonthlyExpensesChart.vue'
+import ExpensesChart from '@/components/MonthlyExpensesChart.vue'
+
+const router = useRouter();
+
+const goBack = () => {
+  router.back();
+};
 
 // Datos de ejemplo, en la práctica los traerás del usuario logueado
 const allActivities = ref([

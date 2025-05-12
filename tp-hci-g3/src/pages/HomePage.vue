@@ -2,11 +2,16 @@
   <div class="layout">
     <Sidebar /> <!-- aca llamo al sidebar, ya esta definido como componente-->
     <main class="main-content">
-      <div class="top-icons" :class="{ 'mobile': isMobile && !isVerySmall && !isMedium }">
+      <div class="top-icons">
         <span class="material-symbols-rounded icon">notifications</span>
         <span class="material-symbols-rounded icon">help</span>
       </div>
       <div class="top-section">
+        <div class="top-header-row">
+          <button class="back-btn" @click="goBack">
+            <span class="material-symbols-rounded">arrow_back</span> Volver
+          </button>
+        </div>
         <!-- Sección de botones (ya existente) -->
         <div class="operations-buttons">
           <OperationsButtons bgColor="#03192c" width="360px" height="300px">
@@ -67,7 +72,7 @@
                 <span class="material-symbols-rounded arrow">chevron_right</span>
               </button>
             </div>
-            <MonthlyExpensesChart />
+            <MonthlyExpensesChart :height="150" />
           </div>
 
           <!-- Inversiones 2025 -->
@@ -118,11 +123,11 @@ import AddCardButton from '@/components/AddCardButton.vue';
 import MonthlyExpensesChart from '@/components/MonthlyExpensesChart.vue';
 import Swiper from '@/components/Swiper.vue';
 import Activity from '@/components/Activity.vue';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { Chart } from 'chart.js/auto';
 import { useRouter } from 'vue-router';
 import Modal from '@/components/Modal.vue';
-
+import ProfileInfo from '@/components/ProfileInfo.vue';
 
 const router = useRouter();
 const investmentsChartRef = ref(null);
@@ -143,7 +148,6 @@ const closeModal = () => {
   showEnterMoneyModal.value = false;
 };
 
-
 const handleResize = () => {
   isMobile.value = window.innerWidth <= 1024;
   isVerySmall.value = window.innerWidth <= 600;
@@ -153,6 +157,10 @@ const handleResize = () => {
 function goToMovements() {
   router.push('/actividad');
 }
+
+const goBack = () => {
+  router.back();
+};
 
 onMounted(() => {
   window.addEventListener('resize', handleResize);
@@ -221,6 +229,58 @@ const copyToClipboard = async (text) => {
   width: 100%;
   gap: 1rem;
   max-width: 1100px;
+  position: relative;
+  margin-top: 3rem;
+}
+
+.top-header-row {
+  position: absolute;
+  top: -3rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+  z-index: 10;
+}
+
+.top-icons {
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  z-index: 1000;
+}
+
+.top-icons .material-symbols-rounded {
+  font-size: 28px;
+  cursor: pointer;
+  color: #03192C;
+  transition: color 0.2s ease;
+}
+
+.top-icons .material-symbols-rounded:hover {
+  color: #0a4b85;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #03192C;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.3rem;
+  font-weight: bold;
+  padding: 0;
+}
+
+.back-btn:hover {
+  color: #0a4b85;
 }
 
 .operations-buttons {
@@ -307,14 +367,16 @@ const copyToClipboard = async (text) => {
   width: 40%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.5rem;
   min-width: 300px;
   max-width: calc(100% - 420px);
+  height: 100%;
 }
 
 .activity-card-outer {
   width: 100%;
   max-width: 700px;
+  height: 15%;
 }
 
 .header-activity-card {
@@ -322,7 +384,7 @@ const copyToClipboard = async (text) => {
   font-size: 25px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  padding: 1.5rem 1rem 0.1rem 1.7rem;
+  padding: 0.5rem 1rem 0.1rem 1.7rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -359,22 +421,24 @@ const copyToClipboard = async (text) => {
 .investments-section {
   background-color: #03192C;
   border-radius: 20px;
-  padding: 1rem;
+  padding: 0.75rem;
   color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   flex: 1;
   display: flex;
   flex-direction: column;
+  height: 85%;
 }
 
 .investments-section h3 {
   font-size: 1.2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
 }
 
 .chart-placeholder {
   flex: 1;
-  min-height: 200px;
+  min-height: 0;
+  height: 100%;
 }
 
 .chart-container {
@@ -394,43 +458,14 @@ const copyToClipboard = async (text) => {
   font-size: 0.8rem;
 }
 
-.top-icons {
-  position: fixed;
-  top: 1.5rem;
-  right: 2rem;
-  display: flex;
-  gap: 1.5rem;
-  z-index: 1000;
-}
-
-.top-icons .material-symbols-rounded {
-  font-size: 28px;
-  cursor: pointer;
-  color: white;
-  transition: color 0.2s ease;
-}
-
-.top-icons .material-symbols-rounded:hover {
-  color: #A8A8A8;
-}
-
-.top-icons.mobile {
-  background-color: white;
-  padding: 0.5rem;
-  border-radius: 10px;
-}
-
-.top-icons.mobile .material-symbols-rounded {
-  color: #03192C;
-}
-
-.top-icons.mobile .material-symbols-rounded:hover {
-  color: #0a4b85;
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 auto;
+  display: block;
 }
 
 @media (max-width: 1024px) {
-  .top-section {
-
   .main-content {
     margin-left: 21vw;
     padding: 1rem;
@@ -438,18 +473,24 @@ const copyToClipboard = async (text) => {
     background-color: #e6e6e6;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 1rem;
     width: 100%;
   }
 
-  .operations-buttons {
-    width: 360px;
-    max-width: 360px;
-    margin-left: auto;
-    margin-right: auto;
+  .top-section {
+    width: 100%;
+    max-width: 500px;
+    margin-top: 3rem;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .operations-buttons {
+    width: 100%;
+    max-width: 500px;
+    margin: 0;
   }
 
   .balance-and-cards {
@@ -458,94 +499,25 @@ const copyToClipboard = async (text) => {
   }
 
   .bottom-section {
-
-  }
-
-  .inner1 {
-    flex: 1;
-    min-width: 300px;
-  }
-
-  .inner2 {
-    width: 40%;
+    width: 100%;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 1rem;
-    padding: 0;
   }
 
-  .inner1,
-  .inner2 {
+  .inner1, .inner2 {
     width: 100%;
-    min-width: 300px;
-    max-width: calc(100% - 420px); /* 400px de Activity + 1rem de gap */
+    max-width: 500px;
   }
 
-  .header-activity-card {
-    background: #fff;
-    height: 70px;
-    font-size: 25px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    padding: 1.5rem 1rem 0.1rem 1.7rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box;
-    position: relative;
-    z-index: 2;
-    margin-bottom: -18px;
-  }
-
-  .more-activities {
-    background-color: white;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-    transition: background 0.2s;
-  }
-
-  .arrow {
-    font-size: 30px;
-    color: #03192C;
-  }
-
-  .more-activities:hover {
-    background-color: #eaeaea;
+  .activity-card-outer {
+    width: 100%;
   }
 
   .investments-section {
-    background-color: #03192C;
-    border-radius: 20px;
-    padding: 1rem;
-    color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .investments-section h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
-
-  .chart-placeholder {
-    flex: 1;
-    min-height: 200px;
-  }
-
-
-
-  .inner2 {
-    gap: 1rem;
+    width: 100%;
   }
 }
 
@@ -555,17 +527,24 @@ const copyToClipboard = async (text) => {
     padding: 0.5rem;
   }
 
-  .operations-buttons {
-    width: 360px;
-    height: 300px;
-    background-color: #03192c;
-    border-radius: 20px;
+  .top-section {
+    margin-top: 2rem;
   }
 
+  .top-header-row {
+    top: -2rem;
+  }
 
+  .top-icons {
+    right: 1rem;
+  }
+
+  .operations-buttons,
   .balance-and-cards,
   .inner1,
-  .inner2 {
+  .inner2,
+  .activity-card-outer,
+  .investments-section {
     width: 100%;
     max-width: none;
   }
@@ -593,7 +572,7 @@ const copyToClipboard = async (text) => {
 
 .title {
   font-weight: 600;
-  color: #03192C;
+  color: #001a33;
   font-size: 1.05rem;
   flex: 1 1 0;
   text-align: left;
@@ -714,83 +693,5 @@ const copyToClipboard = async (text) => {
 .copy-icon:hover {
   background-color: #e0e0e0;
 }
-  @media (max-width: 600px) {
-    .main-content {
-      margin-left: 0;
-      padding: 0.5rem;
-    }
-
-    .operations-buttons {
-      width: 360px;
-      height: 300px;
-      background-color: #03192c;
-      border-radius: 20px;
-    }
-
-    .balance-and-cards,
-    .inner1,
-    .inner2 {
-      width: 100%;
-      max-width: none;
-    }
-    }
-
-  .info {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    min-width: 0;
-  }
-
-  .title {
-    font-weight: 600;
-    color: #001a33;
-    font-size: 1.05rem;
-    flex: 1 1 0;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .date-col {
-    flex: 0 0 auto;
-    font-size: 1rem;
-    color: #8ca0b3;
-    min-width: 90px;
-    text-align: right;
-    white-space: nowrap;
-    margin-left: 1.5rem;
-  }
-
-  @media (max-width: 700px) {
-    .info {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.1rem;
-    }
-    .title {
-      width: 100%;
-      text-align: left;
-      font-size: 1rem;
-      margin-bottom: 0.1rem;
-    }
-    .date-col {
-      min-width: unset;
-      width: 100%;
-      text-align: left;
-      font-size: 0.85rem;
-      margin-left: 0;
-      margin-top: 0;
-    }
-  }
-
-  canvas {
-    width: 100% !important;
-    height: 220px !important;
-    margin: 0 auto;
-    display: block;
-  }
 </style>
 
