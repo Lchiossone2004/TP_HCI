@@ -14,7 +14,8 @@
           <span class="text">{{ item.text }}</span>
         </button>
       </div>
-      <button class="menu-btn danger">
+      <button class="menu-btn danger"  
+          @click="goTo('/')">
         <span class="material-symbols-rounded icon">logout</span>
         <span class="text">Cerrar sesión</span>
       </button>
@@ -31,7 +32,7 @@ const menuItems = [
   { text: 'Inicio', icon: 'home', route: '/home' },
   { text: 'Actividad', icon: 'description', route: '/actividad' },
   { text: 'Inversiones', icon: 'finance_mode', route: '/inversiones' },
-  { text: 'Perfil', icon: 'account_circle', route: '/ProfilePAGE' }
+  { text: 'Perfil', icon: 'account_circle', route: '/ProfilePAGE' },
 ]
 
 function goTo(route) {
@@ -115,6 +116,7 @@ function goTo(route) {
     top: 0;
     left: 0;
     width: 21vw;
+    z-index: 2000;
     height: 100vh;
     background-color: #03192C;
     color: white;

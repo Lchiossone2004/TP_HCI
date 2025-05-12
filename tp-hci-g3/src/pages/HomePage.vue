@@ -1,70 +1,60 @@
 <template>
   <div class="layout">
-    <Sidebar /> <!-- aca llamo al sidebar, ya esta definido como componente-->
+    <Sidebar />
     <main class="main-content">
-      <div class="top-icons">
-        <span class="material-symbols-rounded icon">notifications</span>
-        <span class="material-symbols-rounded icon">help</span>
-      </div>
       <div class="top-section">
-        <div class="top-header-row">
-          <button class="back-btn" @click="goBack">
-            <span class="material-symbols-rounded">arrow_back</span> Volver
-          </button>
-        </div>
-        <!-- Sección de botones (ya existente) -->
-        <div class="operations-buttons">
+      <div class="operations-buttons">
           <OperationsButtons bgColor="#03192c" width="360px" height="300px">
-            <div class="grid-container">
-              <div class="grid-item">
+        <div class="grid-container">
+          <div class="grid-item">
                 <button class="operation-button" @click="showEnterMoneyModal = true">
-                  <span class="material-symbols-rounded icon">add</span>
-                </button>
-                <h4>Ingresar</h4>
-              </div>
-              <div class="grid-item">
-                <button class="operation-button">
-                  <span class="material-symbols-rounded icon">sync_alt</span>
-                </button>
-                <h4>Transferir</h4>
-              </div>
-              <div class="grid-item">
-                <button class="operation-button">
-                  <span class="material-symbols-rounded icon">id_card</span>
-                </button>
-                <h4>Mis datos</h4>
-              </div>
-              <div class="grid-item">
-                <button class="operation-button">
-                  <span class="material-symbols-rounded icon">more_horiz</span>
-                </button>
-                <h4>Más</h4>
-              </div>
-            </div>
-          </OperationsButtons>
+              <span class="material-symbols-rounded icon">add</span>
+            </button>
+            <h4>Ingresar</h4>
+          </div>
+          <div class="grid-item">
+            <button class="operation-button">
+              <span class="material-symbols-rounded icon">sync_alt</span>
+            </button>
+            <h4>Transferir</h4>
+          </div>
+          <div class="grid-item">
+            <button class="operation-button">
+              <span class="material-symbols-rounded icon">id_card</span>
+            </button>
+            <h4>Mis datos</h4>
+          </div>
+          <div class="grid-item">
+            <button class="operation-button">
+              <span class="material-symbols-rounded icon">more_horiz</span>
+            </button>
+            <h4>Más</h4>
+          </div>
         </div>
+      </OperationsButtons>
+      </div>
 
-        <div class="balance-and-cards">
+      <div class="balance-and-cards">
           <Swiper>
             <BalanceCard />
             <AddCardButton />
           </Swiper>
         </div>
-      </div>
-      <div class="bottom-section">
+    </div>
+        <div class="bottom-section">
         <!-- Actividad reciente -->
-        <div class="inner1">
+         <div class="inner1">
           <div class="header-activity-card">
             <span>Actividad reciente</span>
             <button class="more-activities">
-              <span class="material-symbols-rounded arrow">chevron_right</span>
+              <span class="material-symbols-rounded arrow" >chevron_right</span>
             </button>
           </div>
           <Activity />
         </div>
 
         <!-- Gráfico de Gastos Mensuales -->
-        <div class="inner2">
+         <div class="inner2">
           <div class="activity-card-outer">
             <div class="header-activity-card">
               <span>Gastos mensuales</span>
@@ -75,14 +65,14 @@
             <MonthlyExpensesChart :height="150" />
           </div>
 
-          <!-- Inversiones 2025 -->
-          <div class="investments-section">
-            <h3>Inversiones 2025</h3>
-            <div class="chart-placeholder">
-              <canvas ref="investmentsChartRef"></canvas>
-            </div>
+        <!-- Inversiones 2025 -->
+        <div class="investments-section">
+          <h3>Inversiones 2025</h3>
+          <div class="chart-placeholder">
+            <canvas ref="investmentsChartRef"></canvas>
           </div>
         </div>
+      </div>
       </div>
     </main>
     <Modal 
@@ -127,6 +117,7 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { Chart } from 'chart.js/auto';
 import { useRouter } from 'vue-router';
 import Modal from '@/components/Modal.vue';
+import Header from '@/components/Header.vue';
 import ProfileInfo from '@/components/ProfileInfo.vue';
 
 const router = useRouter();
@@ -206,15 +197,15 @@ const copyToClipboard = async (text) => {
 
 
 <style scoped>
-.app {
-  display: flex;
-}
+  .app {
+    display: flex;
+  }
 
 .main-content {
   margin-left: 21vw;
   padding: 1rem;
   min-height: 100vh;
-  background-color: #F1F1F1;
+  background-color: #eeeeee;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -230,7 +221,7 @@ const copyToClipboard = async (text) => {
   gap: 1rem;
   max-width: 1100px;
   position: relative;
-  margin-top: 3rem;
+  margin-top: 0;
 }
 
 .top-header-row {
@@ -247,23 +238,7 @@ const copyToClipboard = async (text) => {
 }
 
 .top-icons {
-  position: fixed;
-  top: 1.5rem;
-  right: 2rem;
-  display: flex;
-  gap: 1.5rem;
-  z-index: 1000;
-}
-
-.top-icons .material-symbols-rounded {
-  font-size: 28px;
-  cursor: pointer;
-  color: #03192C;
-  transition: color 0.2s ease;
-}
-
-.top-icons .material-symbols-rounded:hover {
-  color: #0a4b85;
+  display: none;
 }
 
 .back-btn {
@@ -294,49 +269,49 @@ const copyToClipboard = async (text) => {
 .operation-button .material-symbols-rounded {
   font-size: 40px; 
   color: white;
-}
+  }
 
-.grid-container {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  justify-items: center;
-  row-gap: 0.8rem;
-  column-gap: 0.4rem;
-  text-align: center;
-  color: white;
-  box-sizing: border-box;
-}
+  .grid-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+    row-gap: 0.8rem;
+    column-gap: 0.4rem;
+    text-align: center;
+    color: white;
+    box-sizing: border-box;
+  }
 
-.grid-item button {
-  width: 80px; 
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  background-color: #093256;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  .grid-item button {
+    width: 80px; 
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background-color: #093256;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
   font-size: inherit;
-}
+  }
 
-.grid-item button:hover {
-  background-color: #0a4b85; 
-}
-
-.grid-item .material-symbols-outlined {
-  color: white;
-  font-size: 28px;
-}
+  .grid-item button:hover {
+    background-color: #0a4b85; 
+  }
+  
+  .grid-item .material-symbols-outlined {
+    color: white;
+    font-size: 28px;
+  }
    
-.grid-item h4 {
-  margin: 0.3rem 0 0;
-  font-size: 14px;
-}
-
+  .grid-item h4 {
+    margin: 0.3rem 0 0;
+    font-size: 14px;
+  }
+  
 .balance-and-cards {
   flex: 1;
   height: 300px;
@@ -508,9 +483,9 @@ canvas {
   }
 
   .inner1, .inner2 {
-    width: 100%;
+      width: 100%;
     max-width: 500px;
-  }
+    }
 
   .activity-card-outer {
     width: 100%;
@@ -537,15 +512,15 @@ canvas {
 
   .top-icons {
     right: 1rem;
-  }
+    }
 
   .operations-buttons,
   .balance-and-cards,
-  .inner1,
+    .inner1,
   .inner2,
   .activity-card-outer,
   .investments-section {
-    width: 100%;
+      width: 100%;
     max-width: none;
   }
 }
@@ -557,7 +532,7 @@ canvas {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   padding: 1rem;
-  box-sizing: border-box;
+    box-sizing: border-box;
   width: 100%;
   max-width: 700px;
 }
@@ -579,7 +554,7 @@ canvas {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
+  }
 
 .date-col {
   flex: 0 0 auto;
@@ -589,7 +564,7 @@ canvas {
   text-align: right;
   white-space: nowrap;
   margin-left: 1.5rem;
-}
+  }
 
 .enter-money-form {
   display: flex;
@@ -599,9 +574,9 @@ canvas {
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   align-items: flex-start;
   width: 100%;
 }
@@ -620,7 +595,7 @@ canvas {
   font-size: 1rem;
   width: 80%;
   max-width: 300px;
-}
+  }
 
 .submit-button {
   background-color: #03192C;
@@ -634,11 +609,11 @@ canvas {
   width: 80%;
   max-width: 300px;
   margin: 0 auto;
-}
+  }
 
 .submit-button:hover {
   background-color: #0a4b85;
-}
+  }
 
 .account-info {
   display: flex;
@@ -680,7 +655,7 @@ canvas {
 .copy-icon {
   color: #03192C;
   cursor: pointer;
-  font-size: 1.2rem;
+    font-size: 1.2rem;
   position: absolute;
   right: 0.5rem;
   top: 50%;
@@ -688,10 +663,10 @@ canvas {
   padding: 0.25rem;
   border-radius: 4px;
   transition: background-color 0.2s ease;
-}
+  }
 
 .copy-icon:hover {
   background-color: #e0e0e0;
-}
+  }
 </style>
 

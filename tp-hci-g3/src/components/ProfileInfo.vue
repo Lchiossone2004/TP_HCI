@@ -1,11 +1,8 @@
 <template>
   <div class="profile-container">
     <div class="top-bar">
-      <button class="back-btn"><  Volver</button>
-      <div>
-        <button class="edit-btn">Editar perfil</button>
-        <button class="help-btn">?</button>
-      </div>
+      <button class="edit-btn">Editar perfil</button>
+   
     </div>
 
     <div class="profile-box">
@@ -61,18 +58,7 @@ defineProps({
   margin-bottom: 0rem;
 }
 
-.back-btn{
-  background: none;
-  border: none;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 1.3rem;
-}
-.back-btn:hover{
-  text-decoration: underline;
-}
-.edit-btn{
+.edit-btn {
   background-color: transparent;
   color: white;
   border: 2px solid white;
@@ -82,30 +68,15 @@ defineProps({
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
+  margin-left: auto; 
 }
+
 
 .edit-btn:hover {
   background-color: white;
   color: #001f3f;
 }
 
-.help-btn{
-  background-color: transparent;
-  color: white;
-  border: 2px solid white;
-  border-radius: 999px; 
-  padding: 0.4rem 1rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  margin-left: 1rem;
-}
-
-.help-btn:hover{
-    background-color: white;
-    color: #001f3f; 
-}
 .profile-box {
   display: flex;
   justify-content: space-between;
@@ -150,6 +121,6 @@ defineProps({
   gap: 3rem;
   font-size: 1.8rem; /* Aumenta el tamaño del texto */
   font-weight: 500;
-  margin-left: 8rem;
+ 
 }
 </style>

@@ -1,16 +1,64 @@
 <template>
-  <v-app>
-    <router-view />
-  </v-app>
+  <div :class="['app-container', { 'with-header': showHeader }]">
+    <Sidebar v-if="showSidebar" />
+    <Header v-if="showHeader" />
+    <router-view></router-view>
+  </div>
 </template>
+<script>
+import Header from './components/Header.vue'
+import Sidebar from './components/Sidebar.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
-<script setup>
-// Componente principal de la aplicación
+export default {
+  name: 'App',
+  components: {
+    Header,
+    Sidebar
+  },
+  setup() {
+    const route = useRoute()
+    const showSidebar = computed(() => {
+      return route.path !== '/'
+    })
+    const showHeader = computed(() => {
+      // Don't show header on login page
+      return route.path !== '/'
+    })
+
+    return {
+      showHeader,
+      showSidebar
+    }
+  }
+}
 </script>
 
 <style>
-.v-application {
-  font-family: 'Nunito', sans-serif !important;
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #e6e6e6;
+}
+
+
+.app-container {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #e6e6e6;
+}
+
+.app-container.with-header {
+  padding-top: 40px;
 }
 </style>
 
