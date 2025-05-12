@@ -5,12 +5,7 @@
       <!-- Top section: header y switch -->
       <div class="top-section">
         <div class="top-header-row">
-          <button class="back-btn" @click="goBack">
-            <span class="material-symbols-rounded">arrow_back</span> Volver
-          </button>
-          <button class="help-btn">
-            <span class="material-symbols-rounded">help</span>
-          </button>
+          
         </div>
         <h2 class="main-title">Movimientos y gastos</h2>
         <div class="switch-row">
@@ -138,9 +133,6 @@ const filteredActivities = computed(() => {
 </script>
 
 <style scoped>
-.app{
-  display: flex
-}
 
 .main-content {
     margin-left: 21vw;
@@ -175,29 +167,6 @@ const filteredActivities = computed(() => {
   margin-bottom: 2rem;
 }
 
-.back-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  gap: 0.3rem;
-  font-weight: bold;
-  padding: 0;
-}
-
-.help-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-}
 
 .main-title {
   font-size: 2rem;
@@ -237,72 +206,72 @@ const filteredActivities = computed(() => {
   border-radius: 20px;
 }
 
-.carousel-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
+    .carousel-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
     margin: 1rem 0 1rem 0;
-}
-.month-label {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #03192C;
-    min-width: 140px;
-    text-align: center;
-}
-.month-arrow {
-    background: none;
-    border: none;
-    color: #193a5e;
-    font-size: 2.2rem;
-    cursor: pointer;
-    border-radius: 50%;
-    padding: 0.2rem 0.5rem;
-    transition: background 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.month-arrow:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
-.search-row {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-.search-input {
-    width: 100%;
+    }
+    .month-label {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #03192C;
+        min-width: 140px;
+        text-align: center;
+    }
+    .month-arrow {
+        background: none;
+        border: none;
+        color: #193a5e;
+        font-size: 2.2rem;
+        cursor: pointer;
+        border-radius: 50%;
+        padding: 0.2rem 0.5rem;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .month-arrow:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+    .search-row {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+    .search-input {
+        width: 100%;
     max-width: 750px;
-    border-radius: 999px;
-    border: none;
-    padding: 0.7rem 1.5rem;
-    font-size: 1.1rem;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-.bottom-section {
-    display: flex;
+        border-radius: 999px;
+        border: none;
+        padding: 0.7rem 1.5rem;
+        font-size: 1.1rem;
+        background: #fff;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .bottom-section {
+        display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 1rem;
-    width: 100%;
+        gap: 1rem;
+        width: 100%;
     position: relative;
 
-}
-.activity-col {
+    }
+    .activity-col {
     flex: 1;
+        min-width: 350px;
+    max-width: 750px;
+    }
+    .chart-col {
+        flex: 1;
     min-width: 350px;
     max-width: 750px;
-}
-.chart-col {
-    flex: 1;
-    min-width: 350px;
-    max-width: 750px;
-    display: flex;
-    flex-direction: column;
+        display: flex;
+        flex-direction: column;
     gap: 1rem;
 }
 @media (max-width: 1024px) {
@@ -321,5 +290,5 @@ const filteredActivities = computed(() => {
     max-width: 750px;
     margin-top: 1rem; /* Agrega espacio entre Activity y el gráfico */
   }
-}
+    }
 </style>
