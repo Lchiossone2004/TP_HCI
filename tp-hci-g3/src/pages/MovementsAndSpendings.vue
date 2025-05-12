@@ -259,20 +259,28 @@ const filteredActivities = computed(() => {
         gap: 1rem;
         width: 100%;
     position: relative;
+    
 
     }
     .activity-col {
     flex: 1;
         min-width: 350px;
     max-width: 750px;
+    
+    
     }
     .chart-col {
-        flex: 1;
-    min-width: 350px;
-    max-width: 750px;
-        display: flex;
-        flex-direction: column;
-    gap: 1rem;
+      flex: 1;
+  min-width: 350px;
+  max-width: 750px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  background-color: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+
 }
 @media (max-width: 1024px) {
   .bottom-section {
@@ -281,10 +289,11 @@ const filteredActivities = computed(() => {
   }
 
   .activity-col {
-    width: 100%;
-    max-width: 750px;
-  }
-
+  flex: 1;
+  min-width: 350px;
+  max-width: 750px;
+ 
+}
   .chart-col {
     width: 100%;
     max-width: 750px;
