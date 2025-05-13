@@ -43,10 +43,12 @@ body {
   min-height: 100vh;
   background-color: #e6e6e6;
 }
-
+.v-application {
+  font-family: 'Nunito', sans-serif !important;
+}
 
 .app-container {
-  font-family: 'Inter', sans-serif;
+  
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
