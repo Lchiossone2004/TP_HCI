@@ -1,13 +1,13 @@
 <template>
-  <div class="expenses-chart-container">
-    <div class="expenses-chart-header">
+  <div class="expenses-chart-container" :class="{ 'simple': simple }">
+    <div v-if="!simple" class="expenses-chart-header">
       <span class="total">${{ totalExpensesFormatted }}</span>
     </div>
-    <div class="chart-legend-row">
+    <div class="chart-legend-row" :class="{ 'simple': simple }">
       <div class="chart-wrapper">
         <canvas ref="chartRef"></canvas>
       </div>
-      <div class="custom-legend">
+      <div v-if="!simple" class="custom-legend">
         <div v-for="(cat, i) in categories" :key="cat.key" class="legend-row">
           <span class="legend-color" :style="{ backgroundColor: chartColors[i] }"></span>
           <span class="material-symbols-rounded legend-icon">{{ cat.icon }}</span>
@@ -15,12 +15,8 @@
         </div>
       </div>
     </div>
-    <div class="categories-list">
-      <div
-        v-for="cat in categories"
-        :key="cat.key"
-        class="category-row"
-      >
+    <div v-if="!simple" class="categories-list">
+      <div v-for="cat in categories" :key="cat.key" class="category-row">
         <span class="material-symbols-rounded category-icon">{{ cat.icon }}</span>
         <span class="category-name">{{ cat.label }}</span>
         <span class="category-amount">${{ formatAmount(cat.amount) }}</span>
@@ -32,6 +28,25 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import { Chart } from 'chart.js/auto'
+
+const props = defineProps({
+  activities: {
+    type: Array,
+    default: () => []
+  },
+  month: {
+    type: Number,
+    default: new Date().getMonth()
+  },
+  year: {
+    type: Number,
+    default: new Date().getFullYear()
+  },
+  simple: {
+    type: Boolean,
+    default: false
+  }
+})
 
 const chartRef = ref(null)
 let chartInstance = null
@@ -47,27 +62,29 @@ const categoryMap = [
   { key: 'varios', label: 'Varios', icon: 'list', match: [] }
 ]
 
-const props = defineProps({
-  activities: {
-    type: Array,
-    default: () => []
-  },
-  month: {
-    type: Number,
-    default: -1
-  },
-  year: {
-    type: Number,
-    default: -1
-  }
+// Datos por defecto para el modo simple (HomePage)
+const defaultData = computed(() => {
+  if (props.activities.length > 0) return props.activities
+  return [
+    { icon: 'restaurant', title: 'Comida', amount: -30000, date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` },
+    { icon: 'shopping_cart', title: 'Supermercado', amount: -25000, date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` },
+    { icon: 'shopping_bag', title: 'Shopping', amount: -20000, date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` },
+    { icon: 'list', title: 'Varios', amount: -15000, date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` },
+    { icon: 'receipt_long', title: 'Servicios', amount: -10000, date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` }
+  ]
 })
 
 // Procesa los gastos
 const categories = computed(() => {
   const result = categoryMap.map(cat => ({ ...cat, amount: 0 }))
-  
-  props.activities.forEach(activity => {
-    if (activity.amount < 0) {
+  const activitiesToProcess = props.activities.length > 0 ? props.activities : defaultData.value
+
+  activitiesToProcess.forEach(activity => {
+    const activityDate = new Date(activity.date)
+    const matchesMonth = props.month === -1 || activityDate.getMonth() === props.month
+    const matchesYear = props.year === -1 || activityDate.getFullYear() === props.year
+
+    if (activity.amount < 0 && matchesMonth && matchesYear) {
       let found = false
       for (const cat of result) {
         if (cat.match.some(m => 
@@ -84,7 +101,6 @@ const categories = computed(() => {
       }
     }
   })
-  
   return result
 })
 
@@ -109,14 +125,28 @@ function renderChart() {
       datasets: [{
         data: categories.value.map(c => c.amount),
         backgroundColor: chartColors,
-        borderWidth: 0,
+        borderWidth: 0
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      cutout: '65%'
+      plugins: {
+        legend: {
+          display: props.simple,
+          position: 'right',
+          labels: {
+            boxWidth: 10,
+            font: {
+              size: 12,
+              family: 'Nunito',
+              weight: '700'
+            },
+            color: '#1E3A8A'
+          }
+        }
+      },
+      cutout: props.simple ? '50%' : '65%'
     }
   })
 }
@@ -139,6 +169,13 @@ watch(categories, renderChart)
   position: relative;
 }
 
+.expenses-chart-container.simple {
+  padding: 3rem;
+  height: 350px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
 .expenses-chart-header {
   width: 100%;
   text-align: center;
@@ -156,6 +193,11 @@ watch(categories, renderChart)
   width: 100%;
 }
 
+.chart-legend-row.simple {
+  flex-direction: column;
+  align-items: center;
+}
+
 .chart-wrapper {
   max-width: 180px;
   min-width: 150px;
@@ -163,6 +205,12 @@ watch(categories, renderChart)
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.chart-wrapper.simple {
+  max-width: 100%;
+  min-width: 0;
+  height: 100%;
 }
 
 canvas {

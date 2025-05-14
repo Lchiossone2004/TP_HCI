@@ -22,7 +22,6 @@
               expand_more
             </span>
           </div>
-
           <!-- Menú de años -->
           <div class="select-wrapper">
             <select 
@@ -43,7 +42,6 @@
           </div>
         </div>
       </div>
-
       <div class="bottom-section">
         <div class="activity-col">
           <div class="search-row">
@@ -53,11 +51,7 @@
               placeholder="Buscar por nombre, fecha, hora..."
             />
           </div>
-          <Activity 
-            :activities="filteredActivities"
-            :month="selectedMonth"
-            :year="selectedYear"
-          />
+          <Activity :activities="filteredActivities" :month="selectedMonth" :year="selectedYear" />
         </div>
         <div class="chart-col">
           <ExpensesChart
@@ -75,9 +69,13 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import Activity from '@/components/Activity.vue'
-import ExpensesChart from '@/components/MonthlyExpensesChart.vue'
+import ExpensesChart from '@/components/ExpensesChart.vue'
 
 const router = useRouter();
+
+const goToHome = () => {
+  router.back();
+};
 
 const isMonthMenuOpen = ref(false)
 const isYearMenuOpen = ref(false)
@@ -140,7 +138,7 @@ const filteredActivities = computed(() => {
     const matchesMonth = selectedMonth.value === -1 || activityDate.getMonth() === selectedMonth.value
     const matchesYear = selectedYear.value === -1 || activityDate.getFullYear() === selectedYear.value
     const matchesSearch = search.value === '' || 
-      activity.title.toLowerCase().includes(search.value.toLowerCase())
+      `${activity.title} ${activity.subtitle}`.toLowerCase().includes(search.value.toLowerCase())
     
     return matchesMonth && matchesYear && matchesSearch
   })
@@ -163,7 +161,7 @@ const filteredActivities = computed(() => {
 .top-section {
   background-color: #03192C;
   border-radius: 20px;
-  padding: 3.5rem 1.5rem 1rem 1rem;
+  padding: 4rem 1.5rem 1.5rem 1rem;
   color: white;
   width: 100%;
   height: 250px;
@@ -171,6 +169,36 @@ const filteredActivities = computed(() => {
   flex-direction: column;
   align-items: center;
   position: relative;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.3rem;
+  font-weight: bold;
+}
+
+.back-btn:hover {
+  color: #e5e7eb;
+}
+
+.help-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.help-btn:hover {
+  color: #e5e7eb;
 }
 
 .main-title {
@@ -202,11 +230,17 @@ const filteredActivities = computed(() => {
   color: #03192C;
   font-size: 1.1rem;
   font-weight: bold;
-  padding: 0.5rem 2.5rem 0.5rem 1.5rem; /* Aumentar padding derecho para la flecha */
+  padding: 0.5rem 2.5rem 0.5rem 1.5rem;
   border-radius: 20px;
   cursor: pointer;
-  transition: background 0.2s;
-  width: 160px;
+  transition: all 0.2s; /* Cambiado de background a all para animar también el width */
+  display: flex;
+  min-width: 160px; /* Mantenemos el min-width */
+  width: 200px; /* Ancho inicial */
+}
+
+.menu-btn:hover {
+  background: #d1d5db;
 }
 
 .arrow-icon {
@@ -219,17 +253,9 @@ const filteredActivities = computed(() => {
   transition: transform 0.2s ease;
 }
 
-.menu-btn:hover {
-  background: #d1d5db;
+.arrow-icon.open {
+  transform: translateY(-50%) rotate(180deg);
 }
-
-.month-select, .year-select {
-  background: #fff;
-  border-radius: 8px;
-  padding: 0.5rem;
-  width: 200px;
-}
-
 
 .search-row {
   display: flex;
