@@ -45,8 +45,8 @@
          <div class="inner1">
           <div class="header-activity-card">
             <span>Actividad reciente</span>
-            <button class="more-activities">
-              <span class="material-symbols-rounded arrow" >chevron_right</span>
+            <button class="more-activities" @click="goToMovements">
+              <span class="material-symbols-rounded arrow">chevron_right</span>
             </button>
           </div>
           <Activity />
@@ -358,11 +358,12 @@ const copyToClipboard = async (text) => {
   font-size: 25px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  padding: 0.5rem 1rem 0.1rem 1.7rem;
+  padding: 1rem 1rem 0.1rem 1.7rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
+  color: #001a33;
 }
 
 .more-activities {

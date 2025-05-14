@@ -55,8 +55,7 @@
   font-size: 1.6rem;
 }
   .action-button:hover{
-    background-color: #03192C;
-    color: white;
+    background-color: #eaeaea;
   }
   </style>
   

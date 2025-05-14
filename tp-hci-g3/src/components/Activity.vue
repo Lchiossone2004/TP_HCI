@@ -25,33 +25,27 @@
       </div>
     </template>
     <template v-else>
-      <div class="no-activity">No hay actividad reciente.</div>
+      <div class="no-activity">No hay actividad</div>
     </template>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+
 const props = defineProps({
   activities: {
     type: Array,
-    default: () => [
-      { icon: 'shopping_bag', title: 'Prüne', subtitle: 'Hoy 19:43', amount: -57800 },
-      { icon: 'restaurant', title: 'Pedidos Ya', subtitle: 'Ayer 21:18', amount: -17550 },
-      { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '19/9 10:25', amount: 57800 },
-      { icon: 'sync_alt', title: 'Mónica Domínguez', subtitle: '17/9 15:56', amount: -1525 },
-      { icon: 'event', title: 'Mateo Gorriti', subtitle: '17/9 09:28', amount: 100000 },
-      { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '15/9 11:32', amount: 20000 },
-      { icon: 'shopping_cart', title: 'DISCO CENCOSUD', subtitle: '13/9 18:37', amount: -127845 },
-      { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '12/9 08:01', amount: 463 },
-    ]
+    default: () => []
   },
-  mode: {
-    type: String,
-    default: 'month'
+  month: {
+    type: Number,
+    default: -1
   },
-  month: Number,
-  year: Number
+  year: {
+    type: Number,
+    default: -1
+  }
 })
 
 function formatAmount(value) {
@@ -60,11 +54,17 @@ function formatAmount(value) {
 }
 
 function handleClick(item) {
-  // Podés emitir un evento o navegar si querés
   console.log('Actividad clickeada:', item)
 }
 
-const filteredActivities = computed(() => props.activities)
+const filteredActivities = computed(() => {
+  return props.activities.filter(activity => {
+    const activityDate = new Date(activity.date)
+    const matchesMonth = props.month === -1 || activityDate.getMonth() === props.month
+    const matchesYear = props.year === -1 || activityDate.getFullYear() === props.year
+    return matchesMonth && matchesYear
+  })
+})
 </script>
 
 <style scoped>
@@ -164,16 +164,19 @@ const filteredActivities = computed(() => props.activities)
     align-items: flex-start;
     gap: 0.1rem;
   }
+  
   .main-info {
     width: 100%;
     align-items: flex-start;
   }
+  
   .title {
     width: 100%;
     text-align: left;
     font-size: 1rem;
     margin-bottom: 0.1rem;
   }
+  
   .date-col {
     width: 100%;
     text-align: left;

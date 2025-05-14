@@ -33,10 +33,6 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { Chart } from 'chart.js/auto'
 
-const props = defineProps({
-  activities: { type: Array, default: () => [] }
-})
-
 const chartRef = ref(null)
 let chartInstance = null
 
@@ -51,24 +47,44 @@ const categoryMap = [
   { key: 'varios', label: 'Varios', icon: 'list', match: [] }
 ]
 
+const props = defineProps({
+  activities: {
+    type: Array,
+    default: () => []
+  },
+  month: {
+    type: Number,
+    default: -1
+  },
+  year: {
+    type: Number,
+    default: -1
+  }
+})
+
 // Procesa los gastos
 const categories = computed(() => {
   const result = categoryMap.map(cat => ({ ...cat, amount: 0 }))
-  props.activities.forEach(act => {
-    if (act.amount < 0) {
+  
+  props.activities.forEach(activity => {
+    if (activity.amount < 0) {
       let found = false
       for (const cat of result) {
-        if (cat.match.some(m => act.icon?.toLowerCase().includes(m) || act.title?.toLowerCase().includes(m))) {
-          cat.amount += Math.abs(act.amount)
+        if (cat.match.some(m => 
+          activity.icon?.toLowerCase().includes(m) || 
+          activity.title?.toLowerCase().includes(m)
+        )) {
+          cat.amount += Math.abs(activity.amount)
           found = true
           break
         }
       }
       if (!found) {
-        result.find(c => c.key === 'varios').amount += Math.abs(act.amount)
+        result.find(c => c.key === 'varios').amount += Math.abs(activity.amount)
       }
     }
   })
+  
   return result
 })
 
@@ -119,7 +135,7 @@ watch(categories, renderChart)
   min-width: 300px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra todo horizontalmente */
+  align-items: center;
   position: relative;
 }
 
@@ -135,7 +151,7 @@ watch(categories, renderChart)
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  justify-content: center; /* ¡Esto centra el bloque chart+leyenda! */
+  justify-content: center;
   gap: 2.2rem;
   width: 100%;
 }
@@ -165,30 +181,32 @@ canvas {
 .legend-row {
   display: flex;
   align-items: center;
-  gap: 0.4rem; /* Reduce el espacio entre los elementos */
-  font-size: 0.9rem; /* Reduce el tamaño de la fuente */
+  gap: 0.4rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
 .legend-color {
-  width: 14px; /* Reduce el tamaño del cuadro de color */
+  width: 14px;
   height: 14px;
   border-radius: 4px;
   display: inline-block;
 }
 
 .legend-icon {
-  font-size: 1rem; /* Reduce el tamaño del ícono */
+  font-size: 1rem;
   color: #1E3A8A;
 }
 
 .legend-label {
   color: #03192C;
 }
+
 .categories-list {
   width: 100%;
   margin-top: 0.5rem;
 }
+
 .category-row {
   display: flex;
   align-items: center;
@@ -201,35 +219,39 @@ canvas {
   justify-content: space-between;
   gap: 0.7rem;
 }
+
 .category-icon {
   font-size: 1.4rem;
   color: #1E3A8A;
 }
+
 .category-name {
   flex: 1;
   margin-left: 0.5rem;
 }
+
 .category-amount {
   color: #03192C;
   font-weight: 700;
 }
+
 @media (max-width: 600px) {
   .expenses-chart-container {
-    min-width: 300px; /* Mínimo ancho del contenedor */
-    margin: 0 auto; /* Centra el contenedor */
+    min-width: 300px;
+    margin: 0 auto;
   }
 
   .chart-legend-row {
-    flex-direction: column; /* Cambia las leyendas a diseño vertical */
+    flex-direction: column;
     align-items: center;
   }
 
   .chart-wrapper {
-    max-width: 150px; /* Reduce el tamaño del gráfico */
+    max-width: 150px;
   }
 
   .custom-legend {
-    align-items: center; /* Centra las leyendas */
+    align-items: center;
   }
 }
 </style>
