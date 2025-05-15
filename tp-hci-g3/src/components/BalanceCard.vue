@@ -2,114 +2,74 @@
   <div class="balance-card">
     <div class="balance-header">
       <span>Balance</span>
-      <span 
-        class="material-symbols-rounded icon"
-        @click="toggleVisibility"
-      >
-        {{ isVisible ? 'visibility' : 'visibility_off' }}
+      <span class="material-symbols-rounded icon" @click="toggle">
+        {{ visible ? 'visibility' : 'visibility_off' }}
       </span>
     </div>
     <div class="balance-amount">
-      <!-- Balance con ancho fijo para evitar movimiento -->
       <span class="balance-value">
-        {{ isVisible ? '$205.768,63' : '***' }}
+        {{ visible ? formatted : '***' }}
       </span>
-      <span class="coin">
-        <span>ARS</span>
-      </span>
+      <span class="coin">ARS</span>
     </div>
     <div class="balance-yield">
       <span>Rendimiento de</span>
-      <span class="balance-growth">
-        <span>+24,6%</span>
-      </span>
+      <span class="balance-growth">+24,6%</span>
     </div>
   </div>
+  
 </template>
 
 <script setup>
 import { ref } from 'vue'
-
-// Estado para controlar la visibilidad del balance
-const isVisible = ref(true)
-
-// Función para alternar la visibilidad del balance
-function toggleVisibility() {
-  isVisible.value = !isVisible.value
-}
+const visible = ref(true)
+const formatted = '$205.768,63'
+function toggle() { visible.value = !visible.value }
 </script>
 
 <style scoped>
 .balance-card {
-  background: linear-gradient(135deg, #FFFF, #A8A8A8);
+  background: linear-gradient(135deg,#FFFF,#A8A8A8);
   border-radius: 20px;
   padding: 1rem;
-  color: #03192C;
-  width: 360px;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
+  width: 360px; height: 200px;
+  display: flex; flex-direction: column;
   justify-content: space-between;
+  color: #03192C;
 }
-
 .balance-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  display: flex; align-items: center; gap: .5rem;
   font-size: 25px;
 }
-
-.balance-amount {
-  font-size: 30px;
-  display: flex;
-  align-items: center;
-  gap: 2rem;
+.icon {
+  font-size: 22px; cursor: pointer;
 }
-
+.balance-amount {
+  display: flex; align-items: center; gap: 2rem;
+  font-size: 30px;
+}
+.balance-value {
+  min-width: 140px; text-align: left;
+}
 .coin {
-  color: #FFFF;
   background: #03192C;
+  color: #FFFF;
   border-radius: 10px;
   padding: 1rem;
-  width: 60px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  font-size: 20px;
-  flex-direction: row;
+  display: flex; align-items: center;
   justify-content: center;
+  width: 60px; height: 30px;
+  font-size: 20px;
 }
-
 .balance-yield {
-  font-size: 12px;
-  color: #06B800;
-  display: flex;
-  gap: 0.5rem;
-  align-items: baseline;
+  display: flex; align-items: baseline; gap: .5rem;
+  font-size: 12px; color: #06B800;
 }
-
 .balance-growth {
-  background-color: #9DD6AB;
+  background: #9DD6AB;
   border-radius: 40px;
   width: 4rem;
-  display: flex;
-  align-items: center;
+  display: flex; align-items: center;
   justify-content: center;
-  gap: 0.2rem;
-}
-
-.add-card-btn:hover {
-  background-color: #0a4b85;
-}
-
-.icon {
-  font-size: 22px;
-  cursor: pointer;
-}
-
-.balance-value {
-  display: inline-block;
-  min-width: 140px;
-  text-align: left;
 }
 </style>
