@@ -3,18 +3,19 @@
       <button v-for="(action, index) in actions" :key="index" class="action-button">
         <i :class="action.icon"></i>
         <span class="label">{{ action.label }}</span>
-        <span class="arrow">&gt;</span>
+        <span class="material-icons">arrow_forward_ios</span>
+        
       </button>
     </div>
   </template>
   
   <script setup>
   const actions = [
-    { label: 'Datos de mi cuenta', icon: 'fas fa-user' },
-    { label: 'Tarjetas', icon: 'fas fa-credit-card' },
-    { label: 'Actividad', icon: 'fas fa-chart-line' },
-    { label: 'Administrar dinero', icon: 'fas fa-wallet' },
-  ]
+  { label: 'Datos de mi cuenta', icon: 'account_circle' },
+  { label: 'Tarjetas', icon: 'credit_card' },
+  { label: 'Actividad', icon: 'insights' },
+  { label: 'Administrar dinero', icon: 'account_balance_wallet' },
+]
   </script>
   
   <style scoped>
