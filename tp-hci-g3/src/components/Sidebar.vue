@@ -15,7 +15,7 @@
         </button>
       </div>
       <button class="menu-btn danger"  
-          @click="goTo('/')">
+          @click="logout">
         <span class="material-symbols-rounded icon">logout</span>
         <span class="text">Cerrar sesión</span>
       </button>
@@ -36,6 +36,15 @@ const menuItems = [
 
 function goTo(name) {
   router.push(name)
+}
+function logout() {
+  // Eliminar el usuario del localStorage y sessionStorage
+  localStorage.removeItem('email')
+  sessionStorage.removeItem('email')
+
+  // Lógica para cerrar sesión
+  console.log('Cerrando sesión...')
+  router.push('/login') // Redirigir al usuario a la página de inicio de sesión
 }
 </script>
 

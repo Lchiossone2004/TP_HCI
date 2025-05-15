@@ -62,29 +62,27 @@ import Suggestions from '@/components/transfer/Suggestions.vue'
 import RecentTransfers from '@/components/transfer/RecentTransfers.vue'
 import TransferDetail from '@/components/transfer/TransferDetail.vue'
 
-import avatar1 from '@/assets/images/avatars/Avatar1.jpg'
-import avatar2 from '@/assets/images/avatars/Avatar2.jpg'
-import avatar3 from '@/assets/images/avatars/Avatar3.jpeg'
-import avatar4 from '@/assets/images/avatars/Avatar4.jpg'
-import avatar5 from '@/assets/images/avatars/Avatar5.jpeg'
-import avatar6 from '@/assets/images/avatars/Avatar6.jpeg'
-import avatar7 from '@/assets/images/avatars/Avatar7.jpeg'
+function getAvatar(n) {
+  return new URL(`../assets/images/avatars/Avatar${n}.jpg`, import.meta.url).href
+}
 
 const contactosSugeridos = [
-  { id: 1, name: 'Pablo Gomez', alias: '@pablog', avatar: avatar1 },
-  { id: 2, name: 'Mónica Domínguez', alias: '@monica', avatar: avatar2 },
-  { id: 3, name: 'Josefina Grimolti', alias: '@josefina', avatar: avatar3 },
+  { id: 1, name: 'Pablo Gomez', alias: '@pablog', avatar: getAvatar(1) },
+  { id: 2, name: 'Mónica Domínguez', alias: '@monica', avatar: getAvatar(2) },
+  { id: 3, name: 'Josefina Grimolti', alias: '@josefina', avatar: getAvatar(4) },
 ]
+
 const contactosRecientes = [
-  { id: 4, name: 'Juan Perez', alias: '@juanp', avatar: avatar4 },
-  { id: 5, name: 'Micaela Trevi', alias: '@micaela', avatar: avatar5 },
-  { id: 6, name: 'Guillermo Rivas', alias: '@guillermo', avatar: avatar6 },
-  { id: 7, name: 'Flor Margalo', alias: '@flor', avatar: avatar7 },
+  { id: 4, name: 'Juan Perez', alias: '@juanp', avatar: getAvatar(4) },
+  { id: 5, name: 'Micaela Trevi', alias: '@micaela', avatar: getAvatar(1) },
+  { id: 6, name: 'Guillermo Rivas', alias: '@guillermo', avatar: getAvatar(4) },
+  { id: 7, name: 'Flor Margalo', alias: '@flor', avatar: getAvatar(1) },
 ]
+
 const transferenciasRecientes = [
-  { id: 1, name: 'Pablo Gomez', alias: '@pablog', avatar: avatar1, amount: '$1200' },
-  { id: 2, name: 'Mónica Domínguez', alias: '@monica', avatar: avatar2, amount: '$850' },
-  { id: 3, name: 'Josefina Grimolti', alias: '@josefina', avatar: avatar3, amount: '$430' },
+  { id: 1, name: 'Pablo Gomez', alias: '@pablog', avatar: getAvatar(1), amount: '$1200' },
+  { id: 2, name: 'Mónica Domínguez', alias: '@monica', avatar: getAvatar(2), amount: '$850' },
+  { id: 3, name: 'Josefina Grimolti', alias: '@josefina', avatar: getAvatar(4), amount: '$430' },
 ]
 
 const balance = ref(205768.79)
