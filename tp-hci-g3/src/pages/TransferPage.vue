@@ -1,25 +1,52 @@
 <template>
-  <div class="main-layout">
+  <div class="layout">
+    <Sidebar />
+
     <div class="main-content">
-      <div class="left">
-        <div>
+      <template v-if="selectedContact">
+        <div class="detail-and-contacts">
+          <!-- Columna de detalle -->
+          <div class="detail-col">
+            <TransferDetail
+              :contact="selectedContact"
+              :availableBalance="balance"
+              @back="selectedContact = null"
+              @transfer="onTransfer"
+            />
+          </div>
+          <!-- Columna de contactos -->
+          <div class="contacts-col">
+            <Suggestions
+              :suggested="contactosSugeridos"
+              :recent="contactosRecientes"
+              @select="selectedContact = $event"
+            />
+            <RecentTransfers
+              :transfers="transferenciasRecientes"
+              @select="selectedContact = $event"
+            />
+          </div>
+        </div>
+      </template>
+
+      <div v-else class="transfer-list-view">
+        <div class="left">
           <TransferSearch @search="handleSearch" />
+          <div class="panel dark-panel">
+            <p class="panel-title">Balance</p>
+            <BalanceCard />
+          </div>
         </div>
-        <div class = "balance">
-          <p class = "title">Dinero Disponible</p>
-          <BalanceCard />
-        </div>
-      </div>
-      <div class="right">
-        <div>
-        <Suggestions
-          :suggested="contactosSugeridos"
-          :recent="contactosRecientes"
-          @select="manejarSeleccion"
-        />
-        </div>
-        <div>
-          <RecentTransfers :transfers="transferenciasRecientes" @select="handleTransferSelect"/>
+        <div class="right">
+          <Suggestions
+            :suggested="contactosSugeridos"
+            :recent="contactosRecientes"
+            @select="selectedContact = $event"
+          />
+          <RecentTransfers
+            :transfers="transferenciasRecientes"
+            @select="selectedContact = $event"
+          />
         </div>
       </div>
     </div>
@@ -27,92 +54,61 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import Sidebar from '@/components/Sidebar.vue'
-import Suggestions from '@/components/transfer/Suggestions.vue'
 import TransferSearch from '@/components/transfer/TransferSearch.vue'
-import RecentTransfers from '@/components/transfer/RecentTransfers.vue'
 import BalanceCard from '@/components/BalanceCard.vue'
+import Suggestions from '@/components/transfer/Suggestions.vue'
+import RecentTransfers from '@/components/transfer/RecentTransfers.vue'
+import TransferDetail from '@/components/transfer/TransferDetail.vue'
 
-import avatarJuan from '@/assets/images/avatars/Avatar1.jpg'
-import avatarAna from '@/assets/images/avatars/Avatar2.jpg'
-import avatarCarlos from '@/assets/images/avatars/Avatar3.jpeg'
-import avatarLaura from '@/assets/images/avatars/Avatar4.jpg'
-import avatarPedro from '@/assets/images/avatars/Avatar5.jpeg'
-import avatarBenja from '@/assets/images/avatars/Avatar6.jpeg'
-import avatarHilario from '@/assets/images/avatars/Avatar7.jpeg'
+import avatar1 from '@/assets/images/avatars/Avatar1.jpg'
+import avatar2 from '@/assets/images/avatars/Avatar2.jpg'
+import avatar3 from '@/assets/images/avatars/Avatar3.jpeg'
+import avatar4 from '@/assets/images/avatars/Avatar4.jpg'
+import avatar5 from '@/assets/images/avatars/Avatar5.jpeg'
+import avatar6 from '@/assets/images/avatars/Avatar6.jpeg'
+import avatar7 from '@/assets/images/avatars/Avatar7.jpeg'
 
 const contactosSugeridos = [
-  { id: 1, name: 'Juan Pérez', alias: '@juanp', avatar: avatarJuan },
-  { id: 2, name: 'Ana Torres', alias: '@ana_t', avatar: avatarAna },
-  { id: 3, name: 'Carlos Ruiz', alias: '@cruiz', avatar: avatarCarlos },
+  { id: 1, name: 'Pablo Gomez', alias: '@pablog', avatar: avatar1 },
+  { id: 2, name: 'Mónica Domínguez', alias: '@monica', avatar: avatar2 },
+  { id: 3, name: 'Josefina Grimolti', alias: '@josefina', avatar: avatar3 },
 ]
-
 const contactosRecientes = [
-  { id: 4, name: 'Laura Méndez', alias: '@lau_m', avatar: avatarLaura },
-  { id: 5, name: 'Pedro González', alias: '@pedrog', avatar: avatarPedro },
+  { id: 4, name: 'Juan Perez', alias: '@juanp', avatar: avatar4 },
+  { id: 5, name: 'Micaela Trevi', alias: '@micaela', avatar: avatar5 },
+  { id: 6, name: 'Guillermo Rivas', alias: '@guillermo', avatar: avatar6 },
+  { id: 7, name: 'Flor Margalo', alias: '@flor', avatar: avatar7 },
 ]
-
 const transferenciasRecientes = [
-  { id: 1, name: 'Juan Pérez', alias: '@juanp', avatar: avatarJuan, amount: '$100' },
-  { id: 2, name: 'Ana Torres', alias: '@ana_t', avatar: avatarAna, amount: '$200' },
-  { id: 3, name: 'Carlos Ruiz', alias: '@cruiz', avatar: avatarCarlos, amount: '$150' },
-  { id: 4, name: 'Benja Such', alias: '@ana_t', avatar: avatarBenja, amount: '$2000' },
-  { id: 5, name: 'Hilario Lagos', alias: '@cruiz', avatar: avatarHilario, amount: '$1530' },
+  { id: 1, name: 'Pablo Gomez', alias: '@pablog', avatar: avatar1, amount: '$1200' },
+  { id: 2, name: 'Mónica Domínguez', alias: '@monica', avatar: avatar2, amount: '$850' },
+  { id: 3, name: 'Josefina Grimolti', alias: '@josefina', avatar: avatar3, amount: '$430' },
 ]
 
-function manejarSeleccion(contacto) {
-  console.log('Contacto seleccionado:', contacto)
-}
+const balance = ref(205768.79)
+const selectedContact = ref(null)
 
-function handleSearch(valor) {
-  console.log('Buscar por:', valor)
-}
-function handleTransferSelect(transferencia) {
-  console.log('Transferencia seleccionada:', transferencia)
-  // Aquí puedes redirigir, abrir un modal, etc.
+function handleSearch(p) { console.log('search', p) }
+function onTransfer({ to, amount }) {
+  balance.value -= amount
+  selectedContact.value = null
 }
 </script>
-  
-  <style scoped>
 
-.main-content {
-  display: flex;
-  flex-direction: row; /* Asegura distribución horizontal */
-  justify-content: space-between; /* Opcional: agrega separación */
-  gap: 2rem; /* Espacio entre opciones y sugerencias */
-  margin-left: 21vw;
-  padding: 2rem;
-  background-color: #f1f1f1;
-  min-height: 100vh;
-}
+<style scoped>
+.main-content { display: flex; flex-direction: column; gap: 2rem; padding: 2rem; background: #f5f5f7; min-height: 100vh; margin-left: 20vw; }
+.transfer-list-view { display: flex; gap: 2rem; flex: 1; }
+.left { flex: 1; display: flex; flex-direction: column; gap: 2rem; }
+.right { flex: 1; display: flex; flex-direction: column; gap: 2rem; }
 
-.left {
-  flex: 1;
-  max-width: 40%; /* Por ejemplo */
-}
+/* detalle + contactos ocupa todo el ancho */
+.detail-and-contacts { display: flex; gap: 2rem; width: 100%; }
+.detail-col { flex: 2; }   /* más espacio para detalle */
+.contacts-col { flex: 1; display: flex; flex-direction: column; gap: 2rem; }
 
-.right {
-  flex: 1;
-  max-width: 60%; /* Por ejemplo */
-}
-.balance {
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  margin-top: 2rem;
-  justify-content: center;
-  align-items: center; 
-  min-height: 15rem;
-  border-radius: 12px;
-  padding: 2rem;
-}
-.title {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: #03192C;
-    text-align: center;
-    display: block;
-    width: 100%;
-}
-  </style>
+/* panel medio */
+.dark-panel { background: #03192C; border-radius: 16px; padding: 1.5rem; color: #fff; }
+.panel-title { font-size: 1.25rem; margin-bottom: 1rem; }
+</style>
