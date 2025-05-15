@@ -41,14 +41,15 @@ function goTo(route) {
 
 <style scoped>
 .title {
-  font-size: clamp(1.7rem, 2.3vw, 2.8rem);
-  margin-bottom: 2rem; 
+  font-size: 30px;
   color: white;
+  margin-top: 1rem;
   margin-bottom: 5rem;
   white-space: nowrap;        /* No hacer saltos de línea */
   overflow: hidden;           /* Ocultar el exceso de texto */
   text-overflow: ellipsis;    /* Mostrar "..." al final si se corta */
   max-width: 100%;            /* Respetar el ancho del contenedor */
+  text-align: left;
   
 }
 
@@ -63,6 +64,7 @@ function goTo(route) {
   display: flex;
   flex-direction: column;
   gap: 4rem; 
+
 }
 
 .menu-btn {
@@ -71,7 +73,6 @@ function goTo(route) {
   background: none;
   border: none;
   color: white;
-  font-size: clamp(1.2rem, 1.5vw, 2rem);
   cursor: pointer;
   padding: 0.5rem;
   transition: background 0.2s ease, border-radius 0.2s ease;
@@ -85,7 +86,7 @@ function goTo(route) {
 
 .icon {
   margin-right: 0.5rem;
-  font-size: clamp(2rem, 3vw, 3.2rem);
+  font-size: 35px;
 }
 
 .menu-btn.danger {
@@ -104,7 +105,7 @@ function goTo(route) {
 }
 
 .text {
-  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  font-size: 20px;
   white-space: nowrap;        /* No hacer saltos de línea */
   overflow: hidden;           /* Ocultar el exceso de texto */
   text-overflow: ellipsis;    /* Mostrar "..." al final si se corta */

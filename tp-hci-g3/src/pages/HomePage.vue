@@ -12,7 +12,7 @@
                 <h4>Ingresar</h4>
               </div>
               <div class="grid-item">
-                <button class="operation-button">
+                <button class="operation-button" @click="irATransferencias" >
                   <span class="material-symbols-rounded icon">sync_alt</span>
                 </button>
                 <h4>Transferir</h4>
@@ -140,6 +140,10 @@ function goToMovements() {
   router.push('/actividad');
 }
 
+function irATransferencias() {
+  router.push('/home/transfer') // o el nombre de la ruta si usás rutas nombradas
+}
+
 
 const allActivities = ref([
   { icon: 'shopping_bag', title: 'Prüne', subtitle: 'Hoy 19:43', amount: -57800, date: '2025-05-14T19:43:00' },
@@ -233,13 +237,13 @@ const currentMonthActivities = computed(() => {
 }
 
 .grid-item .material-symbols-rounded {
-  font-size: 40px;
+  font-size: 35px;
   color: white;
 }
 
 .grid-item h4 {
   margin: 0.3rem 0 0;
-  font-size: 14px;
+  font-size: 17px;
 }
 
 .balance-and-cards {
@@ -303,8 +307,8 @@ const currentMonthActivities = computed(() => {
 
 .more-activities {
   background-color: white;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -313,7 +317,7 @@ const currentMonthActivities = computed(() => {
 }
 
 .arrow {
-  font-size: 30px;
+  font-size: 25px;
   color: #03192C;
 }
 

@@ -55,7 +55,7 @@ export default {
 }
 
 .special-header {
-  background-color: #e6e6e6; /* Cambiá esto al color que quieras */
+  background-color: #e6e6e6;
 }
 
 .top-icons {

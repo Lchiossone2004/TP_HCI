@@ -92,8 +92,8 @@ const filteredActivities = computed(() => {
 .icon-wrapper {
   background-color: #0d2c4a;
   border-radius: 10px;
-  width: 36px;
-  height: 36px;
+  width: 35px;
+  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,7 +123,7 @@ const filteredActivities = computed(() => {
 .title {
   font-weight: 600;
   color: #001a33;
-  font-size: 1.05rem;
+  font-size: 17px;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
@@ -131,7 +131,7 @@ const filteredActivities = computed(() => {
 }
 
 .date-col {
-  font-size: 0.85rem;
+  font-size: 14px;
   color: #8ca0b3;
   text-align: left;
   margin-top: 0.1rem;
@@ -141,6 +141,7 @@ const filteredActivities = computed(() => {
   font-weight: bold;
   white-space: nowrap;
   margin-left: auto;
+  font-size: 17px;
 }
 
 .positive {

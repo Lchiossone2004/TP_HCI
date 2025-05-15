@@ -35,7 +35,7 @@
 }
 
 .icon {
-  font-size: 24px;
+  font-size: 25px;
   color: #03192c;
 }
 

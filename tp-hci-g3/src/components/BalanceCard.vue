@@ -56,11 +56,11 @@ function toggleVisibility() {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.4rem;
+  font-size: 25px;
 }
 
 .balance-amount {
-  font-size: 2rem;
+  font-size: 30px;
   display: flex;
   align-items: center;
   gap: 2rem;

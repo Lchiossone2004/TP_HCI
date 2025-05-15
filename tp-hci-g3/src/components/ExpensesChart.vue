@@ -10,7 +10,6 @@
       <div v-if="!simple" class="custom-legend">
         <div v-for="(cat, i) in categories" :key="cat.key" class="legend-row">
           <span class="legend-color" :style="{ backgroundColor: chartColors[i] }"></span>
-          <span class="material-symbols-rounded legend-icon">{{ cat.icon }}</span>
           <span class="legend-label">{{ cat.label }}</span>
         </div>
       </div>
@@ -179,9 +178,10 @@ watch(categories, renderChart)
 .expenses-chart-header {
   width: 100%;
   text-align: center;
-  font-size: 2rem;
+  font-size: 30px;
   font-weight: bold;
   margin-bottom: 1rem;
+  color: #001a33;
 }
 
 .chart-legend-row {
@@ -189,7 +189,7 @@ watch(categories, renderChart)
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
-  gap: 2.2rem;
+  gap: 2.5rem;
   width: 100%;
 }
 
@@ -230,7 +230,7 @@ canvas {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.9rem;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -247,39 +247,49 @@ canvas {
 }
 
 .legend-label {
-  color: #03192C;
+  color: #001a33;
 }
 
 .categories-list {
   width: 100%;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
 }
 
 .category-row {
   display: flex;
   align-items: center;
   background: #f3f6fa;
-  border-radius: 999px;
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
-  font-size: 1.1rem;
+  border-radius: 20px;
+  padding: 1rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 17px;
   font-weight: 600;
-  justify-content: space-between;
-  gap: 0.7rem;
+  height: 50px;
+
 }
 
 .category-icon {
-  font-size: 1.4rem;
-  color: #1E3A8A;
+  background-color: #0d2c4a;
+  border-radius: 10px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  margin-right: 0.75rem;
 }
 
 .category-name {
   flex: 1;
-  margin-left: 0.5rem;
+  text-align: left;
+  color: #001a33;
+
 }
 
 .category-amount {
-  color: #03192C;
+  color: #001a33;
   font-weight: 700;
 }
 
