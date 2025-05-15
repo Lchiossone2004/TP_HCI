@@ -32,7 +32,25 @@ export default {
   },
   methods: {
     login() {
-      this.$router.push('/home')
+      if (this.remember) {
+      localStorage.setItem('email', this.email);
+      localStorage.setItem('password', this.password);
+      } else {
+      sessionStorage.setItem('email', this.email);
+      sessionStorage.setItem('password', this.password);
+      }
+      this.$router.push({ name: 'Home' });
+    }
+  },
+  mounted() {
+    if (localStorage.getItem('email') && localStorage.getItem('password')) {
+      this.email = localStorage.getItem('email');
+      this.password = localStorage.getItem('password');
+      this.remember = true;
+    } else if (sessionStorage.getItem('email') && sessionStorage.getItem('password')) {
+      this.email = sessionStorage.getItem('email');
+      this.password = sessionStorage.getItem('password');
+      this.remember = false;
     }
   }
 };

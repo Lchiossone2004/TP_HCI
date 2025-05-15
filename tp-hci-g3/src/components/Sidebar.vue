@@ -7,8 +7,8 @@
           v-for="item in menuItems"
           :key="item.text"
           class="menu-btn"
-          :class="{ active: route.path === item.route }"
-          @click="goTo(item.route)"
+          :class="{ active: route.name === item.name }"
+          @click="goTo(item.name)"
         >
           <span class="material-symbols-rounded icon">{{ item.icon }}</span>
           <span class="text">{{ item.text }}</span>
@@ -29,13 +29,13 @@ const router = useRouter()
 const route = useRoute()
 
 const menuItems = [
-  { text: 'Inicio', icon: 'home', route: '/home' },
-  { text: 'Actividad', icon: 'description', route: '/actividad' },
-  { text: 'Perfil', icon: 'account_circle', route: '/ProfilePAGE' },
+  { text: 'Inicio', icon: 'home', name: 'Home' },
+  { text: 'Actividad', icon: 'description', name: 'Actividad' },
+  { text: 'Perfil', icon: 'account_circle', name: 'ProfilePage' },
 ]
 
-function goTo(route) {
-  router.push(route)
+function goTo(name) {
+  router.push(name)
 }
 </script>
 
