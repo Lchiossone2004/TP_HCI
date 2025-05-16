@@ -6,7 +6,7 @@
           <OperationsButtons bgColor="#03192c" width="360px" height="300px">
             <div class="grid-container">
               <div class="grid-item">
-                <button class="operation-button" @click="showEnterMoneyModal = true">
+                <button class="operation-button">
                   <span class="material-symbols-rounded icon">add</span>
                 </button>
                 <h4>Ingresar</h4>
@@ -18,13 +18,13 @@
                 <h4>Transferir</h4>
               </div>
               <div class="grid-item">
-                <button class="operation-button">
+                <button class="operation-button" @click="showMyInfoModal = true">
                   <span class="material-symbols-rounded icon">id_card</span>
                 </button>
                 <h4>Mis datos</h4>
               </div>
               <div class="grid-item">
-                <button class="operation-button">
+                <button class="operation-button" @click="showMoreModal = true">
                   <span class="material-symbols-rounded icon">more_horiz</span>
                 </button>
                 <h4>Más</h4>
@@ -69,9 +69,9 @@
       </div>
     </main>
     <Modal 
-      v-model="showEnterMoneyModal" 
-      title="Ingresar dinero"
-      subtitle="Copiar tus datos para transferir desde otra cuenta"
+      v-model="showMyInfoModal" 
+      title="Mis datos"
+     
     >
       <div class="enter-money-form">
         <div class="form-group">
@@ -95,6 +95,20 @@
         <button class="submit-button" @click="closeModal">Cerrar</button>
       </div>
     </Modal>
+    <Modal v-model="showMoreModal" title="Más">
+  <div class="button-container">
+    <button class="modal-button" @click="accion1">
+      Cobrar servicios
+      <span class="material-icons icon-right">chevron_right</span>
+    </button>
+    <button class="modal-button" @click="accion2">
+      Pagar servicios
+      <span class="material-icons icon-right">chevron_right</span>
+    </button>
+  </div>
+  <button class="submit-button" @click="closeModal">Cerrar</button>
+</Modal>
+
   </div>
 </template>
 
@@ -115,7 +129,8 @@ const router = useRouter();
 const isMobile = ref(window.innerWidth <= 1024);
 const isVerySmall = ref(window.innerWidth <= 600);
 const isMedium = ref(window.innerWidth <= 800);
-const showEnterMoneyModal = ref(false);
+const showMyInfoModal = ref(false);
+const showMoreModal = ref(false);
 const currentMonth = ref(new Date().getMonth());
 const currentYear = ref(new Date().getFullYear());
 
@@ -127,7 +142,8 @@ const accountInfo = ref({
 
 // Function to close modal
 const closeModal = () => {
-  showEnterMoneyModal.value = false;
+  showMyInfoModal.value = false;
+  showMoreModal.value = false;
 };
 
 const handleResize = () => {
@@ -370,11 +386,40 @@ const currentMonthActivities = computed(() => {
   transition: background-color 0.2s ease;
   width: 80%;
   max-width: 300px;
+  display: block;
   margin: 0 auto;
 }
 
 .submit-button:hover {
   background-color: #0a4b85;
+}
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.modal-button {
+  padding: 12px 20px;
+  text-align: left;  
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;              
+  justify-content: space-between;
+  transition: background-color 0.2s ease;
+  min-width: 100%; 
+}
+.icon-right {
+  font-size: 25px;
+  
+}
+.modal-button:hover {
+  background-color: #d5d5d5;
 }
 
 .info-row {

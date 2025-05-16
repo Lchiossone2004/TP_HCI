@@ -32,7 +32,7 @@
   flex: 1;
   margin-left: 21vw; /* Esto hace que el contenido principal se mueva hacia la derecha */
   padding: 2rem;
-  background-color: #f1f1f1;
+  background-color: #eeeeee;
   min-height: 100vh;
 }
   </style>
