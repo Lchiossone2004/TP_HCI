@@ -137,11 +137,11 @@ const handleResize = () => {
 };
 
 function goToMovements() {
-  router.push('/actividad');
+  router.push({ name: 'Actividad' });
 }
 
 function irATransferencias() {
-  router.push('/home/transfer') // o el nombre de la ruta si usás rutas nombradas
+  router.push({ name: 'Transfer' }); // Usa el nombre de la ruta en lugar de la ruta directa
 }
 
 

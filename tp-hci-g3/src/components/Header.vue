@@ -21,11 +21,11 @@ export default {
     const route = useRoute()
     const router = useRouter()
 
-    const isHomePage = computed(() => route.path === '/home')
-    const isActivityPage = computed(() => route.path === '/actividad')
+    const isHomePage = computed(() => route.name === 'Home')
+    const isActivityPage = computed(() => route.name === 'Actividad')
 
     const goBack = () => {
-      router.back()
+      router.go(-1)
     }
 
     return {

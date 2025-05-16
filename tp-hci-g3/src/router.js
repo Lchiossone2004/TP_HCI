@@ -3,9 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from './pages/HomePage.vue'
 import AuthView from './pages/AuthView.vue'
 import ProfilePage from './pages/ProfilePage.vue'
-import TransferPage from './pages/TransferPage.vue'
 import MovementsAndSpendings from './pages/MovementsAndSpendings.vue'
-
 
 const routes = [
   {
@@ -19,12 +17,12 @@ const routes = [
     component: HomePage
   },
   {
-    path: '/home/transfer',
+    path: '/transfer',
     name: 'Transfer',
-    component: TransferPage
+    component: () => import('@/pages/TransferPage.vue')
   },
   {
-    path: '/ProfilePAGE',
+    path: '/ProfilePage',
     name: 'ProfilePage',
     component: ProfilePage
   },
@@ -33,12 +31,27 @@ const routes = [
     name: 'Actividad',
     component: MovementsAndSpendings
   },
- 
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'notfound',
+    component: () => import('@/pages/NotFound.vue')
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+// Guard global para verificar autenticación
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('email') || sessionStorage.getItem('email')
+
+  if (to.name !== 'Auth' && !isAuthenticated) {
+    next({ name: 'Auth' })
+  } else {
+    next()
+  }
 })
 
 export default router

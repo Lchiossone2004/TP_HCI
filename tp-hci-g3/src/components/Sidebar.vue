@@ -7,15 +7,15 @@
           v-for="item in menuItems"
           :key="item.text"
           class="menu-btn"
-          :class="{ active: route.path === item.route }"
-          @click="goTo(item.route)"
+          :class="{ active: route.name === item.name }"
+          @click="goTo(item.name)"
         >
           <span class="material-symbols-rounded icon">{{ item.icon }}</span>
           <span class="text">{{ item.text }}</span>
         </button>
       </div>
       <button class="menu-btn danger"  
-          @click="goTo('/')">
+          @click="logout">
         <span class="material-symbols-rounded icon">logout</span>
         <span class="text">Cerrar sesión</span>
       </button>
@@ -29,13 +29,22 @@ const router = useRouter()
 const route = useRoute()
 
 const menuItems = [
-  { text: 'Inicio', icon: 'home', route: '/home' },
-  { text: 'Actividad', icon: 'description', route: '/actividad' },
-  { text: 'Perfil', icon: 'account_circle', route: '/ProfilePAGE' },
+  { text: 'Inicio', icon: 'home', name: 'Home' },
+  { text: 'Actividad', icon: 'description', name: 'Actividad' },
+  { text: 'Perfil', icon: 'account_circle', name: 'ProfilePage' },
 ]
 
-function goTo(route) {
-  router.push(route)
+function goTo(name) {
+  router.push(name)
+}
+function logout() {
+  // Eliminar el usuario del localStorage y sessionStorage
+  localStorage.removeItem('email')
+  sessionStorage.removeItem('email')
+
+  // Lógica para cerrar sesión
+  console.log('Cerrando sesión...')
+  router.push('/login') // Redirigir al usuario a la página de inicio de sesión
 }
 </script>
 
