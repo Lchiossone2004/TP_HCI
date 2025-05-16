@@ -316,7 +316,7 @@ const currentMonthActivities = computed(() => {
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
-  color: #001a33;
+  color: #1f1f1f;
   position: relative; /* Para que se superponga al chart */
   z-index: 2; /* Asegura que el header esté por encima del chart */
 }

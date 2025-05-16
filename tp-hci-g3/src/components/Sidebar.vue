@@ -104,7 +104,7 @@ function logout() {
 }
 
 .menu-btn.danger:hover {
-  background-color: rgba(255, 77, 77, 0.1);
+  background-color: #ff4d4d1a;
   border-radius: 15px; /* Esquinas redondeadas en hover */
 }
 

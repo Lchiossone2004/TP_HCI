@@ -69,7 +69,7 @@ const filteredActivities = computed(() => {
 
 <style scoped>
 .activity-card {
-  background-color: #fff;
+  background-color: var(--color-white);
   border-radius: 20px;
   padding: 1rem;
   box-sizing: border-box;
