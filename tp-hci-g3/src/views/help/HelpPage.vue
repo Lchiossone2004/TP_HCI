@@ -38,16 +38,15 @@ const from = computed(() => route.query.from || '')
 
 
     <div v-else>
-      <h1>Ayuda General</h1>
+      <h1>Centro de Ayuda</h1>
       <h2 class="subtitle"> Página principal </h2>
       <HelpInfoHomePage/>
       <h2 class="subtitle"> Actividad reciente </h2>
       <HelpInfoActivity/>
-      <h2 class="subtitle"> Transferencias </h2>
+      <h2 class="subtitle"> Realizar transferencias </h2>
       <HelpInfoTransfer/>
       <h2 class="subtitle"> Mi perfil </h2>
       <HelpInfoProfile/>
-      
     </div>
 
     <p class="more-help" v-if="from !== ''">
