@@ -32,6 +32,11 @@ const routes = [
     component: MovementsAndSpendings
   },
   {
+    path: '/help',
+    name: 'HelpPage',
+    component: () => import('@/views/help/HelpPage.vue')
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'notfound',
     component: () => import('@/pages/NotFound.vue')
