@@ -96,7 +96,7 @@ function onTransfer({ to, amount }) {
 </script>
 
 <style scoped>
-.main-content { display: flex; flex-direction: column; gap: 2rem; padding: 2rem; background: #f5f5f7; min-height: 100vh; margin-left: 20vw; }
+.main-content { display: flex; flex-direction: column; gap: 2rem; padding: 2rem; background: #eeeeee; min-height: 100vh; margin-left: 20vw; }
 .transfer-list-view { display: flex; gap: 2rem; flex: 1; }
 .left { flex: 1; display: flex; flex-direction: column; gap: 2rem; }
 .right { flex: 1; display: flex; flex-direction: column; gap: 2rem; }

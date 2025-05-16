@@ -113,7 +113,7 @@
 </template>
 
 <script setup>
-import Sidebar from '@/components/Sidebar.vue';
+
 import OperationsButtons from '@/components/OperationsButtons.vue';
 import BalanceCard from '@/components/BalanceCard.vue';
 import AddCardButton from '@/components/AddCardButton.vue';

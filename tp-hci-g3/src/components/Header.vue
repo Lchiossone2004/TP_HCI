@@ -6,7 +6,7 @@
     </button>
     <div class="top-icons">
       <span v-if="isHomePage" class="material-symbols-rounded icon">notifications</span>
-      <span class="material-symbols-rounded icon">help</span>
+      <span class="material-symbols-rounded icon" @click="goToHelp">help</span>
     </div>
   </div>
 </template>
@@ -27,11 +27,18 @@ export default {
     const goBack = () => {
       router.go(-1)
     }
+    const goToHelp = () => {
+  router.push({
+    path: '/help',
+    query: { from: route.name }
+  })
+}
 
     return {
       isHomePage,
       isActivityPage,
-      goBack
+      goBack,
+      goToHelp
     }
   }
 }
