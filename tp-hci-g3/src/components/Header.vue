@@ -56,13 +56,13 @@ export default {
   align-items: center;
   padding: 1rem 2rem;
   gap: 1.5rem;
-  background-color: #eeeeee;
+  background-color: var(--background-grey);
   height: 50px;
   transition: background-color 0.3s ease;
 }
 
 .special-header {
-  background-color: #e6e6e6;
+  background-color: var(--background-grey);
 }
 
 .top-icons {
@@ -72,31 +72,27 @@ export default {
 }
 
 .top-icons .material-symbols-rounded {
-  font-size: 24px;
+  font-size: var(--font-subtitle);
   cursor: pointer;
-  color: #03192C;
+  color: var(--black-text);
   transition: color 0.2s ease;
 }
 
 .top-icons .material-symbols-rounded:hover {
-  color: #0a4b85;
+  color: var(--blue-button-hover);
 }
 
 .back-btn {
-  background: none;
-  border: none;
-  color: #03192C;
-  font-size: 1.1rem;
+  color: var(--black-text);
+  font-size: var(--font-text);
   display: flex;
   align-items: center;
   cursor: pointer;
-  gap: 0.3rem;
-  font-weight: bold;
-  padding: 0;
+  gap: 0.5rem;
 }
 
 .back-btn:hover {
-  color: #0a4b85;
+  color: var(--blue-button-hover);
 }
 
 @media (max-width: 600px) {

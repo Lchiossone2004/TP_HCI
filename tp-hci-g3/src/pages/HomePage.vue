@@ -3,7 +3,7 @@
     <main class="main-content">
       <div class="top-section">
         <div class="operations-buttons">
-          <OperationsButtons bgColor="#03192c" width="360px" height="300px">
+          <OperationsButtons bgColor=var(--azul-oscuro) width="360px" height="300px">
             <div class="grid-container">
               <div class="grid-item">
                 <button class="operation-button">

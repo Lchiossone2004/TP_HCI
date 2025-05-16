@@ -1,62 +1,78 @@
 <template>
-    <div class="actions">
-      <button v-for="(action, index) in actions" :key="index" class="action-button">
-        <i :class="action.icon"></i>
-        <span class="label">{{ action.label }}</span>
-        <span class="material-icons">arrow_forward_ios</span>
-        
-      </button>
-    </div>
-  </template>
-  
-  <script setup>
-  const actions = [
-  { label: 'Datos de mi cuenta', icon: 'account_circle' },
+  <div class="actions-container">
+    <button 
+      v-for="action in actions" 
+      :key="action.label" 
+      class="action-button"
+    >
+      <span class="material-symbols-rounded icon">{{ action.icon }}</span>
+      <span class="label">{{ action.label }}</span>
+      <span class="material-symbols-rounded arrow">chevron_right</span>
+    </button>
+  </div>
+</template>
+
+<script setup>
+const actions = [
+  { label: 'Datos de mi cuenta', icon: 'person' },
   { label: 'Tarjetas', icon: 'credit_card' },
-  { label: 'Actividad', icon: 'insights' },
-  { label: 'Administrar dinero', icon: 'account_balance_wallet' },
+  { label: 'Actividad', icon: 'description' },
+  { label: 'Administrar dinero', icon: 'sync_alt' }
 ]
-  </script>
-  
-  <style scoped>
-  .actions {
-    background-color: #f1f1f1;;
-    border-radius: 10px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  .action-button {
+</script>
+
+<style scoped>
+.actions-container {
+  background: var(--white-inputs);
+  border-radius: var(--general-radius);
+  padding: 1rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.action-button {
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background: white;
-  padding: 0.75rem 1rem;
-  border-radius: 999px; /* Más redondeado */
+  padding: 1rem;
+  margin: 0.5rem 0;
   border: none;
-  font-size: 1.4rem;
+  background: transparent;
   cursor: pointer;
-  margin-top: 1rem;
-  min-height: 5rem;
+  border-radius: var(--button-radius);
+  font-size: var(--font-text);
+  color: var(--black-text);
+  transition: background-color 0.2s ease;
 }
 
-.action-button .label {
-  flex-grow: 1; /* Ocupa el espacio disponible */
-  display: flex;
-  align-items: center;
+.action-button:hover {
+  background-color: var(--button-grey-hover);
 }
 
-.action-button i {
+.icon {
   margin-right: 1rem;
+  color: var(--dark-blue);
 }
 
-.action-button .arrow {
-  font-weight: bold;
-  font-size: 1.6rem;
+.label {
+  flex: 1;
+  text-align: left;
 }
-  .action-button:hover{
-    background-color: #eaeaea;
+
+.arrow {
+  color: var(--dark-grey-text);
+}
+
+@media (max-width: 768px) {
+  .actions-container {
+    padding: 1rem;
   }
-  </style>
+
+  .action-button {
+    padding: 1rem;
+  }
+}
+</style>
   

@@ -34,8 +34,7 @@
     width: var(--card-width, 300px);
     height: var(--card-height, 250px);
     background-color: var(--card-bg-color, #fff);
-    border-radius: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: var(--general-radius);
     padding: 1rem;
     box-sizing: border-box;
     display: flex;

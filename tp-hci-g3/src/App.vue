@@ -41,7 +41,7 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-color: #e6e6e6;
+  background-color: var(--background-grey);
 }
 .v-application {
   font-family: 'Nunito', sans-serif !important;
@@ -56,7 +56,7 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-color: #e6e6e6;
+  background-color: var(--background-grey);
 }
 
 .app-container.with-header {

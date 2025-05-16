@@ -6,32 +6,47 @@ body, html, #app {
 :root{
 
   /* font sizes */
-  --font-gigante: 30px;
-  --font-titulo: 25px;
-  --font-subtitulo: 20px;
-  --font-texto: 17px;
+  --font-login: 45px;
+  --font-big: 30px;
+  --font-title: 25px;
+  --font-subtitle: 20px;
+  --font-text: 17px;
   --font-mini: 14px;
 
   /* icon sizes */
-  --icon-grande: 35px;
-  --icon-mediano: 25px;
-  --icon-chico: 20px;
+  --icon-big: 35px;
+  --icon-mid: 25px;
+  --icon-little: 20px;
 
   /* icon wrapper */
   --icon-wrapper:35px;
 
   /* colors */
-  --azul-oscuro: #03192C;
-  --azul-botones: #093256;
-  --rojo-danger: #ff4d4d;
-  --rojo-boton: #ff4d4d1a;
-  --blanco: #ffff;
-  --gris-oscuro: #1f1f1f;
-  --verde: #00a862;
-  --gris-fondo: #e6e6e6;
-  --gris-boton: #f3f6fa;
+  --white-inputs: #ffffff;
+  --white-text: #f0f0f0;
+
+  --dark-grey-text: #666;
+  --light-grey: #bbbbbb;
+  --black-text: #1f1f1f;
+  --button-grey-hover: #edf0f5;
+--background-grey: #e8e8e8;
+
+
+
+  --blue-link: #3B82F6;
+  --blue-button: #093256;
+  --blue-button-hover: #0a4b85;
+  --dark-blue: #03192C;
+
+  --red-danger: #ff4d4d;
+  --red-button: #ff4d4d1a;
+  --green: #00a862;
+
 
   /* radius */
   --general-radius: 20px;
+  --icon-radius: 10px;
+  --icon-radius-mini: 4px;
+  --button-radius: 50px;
   
 }

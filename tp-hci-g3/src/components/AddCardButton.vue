@@ -9,25 +9,24 @@
 
 <style scoped>
 .add-card {
-  background-color: #03192c;
-  border: 3px solid white;
-  border-radius: 20px;
+  background-color: var(--dark-blue);
+  border: 3px solid var(--white-text);
+  border-radius: var(--general-radius);
   width: 360px;
   height: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
   gap: 0.2rem;
 }
 
 .add-button {
-  background-color: white;
+  background-color: var(--white-text);
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  color: white;
+  border-radius: var(--button-radius);
+  color: var(--white-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,12 +34,13 @@
 }
 
 .icon {
-  font-size: 25px;
-  color: #03192c;
+  font-size: var(--icon-mid);
+  color: var(--dark-blue);
 }
 
 .add-label {
-  font-size: 0.8rem;
+  font-size: var(--font-mini);
   text-align: center;
+  color: var(--white-text);
 }
 </style>

@@ -57,8 +57,8 @@ defineEmits(['update:modelValue']);
 }
 
 .modal-content {
-  background-color: white;
-  border-radius: 20px;
+  background-color: var(--white-inputs);
+  border-radius: var(--general-radius);
   padding: 1.5rem;
   width: 90%;
   max-width: 500px;
@@ -77,8 +77,8 @@ defineEmits(['update:modelValue']);
 
 .modal-header h3 {
   margin: 0;
-  font-size: 1.5rem;
-  color: #03192C;
+  font-size: var(--font-title);
+  color: var(--black-text);
   text-align: center;
 }
 
@@ -90,7 +90,7 @@ defineEmits(['update:modelValue']);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #03192C;
+  color: var(--black-text);
   transition: color 0.2s ease;
   position: absolute;
   right: 0;
@@ -99,11 +99,11 @@ defineEmits(['update:modelValue']);
 }
 
 .close-button:hover {
-  color: #666;
+  color: var(--blue-button-hover);
 }
 
 .modal-body {
-  color: #03192C;
+  color: var(--black-text);
 }
 
 .title-container {
@@ -111,7 +111,6 @@ defineEmits(['update:modelValue']);
 }
 
 .subtitle {
-  color: #666666;
   font-size: 0.9rem;
   margin: 0.5rem 0 0 0;
 }

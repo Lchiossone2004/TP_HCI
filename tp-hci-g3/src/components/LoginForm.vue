@@ -58,14 +58,12 @@ export default {
 
 <style scoped>
 .auth-container {
-  /* background: #093256; */
-  padding: 4rem 3rem;
-  /* border-radius: 12px; */
-  color: white;
+  padding: 2rem 1.5rem;
+  color: var(--white-text);
   width: 100%;
-  max-width: 600px;
-  align-items: center;
-  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+  max-width: 450px; /* Ajustado para ser consistente */
+  margin: 0 auto;
+  box-sizing: border-box; /* Importante: incluye padding en el width */
 }
 
 h2, p {
@@ -74,31 +72,28 @@ h2, p {
 }
 
 h2 {
-  font-size: 4rem;
+  font-size: var(--font-login);
   margin-bottom: 0.5rem;
 }
 
 p {
-  font-size: 1.5rem;
-  color: #F1F1F1;
+  font-size: var(--font-title);
   margin-bottom: 2rem;
 }
 
 input {
-  display: block;
   width: 100%;
   height: 2.5rem;
   padding: 0.5rem 1.5rem;
   margin: 1rem 0;
-  border-radius: 40px;
-  background: #F1F1F1;
-  color: #03192C;
-  font-size: 1.15rem;
+  border-radius: var(--icon-radius);
+  background: var(--white-inputs);
+  display: block;
 }
 
 input::placeholder {
-  color: #666;
-  font-size: 1.1rem;
+  color: var(--dark-grey-text);
+  font-size: var(--font-text);
 }
 
 .row-remember {
@@ -107,30 +102,26 @@ input::placeholder {
   justify-content: space-between;
   gap: 2rem;
   margin: 0.5rem 0 0.5rem 0;
-  flex-wrap: nowrap;
 }
 
 .remember-label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #F1F1F1;
-  font-size: 1rem;
-  margin: 0;
+  color: var(--white-text);
+  font-size: var(--font-text);
   white-space: nowrap;
 }
 
 .remember-label span {
-  color: #F1F1F1;
-  font-size: 1.08rem;
-  font-weight: 500;
+  color: var(--white-text);
   margin-left: 0.3rem;
 }
 
 .forgot-link {
-  color: #3B82F6;
+  color: var(--blue-link);
   text-decoration: none;
-  font-size: 1rem;
+  font-size: var(--font-text);
   white-space: nowrap;
   align-self: center;
 }
@@ -140,15 +131,13 @@ input::placeholder {
 }
 
 button {
-  width: 60%;
+  width: 45%;
   height: 2.5rem;
-  padding: 0;
   margin: 2rem auto 0 auto;
-  background: #F1F1F1;
-  color: #03192C;
-  border-radius: 40px;
-  font-size: 1.15rem;
-  font-weight: bold;
+  background: var(--blue-button);
+  color: var(--white-text);
+  border-radius: var(--button-radius);
+  font-size: var(--font-subtitle);
   cursor: pointer;
   transition: background-color 0.3s ease;
   display: flex;
@@ -157,7 +146,7 @@ button {
 }
 
 button:hover {
-  background: #e0e0e0;
+  background: var(--blue-button-hover);
 }
 
 .row-register {
@@ -170,20 +159,82 @@ button:hover {
 }
 
 .register-text {
-  color: #F1F1F1;
-  font-size: 1rem;
+  color: var(--white-text);
+  font-size: var(--font-text);
   text-align: center;
 }
 
 .register-link {
-  color: #3B82F6;
+  color: var(--blue-link);
   text-decoration: none;
-  font-size: 1rem;
-  font-weight: bold;
+  font-size: var(--font-text);
   text-align: center;
 }
 
 .register-link:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 1200px) {
+  .auth-container {
+    padding: 1.5rem 1rem;
+    max-width: 400px; /* Reducir el ancho máximo en pantallas más pequeñas */
+  }
+
+  h2 {
+    font-size: calc(var(--font-login) * 0.85);
+  }
+
+  p {
+    font-size: calc(var(--font-title) * 0.9);
+  }
+
+  input {
+    margin: 0.75rem 0;
+  }
+
+  .row-remember {
+    gap: 1rem; /* Reducir el gap en pantallas más pequeñas */
+  }
+
+  .remember-label, .forgot-link {
+    font-size: calc(var(--font-text) * 0.9);
+  }
+}
+
+@media (max-width: 992px) {
+  .auth-container {
+    padding: 1rem;
+    max-width: 350px; /* Reducir aún más en pantallas más pequeñas */
+  }
+
+  h2 {
+    font-size: calc(var(--font-login) * 0.75);
+  }
+
+  p {
+    font-size: calc(var(--font-title) * 0.85);
+    margin-bottom: 1.5rem;
+  }
+
+  button {
+    width: 60%;
+  }
+
+  .row-remember {
+    flex-direction: column; /* Apilar en móviles */
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .forgot-link {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    max-width: 300px;
+  }
 }
 </style>

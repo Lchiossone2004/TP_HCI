@@ -1,38 +1,52 @@
 <template>
-    <div class="main-layout">
-      <div class="main-content">
-        <ProfileInfo :perfil="perfil"/>
-        <ProfileActions />
-      </div>
-    </div>
-  </template>
-  
-  <script setup>
-  import Sidebar from '@/components/Sidebar.vue'
-  import ProfileInfo from '@/components/ProfileInfo.vue'
-  import ProfileActions from '@/components/ProfileActions.vue'
+  <div class="layout">
+    <main class="main-content">
+      <ProfileInfo :perfil="perfil"/>
+      <ProfileActions />
+    </main>
+  </div>
+</template>
 
-  const perfil = {
-  nombre: 'Mateo Tomás',
+<script setup>
+import { useRouter } from 'vue-router'
+import ProfileInfo from '@/components/ProfileInfo.vue'
+import ProfileActions from '@/components/ProfileActions.vue'
+
+const router = useRouter()
+
+const goBack = () => router.back()
+
+const perfil = {
+  nombre: 'Mateo',
   apellido: 'Gorriti',
   email: 'mateo.go@gmail.com',
   dni: '40.527.004',
   telefono: '+54 11 7385-4992',
   avatar: '/src/assets/images/FotoPerfil.jpeg'
 }
-  </script>
-  
-  <style scoped>
-.main-layout {
+</script>
+
+<style scoped>
+.main-content {
+  margin-left: 21vw;
+  padding: 1rem;
+  min-height: 100vh;
+  background-color: var(--background-grey);
   display: flex;
-  min-height: 100vh; /* Asegura que la altura sea completa */
+  flex-direction: column;
+  gap: 1.5rem;
+  box-sizing: border-box;
 }
 
-.main-content {
-  flex: 1;
-  margin-left: 21vw; /* Esto hace que el contenido principal se mueva hacia la derecha */
-  padding: 2rem;
-  background-color: #eeeeee;
-  min-height: 100vh;
+@media (max-width: 1150px) {
+  .main-content {
+    padding: 1rem;
+  }
 }
-  </style>
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+}
+</style>

@@ -40,32 +40,33 @@ export default {
 .auth-wrapper {
   display: flex;
   height: 100vh;
-  background-color: #FFFF;
+  background-color: var(--white-text);
 }
 
 .welcome-section {
   width: 30%;
+  min-width: 300px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   padding: 2rem;
   padding-top: 4rem;
-  background-color: #FFFF;
   position: relative;
   overflow: hidden;
+  color: var(--black-text);
 }
 
 .welcome-section h1 {
-  font-size: 2.5rem;
-  color: #03192C;
+  font-size: var(--font-login);
   margin-bottom: 1rem;
   margin-top: 2rem;
 }
 
 .welcome-text {
-  font-size: 1.2rem;
-  color: #666;
+  font-size: var(--font-subtitle);
+  max-width: 80%;
+  text-align: left;
 }
 
 .circles {
@@ -87,7 +88,7 @@ export default {
 .circle-1 {
   width: 400px;
   height: 400px;
-  background-color: #093256;
+  background-color: var(--blue-button);
   bottom: 0;
   left: 0;
 }
@@ -95,7 +96,7 @@ export default {
 .circle-2 {
   width: 400px;
   height: 400px;
-  background-color: #03192C;
+  background-color: var(--dark-blue);
   bottom: 20px;
   left: 100px;
 }
@@ -103,9 +104,59 @@ export default {
 .circle-3 {
   width: 300px;
   height: 300px;
-  background-color: #073259;
+  background-color: var(--blue-button-hover);
   bottom: 40px;
   left: 250px;
+}
+
+
+
+.auth-section {
+  width: 70%;
+  background-color: var(--dark-blue);
+  padding: 3rem;
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+  margin-left: auto; /* Push auth-section to the right */
+}
+
+.auth-tabs-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: absolute;
+  right: -60px;
+  top: 35%;
+  z-index: 2;
+}
+
+.auth-tabs-vertical button {
+  background: var(--white-text);
+  cursor: pointer;
+  color: var(--dark-blue);
+  padding: 1.2rem 2rem 1.2rem 3rem;
+  text-align: left;
+  border-radius: var(--button-radius) 0 0 var(--button-radius);
+  transition: all 0.3s ease;
+  font-size: var(--font-subtitle);
+  min-width: 270px;
+}
+
+.auth-tabs-vertical button.active {
+  background-color: var(--dark-blue);
+  color: var(--white-text);
+}
+
+.form-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 350px; /* Reduced from 450px */
+  max-width: 500px;
+  margin: 0 auto; /* Center the form */
+  padding: 0 1rem; /* Add padding for gap from edges */
 }
 
 @media (max-width: 1200px) {
@@ -142,50 +193,24 @@ export default {
   }
 }
 
-.auth-section {
-  width: 70%;
-  background-color: #03192C;
-  padding: 3rem;
-  display: flex;
-  flex-direction: row;
-  gap: 3rem;
+@media (max-width: 1200px) {
+  .auth-section {
+    padding: 2rem;
+  }
+
+  .form-container {
+    min-width: 300px;
+  }
+
+  .welcome-section h1 {
+    font-size: calc(var(--font-login) * 0.85);
+  }
 }
 
-.auth-tabs-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  position: absolute;
-  right: -60px;
-  top: 35%;
-  z-index: 2;
+@media (max-width: 992px) {
+  .form-container {
+    min-width: 280px;
+  }
 }
 
-.auth-tabs-vertical button {
-  background: #FFFF;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  color: #03192C;
-  padding: 1.2rem 2rem 1.2rem 3rem;
-  text-align: left;
-  border-radius: 40px 0 0 40px;
-  transition: all 0.3s ease;
-  font-size: 1.3rem;
-  min-width: 270px;
-}
-
-.auth-tabs-vertical button.active {
-  background-color: #03192C;
-  color: #FFFF;
-  border: 2px solid #03192C;
-}
-
-.form-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 450px;
-}
 </style>

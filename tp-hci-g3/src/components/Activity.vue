@@ -69,8 +69,8 @@ const filteredActivities = computed(() => {
 
 <style scoped>
 .activity-card {
-  background-color: var(--color-white);
-  border-radius: 20px;
+  background-color: var(--white-inputs);
+  border-radius: var(--general-radius);
   padding: 1rem;
   box-sizing: border-box;
   width: 100%;
@@ -79,19 +79,19 @@ const filteredActivities = computed(() => {
 .activity-item {
   display: flex;
   align-items: center;
-  padding: 0.75rem;
-  border-radius: 12px;
+  padding: 1rem;
+  border-radius: var(--general-radius);
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .activity-item:hover {
-  background-color: #eaeaea;
+  background-color: var(--button-grey-hover);
 }
 
 .icon-wrapper {
-  background-color: #0d2c4a;
-  border-radius: 10px;
+  background-color: var(--blue-button-hover);
+  border-radius: var(--icon-radius);
   width: 35px;
   height: 35px;
   display: flex;
@@ -101,8 +101,8 @@ const filteredActivities = computed(() => {
 }
 
 .icon {
-  color: white;
-  font-size: 20px;
+  color: var(--white-text);
+  font-size: var(--icon-little);
 }
 
 .info {
@@ -121,9 +121,8 @@ const filteredActivities = computed(() => {
 }
 
 .title {
-  font-weight: 600;
-  color: #001a33;
-  font-size: 17px;
+  color: var(--black-text);
+  font-size: var(--font-text);
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
@@ -131,35 +130,34 @@ const filteredActivities = computed(() => {
 }
 
 .date-col {
-  font-size: 14px;
-  color: #8ca0b3;
+  font-size: var(--font-mini);
+  color: var(--dark-grey-text);
   text-align: left;
   margin-top: 0.1rem;
 }
 
 .amount {
-  font-weight: bold;
   white-space: nowrap;
   margin-left: auto;
-  font-size: 17px;
+  font-size: var(--font-text);
 }
 
 .positive {
-  color: #00a862;
+  color: var(--green);
 }
 
 .negative {
-  color: #e74c3c;
+  color: var(--red-danger);
 }
 
 .no-activity {
   text-align: center;
-  color: #8ca0b3;
-  font-size: 1.1rem;
+  color: var(--dark-grey-text);
+  font-size: var(--font-subtitle);
   padding: 2rem 0;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 500px) {
   .info {
     flex-direction: column;
     align-items: flex-start;
@@ -174,14 +172,14 @@ const filteredActivities = computed(() => {
   .title {
     width: 100%;
     text-align: left;
-    font-size: 1rem;
+    font-size: var(--font-text);
     margin-bottom: 0.1rem;
   }
   
   .date-col {
     width: 100%;
     text-align: left;
-    font-size: 0.8rem;
+    font-size: var(--font-mini);
     margin-top: 0;
   }
 }

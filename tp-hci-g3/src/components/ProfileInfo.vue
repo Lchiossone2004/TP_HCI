@@ -1,126 +1,161 @@
 <template>
   <div class="profile-container">
-    <div class="top-bar">
-      <button class="edit-btn">Editar perfil</button>
-   
+    <div class="profile-header">
+      <button class="edit-btn">
+        Editar perfil
+      </button>
     </div>
-
-    <div class="profile-box">
-      <div class="left">
-        <img class="avatar" :src="perfil.avatar" alt="Foto de perfil" />
-        <p class="name">{{ perfil.nombre }}</p>
-        <a :href="`mailto:${perfil.email}`" class="email">{{ perfil.email }}</a>
+    
+    <div class="profile-content">
+      <div class="profile-image">
+        <img :src="perfil.avatar" :alt="perfil.nombre" />
+        <h2>{{ perfil.nombre }}</h2>
+        <a :href="`mailto:${perfil.email}`">{{ perfil.email }}</a>
       </div>
-
-      <div class="right">
-        <p><strong>DNI:</strong> {{ perfil.dni }}</p>
-        <p><strong>Nombre:</strong> {{ perfil.nombre }}</p>
-        <p><strong>Apellido:</strong> {{ perfil.apellido }}</p>
-        <p><strong>Número:</strong> {{ perfil.telefono }}</p>
+      
+      <div class="profile-details">
+        <div class="detail-row">
+          <span>DNI:</span>
+          <span>{{ perfil.dni }}</span>
+        </div>
+        <div class="detail-row">
+          <span>Nombre:</span>
+          <span>{{ perfil.nombre }}</span>
+        </div>
+        <div class="detail-row">
+          <span>Apellido:</span>
+          <span>{{ perfil.apellido }}</span>
+        </div>
+        <div class="detail-row">
+          <span>Número:</span>
+          <span>{{ perfil.telefono }}</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-  <script setup>
-defineProps({
-  perfil: {
-    type: Object,
-    required: true,
+<script setup>
+  defineProps({
+    perfil: {
+      type: Object,
+      required: true,
+    }
+  })
+</script>
+
+<style scoped>
+  .profile-container {
+    background-color: var(--dark-blue);
+    border-radius: var(--general-radius);
+    color: var(--white-text);
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
   }
-})
-  </script>
-  
-  <style scoped>
-.profile-container {
-  background-color: #03192C;
-  border-radius: 30px;
-  padding: 1.5rem;
-  color: white;
-  width: 100%;
+
+  .profile-header {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .edit-btn {
+    background: transparent;
+    border: 2px solid var(--white-text);
+    color: var(--white-text);
+    border-radius: var(--button-radius);
+    padding: 0.5rem 1.5rem;
+    font-size: var(--font-text);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .edit-btn:hover {
+    background: var(--white-text);
+    color: var(--dark-blue);
+  }
+
+  .profile-content {
   display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  min-height: 25rem;
-  padding-top: 0.5rem;
-  /* transition: transform 0.2s ease, box-shadow 0.2s ease; */
-}
-
-/* .profile-container:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-} */
-
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0rem;
-}
-
-.edit-btn {
-  background-color: transparent;
-  color: white;
-  border: 2px solid white;
-  border-radius: 999px; 
-  padding: 0.4rem 1rem;
-  font-size: 1.3rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  margin-left: auto; 
-}
-
-
-.edit-btn:hover {
-  background-color: white;
-  color: #001f3f;
-}
-
-.profile-box {
-  display: flex;
-  justify-content: space-between;
-  gap: 2rem;
-  width: 100%;
-  margin-left: 3rem;
-}
-
-.left {
-  background-color: #073259;
   padding: 2rem;
-  border-radius: 30px;
-  text-align: center;
-  min-width: 200px;
-  flex-shrink: 0;
+  gap: 4rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.avatar {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 1rem;
-  margin-left: 5rem;
-  margin-right: 5rem;
-  margin-top: 2rem;
-}
-.name{
-    font-size: 2rem; 
-}
-.email {
-  color: #9ecbff;
-  text-decoration: none;
-  font-size: 1.2rem;
-}
+  .profile-image {
+    background: #073259;
+    padding: 2rem;
+    border-radius: var(--general-radius);
+    text-align: center;
+    width: 400px;
+    min-width: 300px;
+    flex-shrink: 0; /* Prevents the profile image from shrinking */
+  }
 
-.right {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-grow: 1;
-  gap: 3rem;
-  font-size: 1.8rem; /* Aumenta el tamaño del texto */
-  font-weight: 500;
- 
-}
+  .profile-image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+  }
+
+  .profile-image h2 {
+    font-size: var(--font-big);
+    margin: 1rem 0;
+  }
+
+  .profile-image a {
+    color: var(--blue-link);
+    text-decoration: none;
+    font-size: var(--font-text);
+  }
+
+  .profile-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    gap: 2rem;
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .detail-row {
+    display: flex;
+    gap: 1rem;
+    font-size: var(--font-subtitle);
+    width: 100%;
+    max-width: 600px; /* Add max-width to prevent too wide rows */
+  }
+
+  .detail-row span:first-child {
+    font-weight: bold;
+    min-width: 100px;
+  }
+
+  @media (max-width: 1150px) {
+    .profile-content {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .profile-image {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .profile-details {
+      width: 100%;
+      align-items: center;
+      flex-direction: column;
+    }
+  }
 </style>

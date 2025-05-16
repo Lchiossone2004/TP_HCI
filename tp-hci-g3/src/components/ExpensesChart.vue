@@ -156,8 +156,8 @@ watch(categories, renderChart)
 
 <style scoped>
 .expenses-chart-container {
-  background: #fff;
-  border-radius: 20px;
+  background: var(--white-inputs);
+  border-radius: var(--general-radius);
   padding: 1.5rem;
   box-sizing: border-box;
   width: 100%;
@@ -171,17 +171,15 @@ watch(categories, renderChart)
 .expenses-chart-container.simple {
   padding: 3rem;
   height: 350px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+
 }
 
 .expenses-chart-header {
   width: 100%;
   text-align: center;
-  font-size: 30px;
-  font-weight: bold;
+  font-size: var(--font-big);
   margin-bottom: 1rem;
-  color: #001a33;
+  color: var(--black-text);
 }
 
 .chart-legend-row {
@@ -209,7 +207,6 @@ watch(categories, renderChart)
 
 .chart-wrapper.simple {
   max-width: 100%;
-  min-width: 0;
   height: 100%;
 }
 
@@ -230,24 +227,23 @@ canvas {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--font-mini);
 }
 
 .legend-color {
   width: 14px;
   height: 14px;
-  border-radius: 4px;
+  border-radius: var(--icon-radius-mini);
   display: inline-block;
 }
 
 .legend-icon {
-  font-size: 1rem;
-  color: #1E3A8A;
+  font-size: var(--icon-little);
+  color: var(--blue-button-hover);
 }
 
 .legend-label {
-  color: #001a33;
+  color: var(--black-text);
 }
 
 .categories-list {
@@ -258,39 +254,37 @@ canvas {
 .category-row {
   display: flex;
   align-items: center;
-  background: #f3f6fa;
-  border-radius: 20px;
+  background: var(--button-grey-hover);
+  border-radius: var(--general-radius);
   padding: 1rem 1rem;
   margin-bottom: 1rem;
-  font-size: 17px;
-  font-weight: 600;
+  font-size: var(--font-text);
   height: 50px;
 
 }
 
 .category-icon {
-  background-color: #0d2c4a;
-  border-radius: 10px;
+  background-color: var(--blue-button-hover);
+  border-radius: var(--icon-radius);
   width: 35px;
   height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 20px;
+  color: var(--white-text);
+  font-size: var(--font-subtitle);
   margin-right: 0.75rem;
 }
 
 .category-name {
   flex: 1;
   text-align: left;
-  color: #001a33;
+  color: var(--black-text);
 
 }
 
 .category-amount {
-  color: #001a33;
-  font-weight: 700;
+  color: var(--black-text);
 }
 
 @media (max-width: 600px) {
