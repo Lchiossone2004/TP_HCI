@@ -4,6 +4,7 @@
       v-for="action in actions" 
       :key="action.label" 
       class="action-button"
+      @click="handleClick(action)"
     >
       <span class="material-symbols-rounded icon">{{ action.icon }}</span>
       <span class="label">{{ action.label }}</span>
@@ -13,12 +14,27 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const emit = defineEmits(['edit'])
+
 const actions = [
-  { label: 'Datos de mi cuenta', icon: 'person' },
-  { label: 'Tarjetas', icon: 'credit_card' },
-  { label: 'Actividad', icon: 'description' },
+  { label: 'Datos de mi cuenta', icon: 'person', action: 'edit' },
+  { label: 'Tarjetas', icon: 'credit_card', action: 'cards' },
+  { label: 'Actividad', icon: 'description', action: 'movements' },
   { label: 'Administrar dinero', icon: 'sync_alt' }
 ]
+
+const handleClick = (action) => {
+  if (action.action === 'edit') {
+    emit('edit')
+  } else if (action.action === 'movements') {
+    router.push({ name: 'Actividad' })
+  } else if (action.action === 'cards') {
+    router.push({ name: 'Tarjetas' })
+  }
+}
 </script>
 
 <style scoped>

@@ -3,7 +3,7 @@
     <main class="main-content">
       <div class="top-section">
         <div class="operations-buttons">
-          <OperationsButtons bgColor=var(--azul-oscuro) width="360px" height="300px">
+          <OperationsButtons bgColor="var(--azul-oscuro)" width="360px" height="300px">
             <div class="grid-container">
               <div class="grid-item">
                 <button class="operation-button">
@@ -12,7 +12,7 @@
                 <h4>Ingresar</h4>
               </div>
               <div class="grid-item">
-                <button class="operation-button" @click="irATransferencias" >
+                <button class="operation-button" @click="irATransferencias">
                   <span class="material-symbols-rounded icon">sync_alt</span>
                 </button>
                 <h4>Transferir</h4>
@@ -33,9 +33,19 @@
           </OperationsButtons>
         </div>
         <div class="balance-and-cards">
-          <Swiper>
-            <BalanceCard />
-            <AddCardButton />
+          <Swiper :cards="cards">
+            <template #default="{ index }">
+              <BalanceCard v-if="index === 0" />
+              <Cards 
+                v-else-if="index <= cards.length"
+                :card="cards[index - 1]"
+                @delete="() => handleDeleteCard(index - 1)"
+              />
+              <AddCardButton 
+                v-else-if="index === cards.length + 1"
+                @click="showAddCardModal = true" 
+              />
+            </template>
           </Swiper>
         </div>
       </div>
@@ -68,11 +78,7 @@
         </div>
       </div>
     </main>
-    <Modal 
-      v-model="showMyInfoModal" 
-      title="Mis datos"
-     
-    >
+    <Modal v-model="showMyInfoModal" title="Mis datos">
       <div class="enter-money-form">
         <div class="form-group">
           <label for="cvu">CVU</label>
@@ -96,24 +102,70 @@
       </div>
     </Modal>
     <Modal v-model="showMoreModal" title="Más">
-  <div class="button-container">
-    <button class="modal-button" @click="accion1">
-      Cobrar servicios
-      <span class="material-icons icon-right">chevron_right</span>
-    </button>
-    <button class="modal-button" @click="accion2">
-      Pagar servicios
-      <span class="material-icons icon-right">chevron_right</span>
-    </button>
-  </div>
-  <button class="submit-button" @click="closeModal">Cerrar</button>
-</Modal>
-
+      <div class="button-container">
+        <button class="modal-button" @click="accion1">
+          Cobrar servicios
+          <span class="material-icons icon-right">chevron_right</span>
+        </button>
+        <button class="modal-button" @click="accion2">
+          Pagar servicios
+          <span class="material-icons icon-right">chevron_right</span>
+        </button>
+      </div>
+      <button class="submit-button" @click="closeModal">Cerrar</button>
+    </Modal>
+    <Modal v-model="showAddCardModal" title="Agregar tarjeta">
+      <form @submit.prevent="handleAddCard" class="add-card-form">
+        <div class="form-group">
+          <label>Número de tarjeta</label>
+          <input 
+            v-model="newCard.number"
+            type="text"
+            placeholder="XXXX XXXX XXXX XXXX"
+            maxlength="19"
+            @input="formatCardNumber"
+          >
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Vencimiento</label>
+            <input 
+              v-model="newCard.expiry"
+              type="text"
+              placeholder="MM/YY"
+              maxlength="5"
+            >
+          </div>
+          <div class="form-group">
+            <label>CVV</label>
+            <input 
+              v-model="newCard.cvv"
+              type="text"
+              placeholder="123"
+              maxlength="3"
+            >
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Nombre en la tarjeta</label>
+          <input 
+            v-model="newCard.name"
+            type="text"
+            placeholder="NOMBRE APELLIDO"
+          >
+        </div>
+        <div class="button-group">
+          <button type="submit" class="submit-button">Agregar</button>
+          <button type="button" class="cancel-button" @click="showAddCardModal = false">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </Modal>
   </div>
 </template>
 
 <script setup>
-
 import OperationsButtons from '@/components/OperationsButtons.vue';
 import BalanceCard from '@/components/BalanceCard.vue';
 import AddCardButton from '@/components/AddCardButton.vue';
@@ -124,6 +176,7 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { Chart } from 'chart.js/auto';
 import { useRouter } from 'vue-router';
 import Modal from '@/components/Modal.vue';
+import Cards from '@/components/Cards.vue';
 
 const router = useRouter();
 const isMobile = ref(window.innerWidth <= 1024);
@@ -134,13 +187,50 @@ const showMoreModal = ref(false);
 const currentMonth = ref(new Date().getMonth());
 const currentYear = ref(new Date().getFullYear());
 
-// Account information that will come from backend
+const showAddCardModal = ref(false);
+const cards = ref([]);
+const newCard = ref({
+  number: '',
+  expiry: '',
+  cvv: '',
+  name: ''
+});
+
+const handleAddCard = () => {
+  cards.value.push({
+    id: Date.now(),
+    ...newCard.value
+  });
+  showAddCardModal.value = false;
+  newCard.value = { number: '', expiry: '', cvv: '', name: '' };
+  localStorage.setItem('userCards', JSON.stringify(cards.value));
+};
+
+const handleDeleteCard = (index) => {
+  cards.value.splice(index, 1);
+  localStorage.setItem('userCards', JSON.stringify(cards.value));
+};
+
+const formatCardNumber = (event) => {
+  let value = event.target.value.replace(/\D/g, '');
+  value = value.replace(/(\d{4})/g, '$1 ').trim();
+  newCard.value.number = value;
+};
+
+onMounted(() => {
+  const savedCards = localStorage.getItem('userCards');
+  if (savedCards) {
+    cards.value = JSON.parse(savedCards);
+  }
+});
+
+// Account information
 const accountInfo = ref({
   cvu: '0000003100064484890001',
   alias: 'mateo.gorriti'
 });
 
-// Function to close modal
+// Modal control
 const closeModal = () => {
   showMyInfoModal.value = false;
   showMoreModal.value = false;
@@ -157,9 +247,11 @@ function goToMovements() {
 }
 
 function irATransferencias() {
-  router.push({ name: 'Transfer' }); // Usa el nombre de la ruta en lugar de la ruta directa
+  router.push({ name: 'Transfer' });
 }
 
+const accion1 = () => {}
+const accion2 = () => {}
 
 const allActivities = ref([
   { icon: 'shopping_bag', title: 'Prüne', subtitle: 'Hoy 19:43', amount: -57800, date: '2025-05-14T19:43:00' },
@@ -172,14 +264,12 @@ const allActivities = ref([
   { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '12/9 08:01', amount: 463, date: '2025-09-12T08:01:00' },
 ])
 
-// Filtrar últimas 10 actividades para "Actividad reciente"
 const recentActivities = computed(() => {
   return [...allActivities.value]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 10);
 });
 
-// Filtrar actividades del mes actual para el chart
 const currentMonthActivities = computed(() => {
   return allActivities.value.filter(activity => {
     const activityDate = new Date(activity.date);
@@ -187,7 +277,6 @@ const currentMonthActivities = computed(() => {
            activityDate.getFullYear() === currentYear.value;
   });
 });
-
 </script>
 
 <style scoped>
@@ -274,6 +363,79 @@ const currentMonthActivities = computed(() => {
   max-width: calc(100% - 380px);
 }
 
+.add-card-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+label {
+  font-size: var(--font-text);
+  color: var(--dark-blue);
+}
+
+input {
+  padding: 0.75rem;
+  border: 2px solid var(--light-grey);
+  border-radius: var(--icon-radius);
+  font-size: var(--font-text);
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  border-color: var(--blue-link);
+  outline: none;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.submit-button, .cancel-button {
+  padding: 0.75rem 2rem;
+  border-radius: var(--button-radius);
+  border: none;
+  font-size: var(--font-text);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-button {
+  background: var(--dark-blue);
+  color: var(--white-text);
+}
+
+.submit-button:hover {
+  background: var(--blue-button-hover);
+}
+
+.cancel-button {
+  background: var(--background-grey);
+  color: var(--dark-blue);
+}
+
+.cancel-button:hover {
+  background: var(--light-grey);
+}
+
 .bottom-section {
   display: flex;
   justify-content: flex-start;
@@ -303,7 +465,7 @@ const currentMonthActivities = computed(() => {
   max-width: 700px;
   background: #fff;
   border-radius: 20px;
-  overflow: hidden; /* Asegura que el contenido no sobresalga de los bordes redondeados */
+  overflow: hidden;
 }
 
 .header-activity-card {
@@ -317,8 +479,8 @@ const currentMonthActivities = computed(() => {
   align-items: center;
   box-sizing: border-box;
   color: #1f1f1f;
-  position: relative; /* Para que se superponga al chart */
-  z-index: 2; /* Asegura que el header esté por encima del chart */
+  position: relative;
+  z-index: 2;
 }
 
 .more-activities {
@@ -393,31 +555,33 @@ const currentMonthActivities = computed(() => {
 .submit-button:hover {
   background-color: #0a4b85;
 }
+
 .button-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; 
+  align-items: flex-start;
   gap: 12px;
   margin-bottom: 16px;
 }
 
 .modal-button {
   padding: 12px 20px;
-  text-align: left;  
+  text-align: left;
   background-color: #f5f5f5;
   border: none;
   border-radius: 20px;
   font-size: 16px;
   cursor: pointer;
-  display: flex;              
+  display: flex;
   justify-content: space-between;
   transition: background-color 0.2s ease;
-  min-width: 100%; 
+  min-width: 100%;
 }
+
 .icon-right {
   font-size: 25px;
-  
 }
+
 .modal-button:hover {
   background-color: #d5d5d5;
 }
@@ -533,10 +697,15 @@ const currentMonthActivities = computed(() => {
   .balance-and-cards,
   .inner1,
   .inner2,
-  .activity-card-outer{
+  .activity-card-outer {
     width: 100%;
     max-width: none;
   }
 }
-</style>
 
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+}
+</style>

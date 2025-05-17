@@ -1,16 +1,12 @@
 <template>
   <div class="slider-card">
     <div class="slide-content" :style="{ transform: `translateX(-${activeSlide * 100}%)` }">
-      <div
-        v-for="(slide, index) in slots.default?.()"
-        :key="index"
-        class="slide-wrapper"
-      >
-        <component :is="slide" />
+      <div v-for="(_, index) in totalSlides" :key="index" class="slide-wrapper">
+        <slot :index="index"></slot>
       </div>
     </div>
 
-    <div class="navigation-arrows">
+    <div class="navigation-arrows" v-if="totalSlides > 1">
       <button 
         class="nav-arrow left" 
         :class="{ disabled: activeSlide === 0 }"
@@ -21,9 +17,9 @@
       </button>
       <button 
         class="nav-arrow right"
-        :class="{ disabled: activeSlide === slideCount - 1 }"
+        :class="{ disabled: activeSlide === totalSlides - 1 }"
         @click="nextSlide"
-        :disabled="activeSlide === slideCount - 1"
+        :disabled="activeSlide === totalSlides - 1"
       >
         <span class="material-symbols-rounded">chevron_right</span>
       </button>
@@ -32,14 +28,38 @@
 </template>
 
 <script setup>
-import { ref, computed, useSlots } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+
+const props = defineProps({
+  cards: {
+    type: Array,
+    default: () => []
+  }
+})
 
 const activeSlide = ref(0)
-const slots = useSlots()
-const slideCount = computed(() => slots.default?.().length || 0)
+const totalSlides = ref(0)
+
+onMounted(() => {
+  // Contar el número total de slots
+  updateTotalSlides()
+})
+
+watch(() => props.cards, () => {
+  updateTotalSlides()
+  // Asegurarse de que el slide activo no exceda el total
+  if (activeSlide.value >= totalSlides.value) {
+    activeSlide.value = Math.max(0, totalSlides.value - 1)
+  }
+}, { deep: true })
+
+const updateTotalSlides = () => {
+  // Número de slides es balance card + tarjetas + add button
+  totalSlides.value = 2 + props.cards.length
+}
 
 const nextSlide = () => {
-  if (activeSlide.value < slideCount.value - 1) {
+  if (activeSlide.value < totalSlides.value - 1) {
     activeSlide.value++
   }
 }
@@ -54,37 +74,11 @@ const previousSlide = () => {
 <style scoped>
 .slider-card {
   width: 100%;
-  height: 300px; /* 💡 mismo alto que OperationsButtons */
-  background-color: #03192c;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  overflow: hidden;
-  padding: 1rem;
-  box-sizing: border-box;
+  height: 300px;
+  background-color: var(--dark-blue);
+  border-radius: var(--general-radius);
   position: relative;
-}
-
-.top-icons {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  display: flex;
-  gap: 1.5rem;
-  z-index: 1;
-}
-
-.icon {
-  font-size: 28px;
-  cursor: pointer;
-  color: white;
-  transition: color 0.2s ease;
-}
-
-.icon:hover {
-  color: #A8A8A8;
+  overflow: hidden;
 }
 
 .slide-content {
@@ -94,14 +88,19 @@ const previousSlide = () => {
   width: 100%;
 }
 
+/* Removemos los estilos que afectaban a los componentes internos */
 .slide-wrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center; /* horizontal */
-  align-items: center;     /* vertical */
   min-width: 100%;
   height: 100%;
-  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Removemos los estilos de :slotted(*) que estaban afectando los componentes */
+:slotted(*) {
+  flex-shrink: 0;
 }
 
 .navigation-arrows {
@@ -112,7 +111,7 @@ const previousSlide = () => {
   padding: 0 1rem;
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none; /* Permite que los clicks pasen a través del contenedor */
+  pointer-events: none;
 }
 
 .nav-arrow {
@@ -127,7 +126,7 @@ const previousSlide = () => {
   justify-content: center;
   color: white;
   transition: all 0.2s ease;
-  pointer-events: auto; /* Restaura la interactividad solo para los botones */
+  pointer-events: auto;
 }
 
 .nav-arrow:hover:not(.disabled) {

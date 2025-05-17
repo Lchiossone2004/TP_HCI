@@ -1,7 +1,7 @@
 <template>
   <div class="profile-container">
     <div class="profile-header">
-      <button class="edit-btn">
+      <button class="edit-btn" @click="$emit('edit')">
         Editar perfil
       </button>
     </div>
@@ -39,9 +39,11 @@
   defineProps({
     perfil: {
       type: Object,
-      required: true,
+      required: true
     }
   })
+
+  defineEmits(['edit'])
 </script>
 
 <style scoped>

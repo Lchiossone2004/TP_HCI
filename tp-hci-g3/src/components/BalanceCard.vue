@@ -32,12 +32,14 @@ function toggle() { visible.value = !visible.value }
   background: linear-gradient(100deg, var(--white-inputs), var(--light-grey));
   border-radius: var(--general-radius);
   padding: 1rem;
+  color: var(--black-text);
   width: 360px; 
   height: 200px;
   display: flex; 
   flex-direction: column;
   justify-content: space-between;
-  color: var(--dark-blue);
+  flex-shrink: 0; /* Agregamos esto para evitar que la tarjeta se encoja */
+  margin: 0 auto; /* Para centrar la tarjeta */
 }
 .balance-header {
   display: flex; 
