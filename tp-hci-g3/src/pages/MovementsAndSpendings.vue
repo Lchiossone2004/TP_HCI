@@ -308,8 +308,8 @@ const filteredActivities = computed(() => {
   }
 
   .activity-col {
-    min-width: 350px;
     max-width: 750px;
+    width: 100%;
   }
 
   .chart-col {

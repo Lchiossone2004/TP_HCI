@@ -29,9 +29,7 @@ body, html, #app {
   --light-grey: #bbbbbb;
   --black-text: #1f1f1f;
   --button-grey-hover: #edf0f5;
---background-grey: #e8e8e8;
-
-
+  --background-grey: #e8e8e8;
 
   --blue-link: #3B82F6;
   --blue-button: #093256;

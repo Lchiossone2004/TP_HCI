@@ -256,25 +256,11 @@ input:focus {
 
 @media (max-width: 1200px) {
   .main-content {
-    padding: 1.5rem;
-  }
-
-  .cards-section {
-    padding: 1.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .main-content {
     padding: 1rem;
   }
 
   .cards-section {
     padding: 1rem;
-  }
-
-  .form-row {
-    flex-direction: column;
   }
 }
 </style>

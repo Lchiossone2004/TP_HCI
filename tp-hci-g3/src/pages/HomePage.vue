@@ -280,6 +280,9 @@ const currentMonthActivities = computed(() => {
 </script>
 
 <style scoped>
+.app{
+  display:flex;
+}
 .main-content {
   margin-left: 21vw;
   padding: 1rem;
@@ -290,6 +293,8 @@ const currentMonthActivities = computed(() => {
   flex-direction: column;
   gap: 1rem;
   box-sizing: border-box;
+  width: calc(100% - 21vw);
+
 }
 
 .top-section {
@@ -298,9 +303,6 @@ const currentMonthActivities = computed(() => {
   align-items: flex-start;
   width: 100%;
   gap: 1rem;
-  max-width: 1100px;
-  position: relative;
-  margin-top: 0;
 }
 
 .operations-buttons {
@@ -309,6 +311,7 @@ const currentMonthActivities = computed(() => {
   flex-shrink: 0;
   background-color: #03192c;
   border-radius: 20px;
+  margin: 0 auto;
 }
 
 .grid-container {
@@ -359,8 +362,7 @@ const currentMonthActivities = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 300px;
-  max-width: calc(100% - 380px);
+  min-width: 500px;
 }
 
 .add-card-form {
@@ -439,30 +441,28 @@ input:focus {
 .bottom-section {
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 1rem;
   width: 100%;
-  max-width: 1100px;
 }
 
 .inner1 {
   flex: 1;
-  min-width: 500px;
+  min-width: 360px; 
 }
 
 .inner2 {
-  width: 40%;
+  width: 50%;
+  min-width: 360px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
   min-width: 300px;
-  max-width: calc(100% - 420px);
   height: 100%;
 }
 
 .activity-card-outer {
   width: 100%;
-  max-width: 700px;
   background: #fff;
   border-radius: 20px;
   overflow: hidden;
@@ -512,7 +512,6 @@ input:focus {
   padding: 1rem;
   box-sizing: border-box;
   width: 100%;
-  max-width: 700px;
 }
 
 .enter-money-form {
@@ -630,82 +629,21 @@ input:focus {
   background-color: #e0e0e0;
 }
 
-@media (max-width: 1024px) {
-  .main-content {
-    margin-left: 21vw;
-    padding: 1rem;
-    min-height: 100vh;
-    background-color: #e6e6e6;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    width: 100%;
-  }
-
-  .top-section {
-    width: 100%;
-    max-width: 500px;
-    margin-top: 3rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .operations-buttons {
-    width: 100%;
-    max-width: 500px;
-    margin: 0;
-  }
-
-  .balance-and-cards {
-    width: 100%;
-    max-width: 500px;
-  }
-
+@media (max-width: 1200px) {
+  .top-section,
   .bottom-section {
-    width: 100%;
-    max-width: 500px;
-    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+    align-items: center;
   }
 
-  .inner1, .inner2 {
-    width: 100%;
-    max-width: 500px;
-  }
-
-  .activity-card-outer {
-    width: 100%;
-    max-width: 500px;
-  }
-}
-
-@media (max-width: 600px) {
-  .main-content {
-    margin-left: 0;
-    padding: 0.5rem;
-  }
-
-  .top-section {
-    margin-top: 2rem;
-  }
-
-  .operations-buttons,
   .balance-and-cards,
   .inner1,
-  .inner2,
-  .activity-card-outer {
+  .inner2 {
     width: 100%;
-    max-width: none;
+    min-width: 0;
+    max-width: 750px; /* Mismo que en MovementsAndSpendings */
+    margin: 0 auto;
   }
 }
 
-@media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-  }
-}
 </style>

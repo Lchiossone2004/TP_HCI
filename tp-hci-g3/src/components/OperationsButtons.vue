@@ -42,18 +42,7 @@
     align-items: center;
   }
 
-  @media (max-width: 1024px) {
-    .card {
-      width: 500px !important;
-    }
-  }
-
-  @media (max-width: 600px) {
-    .card {
-      width: 100% !important;
-      max-width: 500px !important;
-    }
-  }
+  
 </style>
 
   
