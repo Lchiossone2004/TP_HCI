@@ -1,17 +1,7 @@
 <template>
   <div class="layout">
     <main class="main-content">
-      <div class="header">
-        <button class="back-btn" @click="goBack">
-          <span class="material-symbols-rounded">arrow_back</span>
-          Volver
-        </button>
-        <h1>Mis Tarjetas</h1>
-        <button class="help-btn">
-          <span class="material-symbols-rounded">help</span>
-        </button>
-      </div>
-
+      <h1 class="header">Mis Tarjetas</h1>
       <div class="cards-section">
         <h2>Billetera Virtual</h2>
         <div class="cards-grid">
@@ -149,30 +139,13 @@ const formatCardNumber = (event) => {
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
-}
-
-.back-btn {
-  background: none;
-  border: none;
   color: var(--black-text);
-  font-size: var(--font-text);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-}
-
-.help-btn {
-  background: none;
-  border: none;
-  color: var(--black-text);
-  cursor: pointer;
 }
 
 .cards-section {
-  background: var(--white-inputs);
+  background: var(--dark-blue);
   border-radius: var(--general-radius);
   padding: 2rem;
 }

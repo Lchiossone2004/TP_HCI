@@ -68,7 +68,7 @@ const handleConfirmDelete = () => {
 
 <style scoped>
 .credit-card {
-  background: linear-gradient(135deg, var(--dark-blue), #0a4b85);
+  background: linear-gradient(135deg, #FFEC86, #FF7C1D);
   border-radius: var(--general-radius);
   padding: 1.5rem;
   width: 360px;
@@ -76,10 +76,8 @@ const handleConfirmDelete = () => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: var(--white-text);
+  color: var(--black-text);
   position: relative;
-  flex-shrink: 0; /* Prevenir que la tarjeta se encoja */
-  margin: 0 auto;
 }
 
 .card-header {
