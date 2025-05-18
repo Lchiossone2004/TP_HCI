@@ -13,24 +13,10 @@
         </div>
       
         <div class="inner2">
-          <div class="activity-card-outer">
-            <div class="header-activity-card">
-              <span>Gastos mensuales</span>
-              <button class="more-activities" @click="goToMovements">
-                <span class="material-symbols-rounded arrow">chevron_right</span>
-              </button>
-            </div>
-            <ExpensesChart 
-              :activities="currentMonthActivities"
-              :month="currentMonth" 
-              :year="currentYear"  
-            />
-          </div>
+          <ExpensesChart :activities="currentMonthActivities" :month="currentMonth" :year="currentYear" title="Gastos mensuales" :onClickMore="goToMovements"/>
         </div>
       </div>
     </main>
-
-    
   </div>
 </template>
 
@@ -131,37 +117,6 @@ const currentMonthActivities = computed(() => {
   gap: 1rem;
   min-width: 300px;
   height: 100%;
-}
-.activity-card-outer {
-  width: 100%;
-  background: #fff;
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-
-.arrow {
-  font-size: 25px;
-  color: #03192C;
-}
-
-.more-activities:hover {
-  background-color: #eaeaea;
-}
-
-.activity-card {
-  background-color: #FFFF;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  padding: 1rem;
-  box-sizing: border-box;
-  width: 100%;
-}
-
-.icon-right {
-  font-size: 25px;
 }
 @media (max-width: 1200px) {
   .top-section,

@@ -1,28 +1,38 @@
 <template>
-  <div class="expenses-chart-container" :class="{ 'simple': simple }">
-    <div v-if="!simple" class="expenses-chart-header">
-      <span class="total">${{ totalExpensesFormatted }}</span>
+  <div class="activity-card-outer">
+    <div class="header-activity-card" v-if="title">
+      <span>{{ title }}</span>
+      <button v-if="onClickMore" class="more-activities" @click="onClickMore">
+        <span class="material-symbols-rounded arrow">chevron_right</span>
+      </button>
     </div>
-    <div class="chart-legend-row" :class="{ 'simple': simple }">
-      <div class="chart-wrapper">
-        <canvas ref="chartRef"></canvas>
+
+    <div class="expenses-chart-container" :class="{ 'simple': simple }">
+      <div v-if="!simple" class="expenses-chart-header">
+        <span class="total">${{ totalExpensesFormatted }}</span>
       </div>
-      <div v-if="!simple" class="custom-legend">
-        <div v-for="(cat, i) in categories" :key="cat.key" class="legend-row">
-          <span class="legend-color" :style="{ backgroundColor: chartColors[i] }"></span>
-          <span class="legend-label">{{ cat.label }}</span>
+      <div class="chart-legend-row" :class="{ 'simple': simple }">
+        <div class="chart-wrapper">
+          <canvas ref="chartRef"></canvas>
+        </div>
+        <div v-if="!simple" class="custom-legend">
+          <div v-for="(cat, i) in categories" :key="cat.key" class="legend-row">
+            <span class="legend-color" :style="{ backgroundColor: chartColors[i] }"></span>
+            <span class="legend-label">{{ cat.label }}</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div v-if="!simple" class="categories-list">
-      <div v-for="cat in categories" :key="cat.key" class="category-row">
-        <span class="material-symbols-rounded category-icon">{{ cat.icon }}</span>
-        <span class="category-name">{{ cat.label }}</span>
-        <span class="category-amount">${{ formatAmount(cat.amount) }}</span>
+      <div v-if="!simple" class="categories-list">
+        <div v-for="cat in categories" :key="cat.key" class="category-row">
+          <span class="material-symbols-rounded category-icon">{{ cat.icon }}</span>
+          <span class="category-name">{{ cat.label }}</span>
+          <span class="category-amount">${{ formatAmount(cat.amount) }}</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
@@ -44,6 +54,14 @@ const props = defineProps({
   simple: {
     type: Boolean,
     default: false
+  },
+  title: {
+    type: String,
+    default: ''
+  },
+  onClickMore: {
+    type: Function,
+    default: null
   }
 })
 
@@ -306,4 +324,34 @@ canvas {
     align-items: center;
   }
 }
+.activity-card-outer {
+  width: 100%;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.header-activity-card {
+  font-size: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #1f1f1f;
+  margin-bottom: 1rem;
+}
+
+.more-activities {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.arrow {
+  font-size: 25px;
+  color: #1f1f1f;
+}
+
 </style>
