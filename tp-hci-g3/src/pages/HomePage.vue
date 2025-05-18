@@ -9,15 +9,9 @@
       </div>
       <div class="bottom-section">
         <div class="inner1">
-          <div class="header-activity-card">
-            <span>Actividad reciente</span>
-            <button class="more-activities" @click="goToMovements">
-              <span class="material-symbols-rounded arrow">chevron_right</span>
-            </button>
-          </div>
-          <Activity :activities="recentActivities" />
+          <Activity :activities="recentActivities" :title="'Actividad reciente'" :onClickMore="goToMovements"/>
         </div>
-        <!-- Gráfico de Gastos Mensuales -->
+      
         <div class="inner2">
           <div class="activity-card-outer">
             <div class="header-activity-card">
@@ -55,9 +49,6 @@ const currentYear = ref(new Date().getFullYear());
 function goToMovements() {
   router.push({ name: 'Actividad' });
 }
-
-const accion1 = () => {}
-const accion2 = () => {}
 
 const allActivities = ref([
   { icon: 'shopping_bag', title: 'Prüne', subtitle: 'Hoy 19:43', amount: -57800, date: '2025-05-14T19:43:00' },
@@ -148,31 +139,6 @@ const currentMonthActivities = computed(() => {
   overflow: hidden;
 }
 
-.header-activity-card {
-  background: #fff;
-  font-size: 25px;
-  padding: 1rem 1rem 0.1rem 1.7rem;
-  display: flex;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-  color: #1f1f1f;
-  position: relative;
-  z-index: 2;
-}
-
-.more-activities {
-  background-color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
 
 .arrow {
   font-size: 25px;
@@ -194,18 +160,6 @@ const currentMonthActivities = computed(() => {
   width: 100%;
 }
 
-
-
-
-.button-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-
 .icon-right {
   font-size: 25px;
 }
@@ -225,5 +179,4 @@ const currentMonthActivities = computed(() => {
     margin: 0 auto;
   }
 }
-
 </style>

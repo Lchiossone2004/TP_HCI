@@ -1,6 +1,13 @@
 <template>
-  <div class="activity-card">
-    <template v-if="filteredActivities.length > 0">
+  <div class="activity-card-outer">
+    <div class="header-activity-card">
+      <span>{{ title }}</span>
+      <button v-if="onClickMore" class="more-activities" @click="onClickMore">
+        <span class="material-symbols-rounded arrow">chevron_right</span>
+      </button>
+    </div>
+
+    <div v-if="filteredActivities.length > 0">
       <div 
         v-for="(item, index) in filteredActivities" 
         :key="index" 
@@ -23,12 +30,11 @@
           {{ formatAmount(item.amount) }}
         </div>
       </div>
-    </template>
-    <template v-else>
-      <div class="no-activity">No hay actividad</div>
-    </template>
+    </div>
+    <div v-else class="no-activity">No hay actividad</div>
   </div>
 </template>
+
 
 <script setup>
 import { computed } from 'vue'
@@ -45,8 +51,17 @@ const props = defineProps({
   year: {
     type: Number,
     default: -1
+  },
+  title: {
+    type: String,
+    default: 'Actividad'
+  },
+  onClickMore: {
+    type: Function,
+    default: null
   }
 })
+
 
 function formatAmount(value) {
   const formatted = Math.abs(value).toLocaleString('es-AR')
@@ -68,25 +83,47 @@ const filteredActivities = computed(() => {
 </script>
 
 <style scoped>
-.activity-card {
-  background-color: var(--white-inputs);
-  border-radius: var(--general-radius);
+.activity-card-outer {
+  width: 100%;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
   padding: 1rem;
   box-sizing: border-box;
-  width: 100%;
+}
+
+.header-activity-card {
+  font-size: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #1f1f1f;
+  margin-bottom: 1rem;
+}
+
+.more-activities {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.arrow {
+  font-size: 25px;
+  color: #1f1f1f;
 }
 
 .activity-item {
   display: flex;
   align-items: center;
-  padding: 1rem;
-  border-radius: var(--general-radius);
+  padding: 0.75rem 0;
+  border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .activity-item:hover {
-  background-color: var(--button-grey-hover);
+  background-color: #f5f5f5;
 }
 
 .icon-wrapper {
@@ -156,6 +193,7 @@ const filteredActivities = computed(() => {
   font-size: var(--font-subtitle);
   padding: 2rem 0;
 }
+
 
 @media (max-width: 500px) {
   .info {

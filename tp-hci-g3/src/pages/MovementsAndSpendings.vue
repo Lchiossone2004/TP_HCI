@@ -51,7 +51,14 @@
               placeholder="Buscar por nombre, fecha, hora..."
             />
           </div>
-          <Activity :activities="filteredActivities" :month="selectedMonth" :year="selectedYear" />
+          <Activity 
+  :activities="filteredActivities" 
+  :month="selectedMonth" 
+  :year="selectedYear" 
+  title="Movimientos del mes"
+ 
+/>
+
         </div>
         <div class="chart-col">
           <ExpensesChart
