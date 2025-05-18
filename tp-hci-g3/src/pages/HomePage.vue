@@ -78,6 +78,7 @@
         </div>
       </div>
     </main>
+
     <Modal v-model="showMyInfoModal" title="Mis datos">
       <div class="enter-money-form">
         <div class="form-group">
@@ -101,6 +102,7 @@
         <button class="submit-button" @click="closeModal">Cerrar</button>
       </div>
     </Modal>
+
     <Modal v-model="showMoreModal" title="Más">
       <div class="button-container">
         <button class="modal-button" @click="accion1">
@@ -114,6 +116,7 @@
       </div>
       <button class="submit-button" @click="closeModal">Cerrar</button>
     </Modal>
+
     <Modal v-model="showAddCardModal" title="Agregar tarjeta">
       <form @submit.prevent="handleAddCard" class="add-card-form">
         <div class="form-group">
@@ -234,12 +237,6 @@ const accountInfo = ref({
 const closeModal = () => {
   showMyInfoModal.value = false;
   showMoreModal.value = false;
-};
-
-const handleResize = () => {
-  isMobile.value = window.innerWidth <= 1024;
-  isVerySmall.value = window.innerWidth <= 600;
-  isMedium.value = window.innerWidth <= 800;
 };
 
 function goToMovements() {
