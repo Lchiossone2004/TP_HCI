@@ -25,7 +25,7 @@ import OperationsButtons from '@/components/OperationsButtons.vue';
 import ExpensesChart from '@/components/ExpensesChart.vue';
 import Swiper from '@/components/Swiper.vue';
 import Activity from '@/components/Activity.vue';
-import { ref, onMounted,computed } from 'vue';
+import { ref,computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
