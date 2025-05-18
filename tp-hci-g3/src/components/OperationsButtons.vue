@@ -62,6 +62,16 @@
   function irATransferencias() {
   router.push({ name: 'Transfer' });
 }
+const copyToClipboard = async (text) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    // Podés mostrar un mensaje de confirmación si querés
+    console.log('Texto copiado:', text);
+  } catch (err) {
+    console.error('Error al copiar al portapapeles:', err);
+  }
+};
+
 // Account information
 const accountInfo = ref({
   cvu: '0000003100064484890001',
@@ -74,6 +84,7 @@ const openInfoModal = () => {
 const closeModal = () => {
   showMyInfoModal.value = false;
 };
+
 </script>
 
 <style scoped>
