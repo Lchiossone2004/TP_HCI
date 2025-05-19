@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- Slot para personalizar el botón -->
     <div @click="showModal = true">
       <slot></slot>
     </div>
@@ -15,21 +14,46 @@
             placeholder="XXXX XXXX XXXX XXXX"
             maxlength="19"
             @input="formatCardNumber"
+            :class="{ 'error': errors.number }"
           >
+          <span class="error-message" v-if="errors.number">{{ errors.number }}</span>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Vencimiento</label>
-            <input v-model="newCard.expiry" type="text" placeholder="MM/YY" maxlength="5">
+            <input 
+              v-model="newCard.expiry"
+              type="text"
+              placeholder="MM/YY"
+              maxlength="5"
+              @input="formatExpiry"
+              :class="{ 'error': errors.expiry }"
+            >
+            <span class="error-message" v-if="errors.expiry">{{ errors.expiry }}</span>
           </div>
           <div class="form-group">
             <label>CVV</label>
-            <input v-model="newCard.cvv" type="text" placeholder="123" maxlength="3">
+            <input 
+              v-model="newCard.cvv"
+              type="text"
+              :placeholder="isAmex ? '1234' : '123'"
+              :maxlength="isAmex ? 4 : 3"
+              @input="formatCVV"
+              :class="{ 'error': errors.cvv }"
+            >
+            <span class="error-message" v-if="errors.cvv">{{ errors.cvv }}</span>
           </div>
         </div>
         <div class="form-group">
           <label>Nombre en la tarjeta</label>
-          <input v-model="newCard.name" type="text" placeholder="NOMBRE APELLIDO">
+          <input 
+            v-model="newCard.name"
+            type="text"
+            placeholder="NOMBRE APELLIDO"
+            @input="formatName"
+            :class="{ 'error': errors.name }"
+          >
+          <span class="error-message" v-if="errors.name">{{ errors.name }}</span>
         </div>
         <div class="button-group">
           <button type="submit" class="submit-button">Agregar</button>
@@ -41,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import Modal from './Modal.vue'
 
 const emit = defineEmits(['add-card'])
@@ -53,7 +77,57 @@ const newCard = ref({
   name: ''
 })
 
+const isAmex = computed(() => {
+  return newCard.value.number.startsWith('3')
+})
+
+const errors = ref({
+  number: '',
+  expiry: '',
+  cvv: '',
+  name: ''
+})
+
+const validateForm = () => {
+  let isValid = true
+  errors.value = {
+    number: '',
+    expiry: '',
+    cvv: '',
+    name: ''
+  }
+
+  // Validar campos vacíos
+  if (!newCard.value.number) {
+    errors.value.number = 'Campo obligatorio'
+    isValid = false
+  }
+  if (!newCard.value.expiry) {
+    errors.value.expiry = 'Campo obligatorio'
+    isValid = false
+  }
+  if (!newCard.value.cvv) {
+    errors.value.cvv = 'Campo obligatorio'
+    isValid = false
+  } else {
+    // Validar longitud del CVV según tipo de tarjeta
+    const requiredLength = isAmex.value ? 4 : 3
+    if (newCard.value.cvv.length !== requiredLength) {
+      errors.value.cvv = `El CVV debe tener ${requiredLength} dígitos`
+      isValid = false
+    }
+  }
+  if (!newCard.value.name) {
+    errors.value.name = 'Campo obligatorio'
+    isValid = false
+  }
+
+  return isValid
+}
+
 const handleAddCard = () => {
+  if (!validateForm()) return
+
   emit('add-card', {
     id: Date.now(),
     ...newCard.value
@@ -66,6 +140,34 @@ const formatCardNumber = (event) => {
   let value = event.target.value.replace(/\D/g, '')
   value = value.replace(/(\d{4})/g, '$1 ').trim()
   newCard.value.number = value
+}
+
+const formatExpiry = (event) => {
+  let value = event.target.value.replace(/\D/g, '')
+  
+  if (value.length >= 2) {
+    const month = value.substring(0, 2)
+    const year = value.substring(2)
+    if (parseInt(month) > 12) {
+      errors.value.expiry = 'Mes inválido'
+      return
+    }
+    newCard.value.expiry = month + (year.length ? '/' + year : '')
+  } else {
+    newCard.value.expiry = value
+  }
+}
+
+const formatCVV = (event) => {
+  let value = event.target.value.replace(/\D/g, '')
+  const maxLength = isAmex.value ? 4 : 3
+  newCard.value.cvv = value.slice(0, maxLength)
+}
+
+const formatName = (event) => {
+  let value = event.target.value.replace(/[^a-zA-Z\s]/g, '')
+  value = value.toLowerCase().replace(/(?:^|\s)\S/g, letter => letter.toUpperCase())
+  newCard.value.name = value
 }
 </script>
 
@@ -146,6 +248,17 @@ input:focus {
 
 .cancel-button:hover {
   background: var(--light-grey);
+}
+
+.error {
+  border-color: var(--error-color, #dc3545) !important;
+}
+
+.error-message {
+  color: var(--error-color, #dc3545);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  margin-left: 0.5rem;
 }
 
 @media (max-width: 480px) {
