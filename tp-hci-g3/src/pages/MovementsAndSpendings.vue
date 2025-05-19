@@ -52,13 +52,12 @@
             />
           </div>
           <Activity 
-  :activities="filteredActivities" 
-  :month="selectedMonth" 
-  :year="selectedYear" 
-  title="Movimientos del mes"
- 
-/>
-
+            :activities="filteredActivities" 
+            :month="selectedMonth" 
+            :year="selectedYear" 
+            title="Movimientos del mes"
+          
+          />
         </div>
         <div class="chart-col">
           <ExpensesChart
