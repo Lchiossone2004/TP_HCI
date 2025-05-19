@@ -2,11 +2,10 @@
   <div class="slider-card">
     <div class="slide-content" :style="{ transform: `translateX(-${activeSlide * 100}%)` }">
       <template v-for="(component, index) in slides" :key="index">
-  <div class="slide-wrapper">
-    <component :is="component.type" v-bind="component.props" />
-  </div>
-</template>
-
+        <div class="slide-wrapper">
+          <component :is="component.type" v-bind="component.props" />
+        </div>
+      </template>
     </div>
 
     <div class="navigation-arrows" v-if="slides.length > 1">
@@ -28,41 +27,13 @@
       </button>
     </div>
   </div>
-
-  <Modal v-model="showAddCardModal" title="Agregar tarjeta">
-    <form @submit.prevent="handleAddCard" class="add-card-form">
-      <div class="form-group">
-        <label>Número de tarjeta</label>
-        <input v-model="newCard.number" type="text" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" @input="formatCardNumber" />
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Vencimiento</label>
-          <input v-model="newCard.expiry" type="text" placeholder="MM/YY" maxlength="5" />
-        </div>
-        <div class="form-group">
-          <label>CVV</label>
-          <input v-model="newCard.cvv" type="text" placeholder="123" maxlength="3" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Nombre en la tarjeta</label>
-        <input v-model="newCard.name" type="text" placeholder="NOMBRE APELLIDO" />
-      </div>
-      <div class="button-group">
-        <button type="submit" class="submit-button">Agregar</button>
-        <button type="button" class="cancel-button" @click="showAddCardModal = false">Cancelar</button>
-      </div>
-    </form>
-  </Modal>
 </template>
 
 <script setup>
 import { ref, watch, computed, onMounted } from 'vue'
 import BalanceCard from './BalanceCard.vue'
 import Cards from './Cards.vue'
-import AddCardButton from './AddCardButton.vue'
-import Modal from './Modal.vue'
+import AddCard from './AddCard.vue'
 
 const props = defineProps({
   cards: { type: Array, default: () => [] }
@@ -70,8 +41,6 @@ const props = defineProps({
 const emit = defineEmits(['update:cards'])
 
 const activeSlide = ref(0)
-const showAddCardModal = ref(false)
-const newCard = ref({ number: '', expiry: '', cvv: '', name: '' })
 const cardsInternal = ref([...props.cards])
 
 watch(() => props.cards, (val) => {
@@ -90,7 +59,12 @@ const slides = computed(() => {
   return [
     { type: BalanceCard },
     ...cardComponents,
-    { type: AddCardButton, props: { onClick: () => showAddCardModal.value = true } }
+    { 
+      type: AddCard,
+      props: {
+        'onAdd-card': handleAddCard
+      }
+    }
   ]
 })
 
@@ -109,20 +83,12 @@ onMounted(() => {
   }
 })
 
-const handleAddCard = () => {
-  cardsInternal.value.push({ id: Date.now(), ...newCard.value })
-  newCard.value = { number: '', expiry: '', cvv: '', name: '' }
-  showAddCardModal.value = false
+const handleAddCard = (newCard) => {
+  cardsInternal.value.push(newCard)
 }
 
 const handleDeleteCard = (index) => {
   cardsInternal.value.splice(index, 1)
-}
-
-const formatCardNumber = (event) => {
-  let value = event.target.value.replace(/\D/g, '')
-  value = value.replace(/(\d{4})/g, '$1 ').trim()
-  newCard.value.number = value
 }
 
 const nextSlide = () => {

@@ -1,7 +1,11 @@
 <template>
   <div class="credit-card">
     <div class="card-header">
-      <span class="card-type">{{ getCardType(card.number) }}</span>
+      <img 
+        :src="getCardLogo(card.number)" 
+        :alt="getCardType(card.number)" 
+        :class="['card-logo', `card-logo-${getCardType(card.number).toLowerCase()}`]"
+      />
       <button class="delete-btn" @click="showConfirmDelete = true">
         <span class="material-symbols-rounded">delete</span>
       </button>
@@ -11,12 +15,8 @@
     </div>
     <div class="card-footer">
       <div class="card-holder">
-        <span class="label">Titular</span>
         <span class="value">{{ card.name }}</span>
-      </div>
-      <div class="card-expiry">
-        <span class="label">Vence</span>
-        <span class="value">{{ card.expiry }}</span>
+        <span class="expiry">{{ card.expiry }}</span>
       </div>
     </div>
 
@@ -41,6 +41,9 @@
 <script setup>
 import { ref } from 'vue'
 import Modal from './Modal.vue'
+import visaLogo from '@/assets/images/cardEmisors/visa.png'
+import mastercardLogo from '@/assets/images/cardEmisors/mastercard.png'
+import amexLogo from '@/assets/images/cardEmisors/amex.png'
 
 const props = defineProps({
   card: {
@@ -54,10 +57,19 @@ const showConfirmDelete = ref(false)
 
 const getCardType = (number) => {
   const firstDigit = number[0]
-  if (firstDigit === '4') return 'VISA'
-  if (firstDigit === '5') return 'MASTERCARD'
-  if (firstDigit === '3') return 'AMERICAN EXPRESS'
+  if (firstDigit === '4') return 'visa'
+  if (firstDigit === '5') return 'mastercard'
+  if (firstDigit === '3') return 'amex'
   return 'TARJETA'
+}
+
+const getCardLogo = (number) => {
+  const firstDigit = number[0]
+  // Usar directamente las imágenes importadas
+  if (firstDigit === '4') return visaLogo
+  if (firstDigit === '5') return mastercardLogo
+  if (firstDigit === '3') return amexLogo
+  return '' // o una imagen por defecto si la tienes
 }
 
 const handleConfirmDelete = () => {
@@ -69,7 +81,7 @@ const handleConfirmDelete = () => {
 <style scoped>
 .credit-card {
   background: linear-gradient(135deg, #FFEC86, #FF7C1D);
-  border-radius: var(--general-radius);
+  border-radius: 10px;
   padding: 1.5rem;
   width: 360px;
   height: 200px;
@@ -78,56 +90,79 @@ const handleConfirmDelete = () => {
   justify-content: space-between;
   color: var(--black-text);
   position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  height: 40px;
 }
 
-.card-type {
-  font-size: var(--font-text);
-  font-weight: bold;
+.card-logo {
+  height: 30px;
+  object-fit: contain;
+}
+
+.card-logo-mastercard {
+  height: 40px;
+  margin-top: -5px;
+}
+
+.card-logo-amex {
+  height: 50px;
+  margin-top: -10px;
 }
 
 .delete-btn {
   background: none;
   border: none;
-  color: var(--white-text);
-  opacity: 0.7;
+  color: rgba(0, 0, 0, 0.7);
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: color 0.2s;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 
 .delete-btn:hover {
-  opacity: 1;
+  color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .card-number {
-  font-size: var(--font-big);
+  font-size: 1.4rem;
   letter-spacing: 2px;
+  font-family: "Courier New", monospace;
+  color: rgba(0, 0, 0, 0.9);
+  margin: 1rem 0;
 }
 
 .card-footer {
+  margin-top: auto;
+}
+
+.card-holder {
   display: flex;
   justify-content: space-between;
-}
-
-.card-holder, .card-expiry {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.label {
-  font-size: var(--font-mini);
-  opacity: 0.7;
+  align-items: flex-end;
 }
 
 .value {
-  font-size: var(--font-text);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(0, 0, 0, 0.9);
 }
+
+.expiry {
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.8);
+}
+
 .confirm-delete {
   display: flex;
   flex-direction: column;

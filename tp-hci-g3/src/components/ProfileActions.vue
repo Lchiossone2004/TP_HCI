@@ -14,10 +14,12 @@
     <!-- Modal para Administrar dinero -->
     <Modal v-model="showMoneyModal" title="Administrar dinero">
       <div class="money-actions">
-        <button class="money-action-btn" @click="handleEnterMoney">
-          <span class="material-symbols-rounded">add</span>
-          <span>Ingresar dinero</span>
-        </button>
+        <ShowInfoButton>
+          <button class="money-action-btn">
+            <span class="material-symbols-rounded">add</span>
+            <span>Ingresar dinero</span>
+          </button>
+        </ShowInfoButton>
         <button class="money-action-btn" @click="handleTransfer">
           <span class="material-symbols-rounded">sync_alt</span>
           <span>Transferir</span>
@@ -32,31 +34,6 @@
         </button>
       </div>
     </Modal>
-
-    <!-- Modal para Mis datos -->
-    <Modal v-model="showMyInfoModal" title="Mis datos">
-      <div class="enter-money-form">
-        <div class="form-group">
-          <label for="cvu">CVU</label>
-          <div class="info-row">
-            <div class="info-value-container">
-              <span class="info-value">{{ accountInfo.cvu }}</span>
-              <span class="material-symbols-rounded copy-icon" @click="copyToClipboard(accountInfo.cvu)" title="Copiar CVU">content_copy</span>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="alias">Alias</label>
-          <div class="info-row">
-            <div class="info-value-container">
-              <span class="info-value">{{ accountInfo.alias }}</span>
-              <span class="material-symbols-rounded copy-icon" @click="copyToClipboard(accountInfo.alias)" title="Copiar Alias">content_copy</span>
-            </div>
-          </div>
-        </div>
-        <button class="submit-button" @click="showMyInfoModal = false">Cerrar</button>
-      </div>
-    </Modal>
   </div>
 </template>
 
@@ -64,16 +41,12 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Modal from './Modal.vue'
+import ShowInfoButton from './ShowInfoButton.vue'
 
 const router = useRouter()
 const emit = defineEmits(['edit'])
 const showMoneyModal = ref(false)
-const showMyInfoModal = ref(false)
 
-const accountInfo = ref({
-  cvu: '0000003100064484890001',
-  alias: 'mateo.gorriti'
-})
 
 const actions = [
   { label: 'Datos de mi cuenta', icon: 'person', action: 'edit' },
@@ -96,7 +69,6 @@ const handleClick = (action) => {
 
 const handleEnterMoney = () => {
   showMoneyModal.value = false
-  showMyInfoModal.value = true
 }
 
 const handleTransfer = () => {
@@ -111,15 +83,6 @@ const handleCollect = () => {
 const handlePay = () => {
   // Implementar lógica de pago
   showMoneyModal.value = false
-}
-
-const copyToClipboard = async (text) => {
-  try {
-    await navigator.clipboard.writeText(text)
-    // Aquí podrías añadir una notificación de éxito si lo deseas
-  } catch (err) {
-    console.error('Error al copiar:', err)
-  }
 }
 </script>
 
@@ -195,62 +158,6 @@ const copyToClipboard = async (text) => {
 
 .money-action-btn .material-symbols-rounded {
   color: var(--dark-blue);
-}
-
-.enter-money-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.info-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.info-value-container {
-  position: relative;
-  flex: 1;
-}
-
-.info-value {
-  display: block;
-  width: 100%;
-  padding: 0.75rem;
-  background-color: var(--background-grey);
-  border-radius: var(--icon-radius);
-  padding-right: 2.5rem;
-}
-
-.copy-icon {
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: var(--dark-blue);
-}
-
-.submit-button {
-  background: var(--dark-blue);
-  color: var(--white-text);
-  border: none;
-  padding: 0.75rem;
-  border-radius: var(--button-radius);
-  cursor: pointer;
-  margin-top: 1rem;
-}
-
-.submit-button:hover {
-  background: var(--blue-button-hover);
 }
 
 @media (max-width: 768px) {
