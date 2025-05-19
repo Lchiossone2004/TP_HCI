@@ -31,6 +31,7 @@ const route = useRoute()
 const menuItems = [
   { text: 'Inicio', icon: 'home', name: 'Home' },
   { text: 'Actividad', icon: 'description', name: 'Actividad' },
+  { text: 'Tarjetas', icon: 'credit_card', name: 'Tarjetas' },
   { text: 'Perfil', icon: 'account_circle', name: 'ProfilePage' },
 ]
 
