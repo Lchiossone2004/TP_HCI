@@ -14,13 +14,13 @@
         <h4>Transferir</h4>
       </div>
       <div class="grid-item">
-        <button class="operation-button">
+        <button class="operation-button" @click="irAServicios('collect')">
           <span class="material-symbols-rounded icon">attach_money</span>
         </button>
         <h4>Cobrar servicios</h4>
       </div>
       <div class="grid-item">
-        <button class="operation-button">
+        <button class="operation-button" @click="irAServicios('pay')">
           <span class="material-symbols-rounded icon">payment_arrow_down</span>
         </button>
         <h4>Pagar servicios</h4>
@@ -55,13 +55,14 @@
 
 <script setup>
   import { useRouter } from 'vue-router';
-  import { ref, onMounted, computed } from 'vue';
+  import { ref } from 'vue';
   import Modal from '@/components/Modal.vue';
   const router = useRouter();
   const showMyInfoModal = ref(false);
   function irATransferencias() {
   router.push({ name: 'Transfer' });
 }
+
 const copyToClipboard = async (text) => {
   try {
     await navigator.clipboard.writeText(text);
@@ -84,6 +85,13 @@ const openInfoModal = () => {
 const closeModal = () => {
   showMyInfoModal.value = false;
 };
+
+function irAServicios(tab) {
+  router.push({ 
+    name: 'Servicios',
+    query: { tab } 
+  });
+}
 
 </script>
 

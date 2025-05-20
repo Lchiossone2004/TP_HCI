@@ -165,9 +165,7 @@ const formatCVV = (event) => {
 }
 
 const formatName = (event) => {
-  let value = event.target.value.replace(/[^a-zA-Z\s]/g, '')
-  value = value.toLowerCase().replace(/(?:^|\s)\S/g, letter => letter.toUpperCase())
-  newCard.value.name = value
+  newCard.value.name = event.target.value.replace(/[^a-zA-Z\s]/g, '')
 }
 </script>
 

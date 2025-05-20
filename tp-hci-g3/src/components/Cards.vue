@@ -1,5 +1,5 @@
 <template>
-  <div class="credit-card">
+  <div class="credit-card" :class="cardTypeClass">
     <div class="card-header">
       <img 
         :src="getCardLogo(card.number)" 
@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import Modal from './Modal.vue'
 import visaLogo from '@/assets/images/cardEmisors/visa.png'
 import mastercardLogo from '@/assets/images/cardEmisors/mastercard.png'
@@ -72,6 +72,11 @@ const getCardLogo = (number) => {
   return '' // o una imagen por defecto si la tienes
 }
 
+const cardTypeClass = computed(() => {
+  const type = getCardType(props.card.number)
+  return `card-${type}`
+})
+
 const handleConfirmDelete = () => {
   emit('delete')
   showConfirmDelete.value = false
@@ -80,8 +85,7 @@ const handleConfirmDelete = () => {
 
 <style scoped>
 .credit-card {
-  background: linear-gradient(135deg, #FFEC86, #FF7C1D);
-  border-radius: 10px;
+  border-radius: var(--general-radius);
   padding: 1.5rem;
   width: 360px;
   height: 200px;
@@ -91,6 +95,18 @@ const handleConfirmDelete = () => {
   color: var(--black-text);
   position: relative;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-visa {
+  background: linear-gradient(135deg, #c8b2ff, #5d29ee);
+}
+
+.card-mastercard {
+  background: linear-gradient(135deg, #FFEC86, #FF7C1D);
+}
+
+.card-amex {
+  background: linear-gradient(135deg, #b4fff4, #0d809a);
 }
 
 .card-header {
