@@ -197,7 +197,7 @@ const handleConfirmDelete = () => {
 }
 
 .delete-confirm-btn:hover {
-  background: #ff3333;
+  background: var(--red-button);
 }
 
 .cancel-btn {

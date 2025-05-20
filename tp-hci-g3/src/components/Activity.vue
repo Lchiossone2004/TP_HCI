@@ -116,7 +116,7 @@ const filteredActivities = computed(() => {
 .activity-item {
   display: flex;
   align-items: center;
-  padding: 0.75rem 0;
+  padding: 0.75rem;
   border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.2s;

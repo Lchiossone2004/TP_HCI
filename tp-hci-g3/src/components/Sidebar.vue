@@ -101,7 +101,7 @@ function logout() {
 
 .menu-btn.danger {
   margin-bottom: 10rem;
-  color: #ff4d4d;
+  color: var(--red-danger);
 }
 
 .menu-btn.danger:hover {
