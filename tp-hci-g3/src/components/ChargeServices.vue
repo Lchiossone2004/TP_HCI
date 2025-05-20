@@ -4,18 +4,18 @@
       <h2>Generar cobro</h2>
       <form @submit.prevent="generatePayment" class="generate-form">
         <div class="form-group">
-          <label>Monto a cobrar</label>
-          <div class="amount-input">
+            <label>Monto a cobrar</label>
+            <div class="amount-input" :class="{ 'error': errors.amount }">
             <span class="currency">$</span>
             <input 
-              v-model="amount"
-              type="number"
-              min="1"
-              step="0.01"
-              placeholder="0.00"
-              required
+                v-model="amount"
+                type="number"
+                min="1"
+                step="0.01"
+                placeholder="0.00"
             >
-          </div>
+            </div>
+            <span class="error-message" v-if="errors.amount">{{ errors.amount }}</span>
         </div>
         <button type="submit" class="submit-btn">Generar cobro</button>
       </form>
@@ -72,10 +72,20 @@
 import { ref, onMounted } from 'vue'
 
 const amount = ref('')
+const errors = ref({
+  amount: ''
+})
 const currentPayment = ref(null)
 const pendingPayments = ref([])
 
 const generatePayment = () => {
+  errors.value.amount = ''
+  
+  if (!amount.value) {
+    errors.value.amount = 'Campo vacío, debe ingresar un valor'
+    return
+  }
+
   const newPayment = {
     id: generateId(),
     amount: parseFloat(amount.value),
@@ -87,7 +97,6 @@ const generatePayment = () => {
   pendingPayments.value.push(newPayment)
   amount.value = ''
   
-  // Guardar en localStorage
   localStorage.setItem('pendingPayments', JSON.stringify(pendingPayments.value))
 }
 
@@ -143,18 +152,18 @@ onMounted(() => {
   display: flex;
   align-items: center;
   background: var(--background-grey);
-  border-radius: var(--input-radius);
-  padding: 0.5rem 1rem;
-  border: 1px solid transparent;
+  border-radius: var(--icon-radius);
+  padding: 0.75rem 1rem;
+  border: 2px solid transparent;
   transition: border-color 0.2s;
 }
 
 .amount-input.error {
-  border-color: var(--error-color);
+  border-color: var(--red-danger);
 }
 
 .error-message {
-  color: var(--error-color);
+  color: var(--red-danger);
   font-size: 0.8rem;
   margin-top: 0.25rem;
   margin-left: 0.5rem;
@@ -170,6 +179,7 @@ input {
   background: none;
   font-size: var(--font-text);
   width: 100%;
+  border-radius: var(--icon-radius);
 }
 
 .submit-btn {
@@ -197,7 +207,8 @@ input {
   gap: 0.5rem;
   background: var(--background-grey);
   padding: 0.75rem 1rem;
-  border-radius: var(--input-radius);
+  border-radius: var(--icon-radius);
+  border: 2px solid transparent;
   overflow: hidden;
   word-break: break-all;
 }

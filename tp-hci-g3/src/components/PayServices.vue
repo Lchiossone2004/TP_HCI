@@ -1,50 +1,87 @@
 <template>
-  <div class="pay-services">
-    <div class="payment-form">
-      <h2>Pagar servicio</h2>
-      <form @submit.prevent="handleSubmit" class="search-form">
-        <div class="form-group">
-          <label>ID o Link del pago</label>
-          <input 
-            v-model="searchQuery"
-            type="text"
-            placeholder="Ingrese el ID o link del pago"
-            :class="{ 'error': errors.search }"
-          >
-          <span class="error-message" v-if="errors.search">{{ errors.search }}</span>
-        </div>
-        <button type="submit" class="search-btn">Buscar</button>
-      </form>
+    <div class="pay-services">
+        <div class="payment-form">
+        <h2>Pagar servicio</h2>
+        <form @submit.prevent="handleSubmit" class="search-form">
+            <div class="form-group">
+            <label>ID o Link del pago</label>
+            <div class="input-container" :class="{ 'error': errors.search }">
+                <input 
+                v-model="searchQuery"
+                type="text"
+                placeholder="Ingrese el ID o link del pago"
+                >
+            </div>
+            <span class="error-message" v-if="errors.search">{{ errors.search }}</span>
+            </div>
+            <button type="submit" class="search-btn">Buscar</button>
+        </form>
 
-      <div v-if="paymentFound" class="payment-details">
-        <h3>Detalles del pago</h3>
-        <div class="detail-row">
-          <label>Monto:</label>
-          <span class="amount">${{ paymentFound.amount }}</span>
+        <div v-if="paymentFound" class="payment-details">
+            <h3>Detalles del pago</h3>
+            <div class="detail-row">
+            <label>Monto:</label>
+            <span class="amount">${{ paymentFound.amount }}</span>
+            </div>
+            <div class="detail-row">
+            <label>ID:</label>
+            <div class="info-value-container">
+                <span class="payment-text">{{ paymentFound.id }}</span>
+            </div>
+            </div>
+            <button @click="showConfirmPayment = true" class="pay-btn">Pagar ahora</button>
         </div>
-        <div class="detail-row">
-          <label>ID:</label>
-          <span>{{ paymentFound.id }}</span>
-        </div>
-        <button @click="processPayment" class="pay-btn">Pagar ahora</button>
-      </div>
 
-      <div v-if="error" class="error-message">
-        {{ error }}
-      </div>
+        <div v-if="error && !errors.search" :class="['notification-message', { 'success': isSuccess, 'error': !isSuccess }]">
+            {{ error }}
+        </div>
+        </div>
+
+        <!-- Modal de confirmación -->
+        <Modal v-model="showConfirmPayment" title="Confirmar pago">
+        <div class="confirm-payment">
+            <p>¿Está seguro que desea realizar este pago?</p>
+            <div class="payment-summary">
+            <div class="summary-row">
+                <span>Monto:</span>
+                <span class="amount">${{ paymentFound?.amount }}</span>
+            </div>
+            <div class="summary-row">
+                <span>ID:</span>
+                <span class="payment-text">{{ paymentFound?.id }}</span>
+            </div>
+            </div>
+            <div class="button-group">
+            <button @click="confirmPayment" class="confirm-btn">
+                Confirmar
+            </button>
+            <button @click="showConfirmPayment = false" class="cancel-btn">
+                Cancelar
+            </button>
+            </div>
+        </div>
+        </Modal>
     </div>
-  </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'  // Added computed import
+import Modal from './Modal.vue'
 
+const isSuccess = computed(() => error.value === 'Pago procesado exitosamente')
 const searchQuery = ref('')
 const paymentFound = ref(null)
 const error = ref('')
 const errors = ref({
   search: ''
 })
+
+const showConfirmPayment = ref(false)
+
+const confirmPayment = () => {
+  processPayment()
+  showConfirmPayment.value = false
+}
 
 const searchPayment = () => {
   const pendingPayments = JSON.parse(localStorage.getItem('pendingPayments') || '[]')
@@ -105,22 +142,33 @@ const handleSubmit = () => {
   margin-bottom: 1.5rem;
 }
 
-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid transparent;
+.input-container {
+  display: flex;
+  align-items: center;
   background: var(--background-grey);
-  border-radius: var(--input-radius);
-  font-size: var(--font-text);
+  border-radius: var(--icon-radius);
+  border: 2px solid transparent;
   transition: border-color 0.2s;
 }
 
-input.error {
-  border-color: var(--error-color);
+.input-container.error {
+  border-color: var(--red-danger);
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: none;
+  font-size: var(--font-text);
+}
+
+input:focus {
+  outline: none;
 }
 
 .error-message {
-  color: var(--error-color);
+  color: var(--red-danger);
   font-size: 0.8rem;
   margin-top: 0.25rem;
   margin-left: 0.5rem;
@@ -154,15 +202,91 @@ input.error {
   color: var(--dark-blue);
 }
 
-.error-message {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: var(--error-light);
-  color: var(--error-color);
-  border-radius: var(--general-radius);
-}
-
 .pay-btn {
   margin-top: 1.5rem;
 }
+
+.info-value-container {
+  background: var(--background-grey);
+  padding: 0.75rem 1rem;
+  border-radius: var(--icon-radius);
+  width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.success-message {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--green);
+  color: white;
+  border-radius: var(--general-radius);
+}
+
+.payment-text {
+  font-size: var(--font-text);
+  font-family: monospace;
+  color: var(--dark-grey-text);
+}
+
+.confirm-payment {
+  padding: 1rem;
+  text-align: center;
+}
+
+.payment-summary {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: var(--background-grey);
+  border-radius: var(--icon-radius);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.confirm-btn, .cancel-btn {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: var(--button-radius);
+  cursor: pointer;
+  font-size: var(--font-text);
+}
+
+.confirm-btn {
+  background: var(--dark-blue);
+  color: white;
+}
+
+.cancel-btn {
+  background: var(--background-grey);
+  color: var(--dark-blue);
+}
+
+.notification-message {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: var(--general-radius);
+  color: white;
+}
+
+.notification-message.success {
+  background: var(--green);
+}
+
+.notification-message.error {
+  background: var(--red-danger);
+}
+
 </style>
