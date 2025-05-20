@@ -76,14 +76,21 @@ const handleTransfer = () => {
 }
 
 const handleCollect = () => {
-  // Implementar lógica de cobro
+  router.push({ 
+    name: 'Servicios',
+    query: { tab: 'collect' }
+  })
   showMoneyModal.value = false
 }
 
 const handlePay = () => {
-  // Implementar lógica de pago
+  router.push({ 
+    name: 'Servicios',
+    query: { tab: 'pay' }
+  })
   showMoneyModal.value = false
 }
+
 </script>
 
 <style scoped>

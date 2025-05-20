@@ -46,6 +46,11 @@ const routes = [
   name: 'Tarjetas',
   component: () => import('@/pages/CardsPage.vue')
   },
+  {
+    path: '/servicios',
+    name: 'Servicios',
+    component: () => import('@/pages/ServicesPage.vue')
+  },
 ]
 
 const router = createRouter({
