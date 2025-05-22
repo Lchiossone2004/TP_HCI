@@ -58,16 +58,6 @@ const router = createRouter({
   routes
 })
 
-// Guard global para verificar autenticación
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('email') || sessionStorage.getItem('email')
-
-  if (to.name !== 'Auth' && !isAuthenticated) {
-    next({ name: 'Auth' })
-  } else {
-    next()
-  }
-})
 
 export default router
 

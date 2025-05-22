@@ -14,5 +14,8 @@ import vuetify from './plugins/vuetify'
 import './assets/main.css'
 import Chart from 'chart.js/auto';
 import '@mdi/font/css/materialdesignicons.css'
+import { createPinia } from 'pinia'
 
-createApp(App).use(router).use(vuetify).mount('#app')
+const pinia = createPinia()
+
+createApp(App).use(router).use(vuetify).use(pinia).mount('#app')

@@ -1,13 +1,17 @@
 <template>
   <div class="auth-container">
     <h2>Registrarse</h2>
-    <p>Hola! Comience su camino con WingPay</p>
+    <p>¡Hola! Comience su camino con WingPay</p>
+
+    <input type="text" placeholder="Nombre" v-model="nombre" />
+    <input type="text" placeholder="Apellido" v-model="apellido" />
+    <input type="date" placeholder="Fecha de nacimiento" v-model="nacimiento" />
     <input type="email" placeholder="Email" v-model="email" />
-    <input type="text" placeholder="DNI" v-model="dni" />
-    <input type="tel" placeholder="Teléfono celular" v-model="phone" />
+    <input type="tel" placeholder="Teléfono celular" v-model="telefono" />
     <input type="password" placeholder="Contraseña" v-model="password" />
-    <input type="password" placeholder="Repita la contraseña" v-model="confirm" />
+
     <button @click="register">Aceptar</button>
+
     <div class="row-login">
       <span class="login-text">¿Ya tiene una cuenta?</span>
       <a href="#" class="login-link" @click="$emit('switch')">Inicie sesión</a>
@@ -17,25 +21,46 @@
 
 <script>
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/UserStore'
 
 export default {
   data() {
     return {
+      nombre: '',
+      apellido: '',
+      nacimiento: '',
       email: '',
-      dni: '',
-      phone: '',
-      password: '',
-      confirm: ''
-    };
+      telefono: '',
+      password: ''
+    }
   },
   methods: {
-    register() {
-      // Por ahora, solo redirigimos a HomePage sin validar
-      this.$router.push('/home')
+    async register() {
+      const datosUsuario = {
+        firstName: this.nombre,
+        lastName: this.apellido,
+        birthDate: "1979-01-01",
+        email: "kaley.harris29@ethereal.email",
+        password: "1234567890",
+        metadata: {}
+      }
+
+      try {
+        const userStore = useUserStore()
+        const resultado = await userStore.createUser(datosUsuario)
+
+        console.log('Registro exitoso:', resultado)
+        
+        this.$router.push('/home')
+      } catch (error) {
+        console.error('Error al registrar:', error)
+        // Podés mostrar un mensaje en pantalla si querés
+      }
     }
   }
-};
+}
 </script>
+
 
 <style scoped>
 .auth-container {

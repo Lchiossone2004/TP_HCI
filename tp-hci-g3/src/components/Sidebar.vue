@@ -1,6 +1,6 @@
 <template>
   <aside class="sidebar">
-    <h2 class="title">Hola, Usuario</h2>
+    <h2 class="title">Hola, {{ userName || 'Usuario' }}</h2>
     <nav class="menu-container">
       <div class="menu">
         <button
@@ -25,8 +25,22 @@
 
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
+import { useUserStore } from '@/stores/UserStore'
+
 const router = useRouter()
 const route = useRoute()
+const userStore = useUserStore()
+
+const userName = ref('') // Acá se guarda el nombre real
+
+onMounted(async () => {
+  try {
+    const user = await userStore.getUser()
+    userName.value = user.firstName // o user.nombre según tu backend
+  } catch (error) {
+    console.error('Error al obtener el usuario:', error)
+  }
+})
 
 const menuItems = [
   { text: 'Inicio', icon: 'home', name: 'Home' },
