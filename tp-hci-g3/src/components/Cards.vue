@@ -6,6 +6,7 @@
         :alt="getCardType(card.number)" 
         :class="['card-logo', `card-logo-${getCardType(card.number).toLowerCase()}`]"
       />
+      <span class="card-type">{{ card.type }}</span>
       <button class="delete-btn" @click="showConfirmDelete = true">
         <span class="material-symbols-rounded">delete</span>
       </button>
@@ -15,8 +16,8 @@
     </div>
     <div class="card-footer">
       <div class="card-holder">
-        <span class="value">{{ card.name }}</span>
-        <span class="expiry">{{ card.expiry }}</span>
+        <span class="value">{{ card.fullName }}</span>
+        <span class="expiry">{{ card.expirationDate }}</span>
       </div>
     </div>
 
@@ -119,6 +120,11 @@ const handleConfirmDelete = () => {
 .card-logo {
   height: 30px;
   object-fit: contain;
+}
+.card-type{
+  display: flex;
+  margin-right: 7rem;
+  margin-top: 1.5rem;
 }
 
 .card-logo-mastercard {

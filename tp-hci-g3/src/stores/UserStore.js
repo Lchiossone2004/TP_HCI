@@ -59,6 +59,7 @@ export const useUserStore = defineStore('user', () => {
             throw error; // vuelve a lanzar para que el componente pueda capturarlo
         }
       }
+      
       async function changePassword(code, password) {
         try {
             const response = await fetch("http://localhost:8080/api/user/change-password", {
@@ -70,7 +71,7 @@ export const useUserStore = defineStore('user', () => {
             })
             if (!response.ok) {
                 // Lanza un error si la respuesta no fue satisfactoria
-                throw new Error(`Error changin password: ${response.status}`);
+                throw new Error(`Error cambiando password: ${response.status}`);
               }
         }
         catch(error){

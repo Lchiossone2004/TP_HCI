@@ -22,14 +22,14 @@
           <div class="form-group">
             <label>Vencimiento</label>
             <input 
-              v-model="newCard.expiry"
+              v-model="newCard.expirationDate"
               type="text"
               placeholder="MM/YY"
               maxlength="5"
               @input="formatExpiry"
-              :class="{ 'error': errors.expiry }"
+              :class="{ 'error': errors.expirationDate }"
             >
-            <span class="error-message" v-if="errors.expiry">{{ errors.expiry }}</span>
+            <span class="error-message" v-if="errors.expirationDate">{{ errors.expirationDate }}</span>
           </div>
           <div class="form-group">
             <label>CVV</label>
@@ -47,13 +47,35 @@
         <div class="form-group">
           <label>Nombre en la tarjeta</label>
           <input 
-            v-model="newCard.name"
+            v-model="newCard.fullName"
             type="text"
             placeholder="NOMBRE APELLIDO"
             @input="formatName"
-            :class="{ 'error': errors.name }"
+            :class="{ 'error': errors.fullName }"
           >
-          <span class="error-message" v-if="errors.name">{{ errors.name }}</span>
+          <span class="error-message" v-if="errors.fullName">{{ errors.fullName }}</span>
+        </div>
+        <div class="form-group">
+          <label>Tipo de tarjeta</label>
+          <div>
+            <label>
+              <input 
+                type="radio" 
+                value="CREDIT" 
+                v-model="newCard.type"
+              >
+              Crédito
+            </label>
+            <label>
+              <input 
+                type="radio" 
+                value="DEBIT" 
+                v-model="newCard.type"
+              >
+              Débito
+            </label>
+          </div>
+          <span class="error-message" v-if="errors.type">{{ errors.type }}</span>
         </div>
         <div class="button-group">
           <button type="submit" class="submit-button">Agregar</button>
@@ -70,55 +92,65 @@ import Modal from './Modal.vue'
 
 const emit = defineEmits(['add-card'])
 const showModal = ref(false)
+
 const newCard = ref({
+  type: '',
   number: '',
-  expiry: '',
+  expirationDate: '',
+  fullName: '',
   cvv: '',
-  name: ''
+  metadata: {},
 })
 
-const isAmex = computed(() => {
-  return newCard.value.number.startsWith('3')
-})
+const isAmex = computed(() => newCard.value.number.replace(/\s/g, '').startsWith('3'))
 
 const errors = ref({
   number: '',
-  expiry: '',
+  expirationDate: '',
   cvv: '',
-  name: ''
+  fullName: '',
+  type: ''
 })
 
 const validateForm = () => {
   let isValid = true
   errors.value = {
     number: '',
-    expiry: '',
+    expirationDate: '',
     cvv: '',
-    name: ''
+    fullName: '',
+    type: '',
+    
   }
 
-  // Validar campos vacíos
   if (!newCard.value.number) {
     errors.value.number = 'Campo obligatorio'
     isValid = false
   }
-  if (!newCard.value.expiry) {
-    errors.value.expiry = 'Campo obligatorio'
+
+  if (!newCard.value.expirationDate) {
+    errors.value.expirationDate = 'Campo obligatorio'
     isValid = false
   }
+
   if (!newCard.value.cvv) {
     errors.value.cvv = 'Campo obligatorio'
     isValid = false
   } else {
-    // Validar longitud del CVV según tipo de tarjeta
     const requiredLength = isAmex.value ? 4 : 3
     if (newCard.value.cvv.length !== requiredLength) {
       errors.value.cvv = `El CVV debe tener ${requiredLength} dígitos`
       isValid = false
     }
   }
-  if (!newCard.value.name) {
-    errors.value.name = 'Campo obligatorio'
+
+  if (!newCard.value.fullName) {
+    errors.value.fullName = 'Campo obligatorio'
+    isValid = false
+  }
+
+  if (!newCard.value.type) {
+    errors.value.type = 'Seleccioná el tipo de tarjeta'
     isValid = false
   }
 
@@ -129,32 +161,56 @@ const handleAddCard = () => {
   if (!validateForm()) return
 
   emit('add-card', {
-    id: Date.now(),
     ...newCard.value
   })
-  newCard.value = { number: '', expiry: '', cvv: '', name: '' }
+
+  newCard.value = {
+    type: '',
+    number: '',
+    expirationDate: '',
+    fullName: '',
+    cvv: '',
+
+  }
+
   showModal.value = false
 }
 
 const formatCardNumber = (event) => {
   let value = event.target.value.replace(/\D/g, '')
-  value = value.replace(/(\d{4})/g, '$1 ').trim()
+  value = value.replace(/(.{4})/g, '$1 ').trim()
   newCard.value.number = value
 }
 
 const formatExpiry = (event) => {
   let value = event.target.value.replace(/\D/g, '')
   
+  if (value.length === 0) {
+    newCard.value.expirationDate = ''
+    errors.value.expirationDate = ''
+    return
+  }
+  
   if (value.length >= 2) {
-    const month = value.substring(0, 2)
-    const year = value.substring(2)
-    if (parseInt(month) > 12) {
-      errors.value.expiry = 'Mes inválido'
+    let month = value.slice(0, 2)
+    let year = value.slice(2, 4)
+
+    const monthNum = parseInt(month)
+    if (monthNum > 12 || monthNum === 0) {
+      errors.value.expirationDate = 'Mes inválido'
       return
+    } else {
+      errors.value.expirationDate = ''
     }
-    newCard.value.expiry = month + (year.length ? '/' + year : '')
+    month = month.padStart(2, '0')
+    
+    if (year) {
+      newCard.value.expirationDate = `${month}/${year}`
+    } else {
+      newCard.value.expirationDate = month
+    }
   } else {
-    newCard.value.expiry = value
+    newCard.value.expirationDate = value
   }
 }
 
@@ -165,9 +221,10 @@ const formatCVV = (event) => {
 }
 
 const formatName = (event) => {
-  newCard.value.name = event.target.value.replace(/[^a-zA-Z\s]/g, '')
+  newCard.value.fullName = event.target.value.replace(/[^a-zA-Z\s]/g, '')
 }
 </script>
+
 
 <style scoped>
 .add-card-form {
