@@ -60,6 +60,7 @@ function logout() {
 
   // Lógica para cerrar sesión
   console.log('Cerrando sesión...')
+  localStorage.removeItem('auth-token')
   router.push('/login') // Redirigir al usuario a la página de inicio de sesión
 }
 </script>

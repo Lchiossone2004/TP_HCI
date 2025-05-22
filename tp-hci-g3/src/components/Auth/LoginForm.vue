@@ -2,16 +2,22 @@
   <div class="auth-container">
     <h2>Bienvenido</h2>
     <p>Es bueno verte de nuevo</p>
+    
     <input type="email" placeholder="Email" v-model="email" />
     <input type="password" placeholder="Contraseña" v-model="password" />
+
+    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+
     <div class="row-remember">
       <div class="remember-label">
         <input type="checkbox" v-model="remember" />
         <span>Recordar siempre</span>
       </div>
-      <a href="#" class="forgot-link" >¿Olvidó su contraseña?</a>
+      <a href="#" class="forgot-link" @click="forgotPassword">¿Olvidó su contraseña?</a>
     </div>
+
     <button @click="login">Aceptar</button>
+
     <div class="row-register">
       <span class="register-text">¿No tiene una cuenta?</span>
       <a href="#" class="register-link" @click="$emit('switch')">Regístrese</a>
@@ -28,7 +34,8 @@ export default {
     return {
       email: '',
       password: '',
-      remember: false
+      remember: false,
+      errorMessage: ''
     };
   },
   methods: {
@@ -37,30 +44,16 @@ export default {
 
       try {
         await userStore.logIn(this.email, this.password);
-
-        if (this.remember) {
-          localStorage.setItem('email', this.email);
-          localStorage.setItem('password', this.password);
-        } else {
-          sessionStorage.setItem('email', this.email);
-          sessionStorage.setItem('password', this.password);
-        }
+        this.errorMessage = ''; // limpia errores previos
 
         this.$router.push({ name: 'Home' });
       } catch (error) {
         console.error('Error al iniciar sesión:', error);
+        this.errorMessage = 'Email o contraseña incorrectos.';
       }
-    }
-  },
-  mounted() {
-    if (localStorage.getItem('email') && localStorage.getItem('password')) {
-      this.email = localStorage.getItem('email');
-      this.password = localStorage.getItem('password');
-      this.remember = true;
-    } else if (sessionStorage.getItem('email') && sessionStorage.getItem('password')) {
-      this.email = sessionStorage.getItem('email');
-      this.password = sessionStorage.getItem('password');
-      this.remember = false;
+    },
+    forgotPassword(){
+      this.$router.push({ name: 'PasswordRecovery' });
     }
   }
 };
@@ -246,5 +239,10 @@ button:hover {
   .auth-container {
     max-width: 300px;
   }
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
 }
 </style>

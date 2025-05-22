@@ -18,27 +18,66 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    async function logIn(email, password){
-        try{
-            const response = await fetch("http://localhost:8080/api/user/login", {
+    async function logIn(email, password) {
+        try {
+          const response = await fetch("http://localhost:8080/api/user/login", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password }) 
+          });
+      
+          if (!response.ok) {
+            // Lanza un error si la respuesta no fue satisfactoria
+            throw new Error(`Error en login: ${response.status}`);
+          }
+      
+          const data = await response.json();
+          localStorage.setItem('auth-token', data.token);
+          return data;
+        } catch (error) {
+          console.error('Error en logIn:', error);
+          throw error; // vuelve a lanzar para que el componente pueda capturarlo
+        }
+      }
+      async function sendRecoveryCode(email){
+        try {
+            const response = await fetch(`http://localhost:8080/api/user/reset-password?email=${email}`, {
                 method: 'POST',
-                headers:{
+                headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
+                  },
             })
-            const data = await response.json()
-
-            localStorage.setItem('auth-token', data.token)
+            if (!response.ok) {
+                // Lanza un error si la respuesta no fue satisfactoria
+                throw new Error(`Error sending code: ${response.status}`);
+              }
         }
         catch(error){
-            console.error('Error al hacer el logIn', error)
+            console.error('Error en sendReocveryCode:', error);
+            throw error; // vuelve a lanzar para que el componente pueda capturarlo
         }
-    }
-
+      }
+      async function changePassword(code, password) {
+        try {
+            const response = await fetch("http://localhost:8080/api/user/change-password", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ code: code, password: password })
+            })
+            if (!response.ok) {
+                // Lanza un error si la respuesta no fue satisfactoria
+                throw new Error(`Error changin password: ${response.status}`);
+              }
+        }
+        catch(error){
+            console.error('Error en changePassword:', error);
+            throw error; // vuelve a lanzar para que el componente pueda capturarlo
+        }
+      }
     async function getUser(){
         try{
             const token = localStorage.getItem('auth-token');
@@ -96,5 +135,5 @@ export const useUserStore = defineStore('user', () => {
             console.error('Error al renviar el email:', error);
         }
     }
-    return{createUser, logIn ,getUser, verifyUser,resendVerification}
+    return{createUser, logIn ,getUser, verifyUser,resendVerification, sendRecoveryCode, changePassword}
 })

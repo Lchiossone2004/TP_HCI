@@ -12,6 +12,11 @@ const routes = [
     component: AuthView
   },
   {
+    path: '/passwordRecovery',
+    name: 'PasswordRecovery',
+    component: () => import('@/pages/Auth/PasswordRecoveryPage.vue')
+  },
+  {
     path: '/verification',
     name: 'Verification',
     component: () => import('@/pages/Auth/VerificationPage.vue')
@@ -61,6 +66,17 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+const publicRoutes = ['Auth', 'Verification', 'PasswordRecovery']
+
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('auth-token')
+  if (!token && !publicRoutes.includes(to.name)) {
+    return next({ name: 'Auth' })
+  }
+  next()
 })
 
 

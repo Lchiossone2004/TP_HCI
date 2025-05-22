@@ -10,6 +10,8 @@
     <input type="tel" placeholder="Teléfono celular" v-model="telefono" />
     <input type="password" placeholder="Contraseña" v-model="password" />
 
+    <p v-if="formError" class="error">{{ formError }}</p>
+
     <button @click="register">Aceptar</button>
 
     <div class="row-login">
@@ -30,16 +32,46 @@ export default {
       nacimiento: '',
       email: '',
       telefono: '',
-      password: ''
+      password: '',
+      formError: ''
     }
   },
   methods: {
+    validarFormulario() {
+      if (!this.nombre || !this.apellido || !this.nacimiento || !this.email || !this.telefono || !this.password) {
+        this.formError = 'Por favor complete todos los campos.';
+        return false;
+      }
+
+      const birthDate = new Date(this.nacimiento);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      const dayDiff = today.getDate() - birthDate.getDate();
+      const is18OrOlder = age > 18 || (age === 18 && (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)));
+
+      if (!is18OrOlder) {
+        this.formError = 'Debes tener al menos 18 años para registrarte.';
+        return false;
+      }
+
+      if (this.password.length < 10) {
+        this.formError = 'La contraseña debe tener al menos 10 caracteres.';
+        return false;
+      }
+
+      this.formError = ''; // Todo ok
+      return true;
+    },
+
     async register() {
+      if (!this.validarFormulario()) return;
+
       const datosUsuario = {
         firstName: this.nombre,
         lastName: this.apellido,
-        birthDate: "1979-01-01",
-        email: "magdalena.steuber5@ethereal.email",
+        birthDate: this.nacimiento,
+        email: this.email,
         password: this.password,
         metadata: {}
       }
@@ -49,11 +81,10 @@ export default {
         const resultado = await userStore.createUser(datosUsuario)
 
         console.log('Registro exitoso:', resultado)
-        
-        // ✅ Usar this.$router en Options API
         this.$router.push({ name: 'Verification' })
       } catch (error) {
         console.error('Error al registrar:', error)
+        this.formError = 'Hubo un error al registrar. Intente nuevamente.';
       }
     }
   }
@@ -180,5 +211,9 @@ button:hover {
   button {
     width: 60%;
   }
+}
+.error {
+  color: red;
+  margin-top: 10px;
 }
 </style>
