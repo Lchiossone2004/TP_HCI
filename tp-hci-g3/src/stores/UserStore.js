@@ -18,14 +18,17 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    async function logIn(datos){
+    async function logIn(email, password){
         try{
             const response = await fetch("http://localhost:8080/api/user/login", {
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(datos)
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
             })
             const data = await response.json()
 
@@ -38,11 +41,16 @@ export const useUserStore = defineStore('user', () => {
 
     async function getUser(){
         try{
+            const token = localStorage.getItem('auth-token');
+
+            if (!token) {
+                throw new Error('No hay token de autenticación guardado.');
+            }
             const response = await fetch("http://localhost:8080/api/user", {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
-                  'Authorization': 'Bearer ' + import.meta.env.VITE_JWT_TOKEN
+                  'Authorization': 'Bearer ' + token
                 }
               });
             const data = await response.json();
@@ -54,31 +62,39 @@ export const useUserStore = defineStore('user', () => {
     }
 
     async function verifyUser(code){
-        try{
-            fetch("http://localhost:8080/api/user/verify?code=${code}",{
+        try {
+            const response = await fetch(`http://localhost:8080/api/user/verify?code=${code}`, {
                 method: 'POST',
                 headers: {
-                'Accept': 'application/json'
-                },
-            })
-        }
-        catch(error){
-            console.error('Error verificando email', error)
+                    'Accept': 'application/json'
+                }
+            });
+    
+            if (!response.ok) {
+                const errorBody = await response.text();
+                throw new Error(`Error del servidor: ${response.status} - ${errorBody}`);
+            }
+    
+            const result = await response.json();
+            console.log('Verificación exitosa:', result);
+            return result;
+        } catch(error){
+            console.error('Error verificando email:', error);
         }
     }
+
     async function resendVerification(email){
         try{
-            const response = await fetch("ttp://localhost:8080/api/user/resend-verification",{
+            const response = await fetch(`http://localhost:8080/api/user/resend-verification?email=${email}`,{
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(email)
             })
         }
         catch(error){
             console.error('Error al renviar el email:', error);
         }
     }
-    return{createUser, getUser, resendVerification}
+    return{createUser, logIn ,getUser, verifyUser,resendVerification}
 })

@@ -21,6 +21,7 @@
 
 <script>
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/UserStore'
 
 export default {
   data() {
@@ -31,15 +32,24 @@ export default {
     };
   },
   methods: {
-    login() {
-      if (this.remember) {
-      localStorage.setItem('email', this.email);
-      localStorage.setItem('password', this.password);
-      } else {
-      sessionStorage.setItem('email', this.email);
-      sessionStorage.setItem('password', this.password);
+    async login() {
+      const userStore = useUserStore();
+
+      try {
+        await userStore.logIn(this.email, this.password);
+
+        if (this.remember) {
+          localStorage.setItem('email', this.email);
+          localStorage.setItem('password', this.password);
+        } else {
+          sessionStorage.setItem('email', this.email);
+          sessionStorage.setItem('password', this.password);
+        }
+
+        this.$router.push({ name: 'Home' });
+      } catch (error) {
+        console.error('Error al iniciar sesión:', error);
       }
-      this.$router.push({ name: 'Home' });
     }
   },
   mounted() {

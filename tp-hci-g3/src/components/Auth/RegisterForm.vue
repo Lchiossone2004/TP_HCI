@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/UserStore'
 
 export default {
@@ -40,8 +39,8 @@ export default {
         firstName: this.nombre,
         lastName: this.apellido,
         birthDate: "1979-01-01",
-        email: "kaley.harris29@ethereal.email",
-        password: "1234567890",
+        email: "magdalena.steuber5@ethereal.email",
+        password: this.password,
         metadata: {}
       }
 
@@ -51,10 +50,10 @@ export default {
 
         console.log('Registro exitoso:', resultado)
         
-        this.$router.push('/home')
+        // ✅ Usar this.$router en Options API
+        this.$router.push({ name: 'Verification' })
       } catch (error) {
         console.error('Error al registrar:', error)
-        // Podés mostrar un mensaje en pantalla si querés
       }
     }
   }

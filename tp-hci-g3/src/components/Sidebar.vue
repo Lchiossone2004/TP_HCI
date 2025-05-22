@@ -26,19 +26,20 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/UserStore'
+import { onMounted, ref } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
 
-const userName = ref('') // Acá se guarda el nombre real
+const userName = ref('')
 
 onMounted(async () => {
   try {
     const user = await userStore.getUser()
-    userName.value = user.firstName // o user.nombre según tu backend
+    userName.value = user.firstName || 'Usuario'
   } catch (error) {
-    console.error('Error al obtener el usuario:', error)
+    console.error('Error cargando el usuario:', error)
   }
 })
 

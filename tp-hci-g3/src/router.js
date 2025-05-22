@@ -1,7 +1,7 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from './pages/HomePage.vue'
-import AuthView from './pages/AuthView.vue'
+import AuthView from './pages/Auth/AuthView.vue'
 import ProfilePage from './pages/ProfilePage.vue'
 import MovementsAndSpendings from './pages/MovementsAndSpendings.vue'
 
@@ -10,6 +10,11 @@ const routes = [
     path: '/',
     name: 'Auth',
     component: AuthView
+  },
+  {
+    path: '/verification',
+    name: 'Verification',
+    component: () => import('@/pages/Auth/VerificationPage.vue')
   },
   {
     path: '/home',
