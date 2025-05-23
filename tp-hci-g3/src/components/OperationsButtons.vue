@@ -27,30 +27,10 @@
       </div>
     </div>
   </div>
-  <Modal
+  <EnterMoneyModal
   v-model:modelValue="mostrarModal"
-  :title="'Ingresar dinero'"
-  :subtitle="'Introducir la cantidad de dinero a ingresar a WingPay'" 
->
-  <template #default>
-    <div class="input-wrapper">
-  <span class="input-prefix">$</span>
-    <input
-  v-model.number="monto"
-  type="number"
-  min="1"
-  placeholder="Monto"
-  class="input-monto"
-  style="width: 100%; padding: 0.5rem; margin-top: 1rem; font-size: 1rem; background-color: #f0f0f0; border-radius: 8px;"
-/>
-    </div>
+ />
 
-    <div class="modal-actions">
-      <button class="submit-button" @click="confirmarIngreso">Confirmar</button>
-      <button class="cancel-button" @click="cerrarModalIngreso">Cancelar</button>
-    </div>
-  </template>
-</Modal>
 
 
 </template>
@@ -58,7 +38,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
-import Modal from '@/components/Modal.vue';
+import EnterMoneyModal from '@/components/EnterMoneyModal.vue';
 import { usePaymetStore } from '@/stores/PaymetStore';
 
 const router = useRouter();
