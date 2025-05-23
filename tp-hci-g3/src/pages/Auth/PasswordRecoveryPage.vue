@@ -39,18 +39,20 @@
 
 <script>
 import { useUserStore } from '@/stores/UserStore';
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 
 export default {
   setup() {
+    const route = useRoute()
     const router = useRouter()
     const goBack = () => {
       router.back()
     }
     const goToHelp = () => {
-  router.push({
- 
+      router.push({
+    path: '/help',
+    query: { from: route.name }
   })
 } 
     return {
@@ -93,8 +95,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   height: 50px;
-  padding: 0 20px; /* para que no quede pegado a los bordes */
-  background-color: transparent; /* si quieres mantener el fondo transparente */
+  padding: 0 20px; 
+  background-color: transparent; 
 }
 
 .back-btn {

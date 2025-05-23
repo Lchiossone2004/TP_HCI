@@ -8,6 +8,8 @@ import HelpInfoActivity from '@/views/help/HelpInfoActivity.vue'
 import HelpInfoTransfer from '@/views/help/HelpInfoTransfer.vue'
 import HelpInfoProfile from '@/views/help/HelpInfoProfile.vue'
 import HelpInfoHomePage from '@/views/help/HelpInfoHomePage.vue'
+import HelpInfoForgotPassword from './HelpInfoForgotPassword.vue'
+import HelpInfoLoginAndRegisterVue from './HelpInfoLoginAndRegister.vue'
 const route = useRoute()
 import { computed } from 'vue'
 
@@ -35,8 +37,14 @@ const from = computed(() => route.query.from || '')
       <h1>Ayuda - Transferencias </h1>
       <HelpInfoTransfer/>
     </div>
-
-
+    <div v-else-if="from === 'PasswordRecovery'">
+      <h1>Ayuda - Recuperar contraseña</h1>
+      <HelpInfoForgotPassword/>
+    </div>
+    <div v-else-if="from === 'Auth'">
+      <h1>Ayuda - Iniciar sesión y registro</h1>
+      <HelpInfoLoginAndRegisterVue/>
+    </div>
     <div v-else>
       <h1>Centro de Ayuda</h1>
       <h2 class="subtitle"> Página principal </h2>
@@ -47,6 +55,10 @@ const from = computed(() => route.query.from || '')
       <HelpInfoTransfer/>
       <h2 class="subtitle"> Mi perfil </h2>
       <HelpInfoProfile/>
+      <h2 class="subtitle"> Recuperar contraseña </h2>
+      <HelpInfoForgotPassword/>
+      <h2 class="subtitle"> Iniciar sesión y registro </h2>
+      <HelpInfoLoginAndRegisterVue/>
     </div>
 
     <p class="more-help" v-if="from !== ''">
