@@ -61,14 +61,15 @@ const routes = [
     name: 'Servicios',
     component: () => import('@/pages/ServicesPage.vue')
   },
+  
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes
 })
+const publicRoutes = ['Auth', 'Verification', 'PasswordRecovery', 'HelpPage']
 
-const publicRoutes = ['Auth', 'Verification', 'PasswordRecovery']
 
 
 router.beforeEach((to, from, next) => {

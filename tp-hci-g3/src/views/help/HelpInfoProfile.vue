@@ -11,11 +11,11 @@
     </div>
     <div class="faq"> 
         <h3>
-           ¿Cómo puedo cambiar mi contraseña?
+           ¿Cómo puedo administrar mi dinero?
         </h3>
     
         <h4 class="ans">
-            Para modificar tu contraseña, debes seleccionar el botón ‘Datos de mi cuenta’ en la pestaña ‘Mi perfil’, en el menú lateral izquierdo.
+            Para administrar tu dinero, debes seleccionar el botón ‘Administrar dinero’ en la pestaña ‘Mi perfil’, en el menú lateral izquierdo. Allí, podrás ingresar dinero, realizar una transferencia, pagar o cobrar servicios.
         </h4>
     </div>
     </div>

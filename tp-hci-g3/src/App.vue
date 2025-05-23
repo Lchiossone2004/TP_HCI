@@ -23,7 +23,7 @@ export default {
       return route.path !== '/' && route.name !== 'notfound' && route.name !== 'Verification' && route.name !== 'PasswordRecovery'
     })
     const showHeader = computed(() => {
-      // Don't show header on login page
+      
       return route.path !== '/' && route.name !== 'notfound' && route.name !== 'Verification'  && route.name !== 'PasswordRecovery'
     })
 

@@ -1,4 +1,7 @@
 <template>
+  <div class="header"> 
+    <span class="material-symbols-rounded icon" @click="goToHelp">help</span>
+  </div>
   <div class="flex auth-wrapper">
     <div class="welcome-section">
       <h1>WingPay</h1>
@@ -21,22 +24,66 @@
     </div>
   </div>
 </template>
-
 <script>
-import LoginForm from '@/components/Auth/LoginForm.vue';
-import RegisterForm from '@/components/Auth/RegisterForm.vue';
+import LoginForm from '@/components/Auth/LoginForm.vue'
+import RegisterForm from '@/components/Auth/RegisterForm.vue'
+import { useRouter, useRoute } from 'vue-router'
 
 export default {
   components: { LoginForm, RegisterForm },
+
   data() {
     return {
       showLogin: true
-    };
+    }
+  },
+
+  setup() {
+    const router = useRouter()
+    const route = useRoute()
+
+    const goToHelp = () => {
+      console.log('Redirigiendo a /help desde', route.name)
+      router.push({
+        name: 'HelpPage',
+        query: { from: route.name || 'unknown' }
+      })
+    }
+
+    return {
+      goToHelp
+    }
   }
-};
+}
 </script>
 
+
+
 <style scoped>
+.header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding: 0 20px; 
+  background-color: transparent; 
+}
+.icon {
+  margin-left: auto; 
+  cursor: pointer;
+  font-size: 2rem;
+  color: white; 
+  transition: color 0.3s ease;
+}
+
+.icon:hover {
+  color: var(--blue-button-hover); 
+}
 .auth-wrapper {
   display: flex;
   height: 100vh;
