@@ -5,12 +5,10 @@
       <div class="cards-section">
         <div class="section-header">
           <h2>Dinero en cuenta</h2>
-          <ShowInfoButton>
             <button class="add-money-btn">
-              <span class="material-symbols-rounded">add</span>
+              <span class="material-symbols-rounded" @click="handleEnterMoney">add</span>
               Ingresar dinero
             </button>
-          </ShowInfoButton>
         </div>
         <div class="balance-container">
           <BalanceCard />
@@ -41,19 +39,23 @@
           </div>
         </div>    
       </div>    
-    </main>
+    
+    <EnterMoneyModal v-model="mostrarModal" />
+  </main>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { onMounted } from 'vue'
 import BalanceCard from '@/components/BalanceCard.vue'
 import Cards from '@/components/Cards.vue'
 import AddCardButton from '@/components/AddCardButton.vue'
-import ShowInfoButton from '@/components/ShowInfoButton.vue'
+import EnterMoneyModal from '@/components/EnterMoneyModal.vue'
 import { useCardStore } from '@/stores/CardStore'
 
 const cardStore = useCardStore()
+const mostrarModal = ref(false)
 
 const handleAddCard = async (newCard) => {
   try {
@@ -64,7 +66,9 @@ const handleAddCard = async (newCard) => {
     console.error('Error al agregar tarjeta:', error)
   }
 }
-
+const handleEnterMoney = () => {
+  mostrarModal.value = true
+}
 const handleDeleteCard = async (id) => {
   try {
     await cardStore.deleteCard(id)
