@@ -1,4 +1,3 @@
-gi
 import { leafActiveStrategy } from 'vuetify/lib/composables/nested/activeStrategies.mjs';
 
 import { leafActiveStrategy } from 'vuetify/lib/composables/nested/activeStrategies.mjs';
