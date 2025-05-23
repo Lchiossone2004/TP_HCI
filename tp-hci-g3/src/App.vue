@@ -20,7 +20,12 @@ export default {
   setup() {
     const route = useRoute()
     const showSidebar = computed(() => {
-      return route.path !== '/' && route.name !== 'notfound' && route.name !== 'Verification' && route.name !== 'PasswordRecovery'
+      return route.path !== '/' && 
+             route.name !== 'notfound' && 
+             route.name !== 'Verification' && 
+             route.name !== 'PasswordRecovery' &&
+             !(route.name === 'HelpPage' && route.query.from === 'Auth') &&
+             !(route.name === 'HelpPage' && route.query.from === 'PasswordRecovery')
     })
     const showHeader = computed(() => {
       

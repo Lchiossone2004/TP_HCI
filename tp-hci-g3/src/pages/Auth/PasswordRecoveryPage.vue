@@ -2,11 +2,11 @@
   <div class="page-background">
     <div class="header">
       <button class="back-btn" @click="goBack">
-      <span class="material-symbols-rounded">arrow_back</span>
-      Volver
-    </button>
-    <span class="material-symbols-rounded icon" @click="goToHelp">help</span>
-  </div>
+        <span class="material-symbols-rounded">arrow_back</span>
+        <span>Volver</span>
+      </button>
+      <span class="material-symbols-rounded icon" @click="goToHelp">help</span>
+    </div>
     <div class="reset-container">
       <h2>Recuperar Contraseña</h2>
 
@@ -47,7 +47,7 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const goBack = () => {
-      router.back()
+      router.push('/')
     }
     const goToHelp = () => {
       router.push({
@@ -100,24 +100,33 @@ export default {
 }
 
 .back-btn {
- 
+  display: flex;
   align-items: center;
   gap: 0.3rem;
   background: none;
   border: none;
   color: white;
   font-weight: bold;
-  padding: 0;
-  display: inline-flex; 
-  width: auto;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
-.material-symbols-rounded:hover {
-  color: var(--blue-button-hover);
+
+.back-btn span {
+  color: white;
 }
 
 .back-btn:hover {
   background: none;
-  color: var(--blue-button-hover); 
+  color: var(--blue-button-hover);
+}
+
+.back-btn:hover span {
+  color: var(--blue-button-hover);
+}
+
+.material-symbols-rounded:hover {
+  color: var(--blue-button-hover);
 }
 
 .material-symbols-rounded {
@@ -128,8 +137,6 @@ export default {
   cursor: default; /* sin pointer */
   color: white;
 }
-
-
 
 .page-background {
   min-height: 100vh;
