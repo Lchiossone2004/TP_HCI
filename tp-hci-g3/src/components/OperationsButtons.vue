@@ -56,45 +56,57 @@
 </template>
 
 <script setup>
-  import { useRouter } from 'vue-router';
-  import { ref } from 'vue';
-  import Modal from '@/components/Modal.vue';
-  import { usePaymentStore } from '@/stores/PaymetStore';
-  const router = useRouter();
-  const showMyInfoModal = ref(false);
-  function irATransferencias() {
-  router.push({ name: 'Transfer' });
-}
+import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import Modal from '@/components/Modal.vue';
+import { usePaymetStore } from '@/stores/PaymetStore';
+
+const router = useRouter();
+const store = usePaymetStore();
+
+const showMyInfoModal = ref(false);
+const mostrarModal = ref(false);
+const monto = ref(0);
+const montoTotal = ref(0); 
 
 
-const store = usePaymentStore()
-const mostrarModal = ref(false)
-const monto = ref(0)
+onMounted(() => {
+  const guardado = localStorage.getItem('montoTotal');
+  if (guardado) {
+    montoTotal.value = Number(guardado);
+  }
+});
 
 function abrirModalIngreso() {
-  mostrarModal.value = true
+  mostrarModal.value = true;
 }
 
 function cerrarModalIngreso() {
-  mostrarModal.value = false
-  monto.value = 0
+  mostrarModal.value = false;
+  monto.value = 0;
 }
 
 function confirmarIngreso() {
   if (monto.value > 0) {
-    store.agregarTransaccion(monto.value, 'ingreso')
-    cerrarModalIngreso()
+    store.agregarTransaccion(monto.value, 'ingreso');
+    montoTotal.value += monto.value;
+    localStorage.setItem('montoTotal', montoTotal.value); // Guardar persistente
+    cerrarModalIngreso();
   }
 }
 
-function irAServicios(tab) {
-  router.push({ 
-    name: 'Servicios',
-    query: { tab } 
-  });
+function irATransferencias() {
+  router.push({ name: 'Transfer' });
 }
 
+function irAServicios(tab) {
+  router.push({
+    name: 'Servicios',
+    query: { tab }
+  });
+}
 </script>
+
 
 <style scoped>
 .input-wrapper {

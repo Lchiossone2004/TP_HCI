@@ -1,31 +1,30 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
 
-export const usePaymentStore = defineStore('payment', () => {
-  const items = ref([]) 
-  const balance = ref(0) 
+export const usePaymetStore = defineStore('payment', () => {
+  const transacciones = ref([])
 
-  const agregarTransaccion = (monto, tipo) => {
-    const transaccion = {
-      id: crypto.randomUUID(),
-      tipo, 
-      monto,
-      fecha: new Date().toISOString()
+  // Recuperar montoTotal desde localStorage o inicializar en 0
+  const montoTotal = ref(Number(localStorage.getItem('montoTotal')) || 0)
+
+  function agregarTransaccion(monto, tipo) {
+    transacciones.value.push({ monto, tipo, fecha: new Date().toISOString() })
+
+    if (tipo === 'ingreso') {
+      montoTotal.value += monto
+    } else if (tipo === 'egreso') {
+      montoTotal.value -= monto
     }
-    items.value.push(transaccion)
 
-    if (tipo === 'ingreso') balance.value += monto
-    if (tipo === 'transferencia') balance.value -= monto
+    // Guardar en localStorage
+    localStorage.setItem('montoTotal', montoTotal.value)
   }
 
-  const getBalance = computed(() => balance.value)
-  const getTransacciones = computed(() => items.value)
+  const getBalance = computed(() => montoTotal.value)
 
   return {
-    balance,
-    items,
+    transacciones,
     agregarTransaccion,
     getBalance,
-    getTransacciones
   }
 })

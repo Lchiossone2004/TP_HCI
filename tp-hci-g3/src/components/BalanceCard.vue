@@ -21,9 +21,9 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { usePaymentStore } from '@/stores/PaymetStore'
+import { usePaymetStore } from '@/stores/PaymetStore'
 
-const store = usePaymentStore()
+const store = usePaymetStore()
 
 const visible = ref(true)
 function toggle() {
