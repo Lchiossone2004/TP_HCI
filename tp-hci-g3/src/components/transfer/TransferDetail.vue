@@ -53,20 +53,23 @@
   
   <script setup>
   import { ref, computed } from 'vue'
-  const props = defineProps({
-    contact: Object,
-    availableBalance: Number
-  })
+  import { usePaymetStore } from '@/stores/PaymetStore'
+
+const props = defineProps({
+  contact: Object
+})
+
+const store = usePaymetStore()
   const emit = defineEmits(['back','transfer'])
   
   const amount = ref(0)
   const showConfirm = ref(false)
   
   const remaining = computed(() =>
-    amount.value > 0 ? props.availableBalance - amount.value : props.availableBalance
+    amount.value > 0 ? availableBalance.value - amount.value : availableBalance.value
   )
   const canTransfer = computed(() =>
-    amount.value > 0 && amount.value <= props.availableBalance
+    amount.value > 0 && amount.value <= availableBalance.value
   )
   
   function formatCurrency(v) {
@@ -75,11 +78,15 @@
   function openConfirm() {
     if (canTransfer.value) showConfirm.value = true
   }
+  const availableBalance = computed(() => store.getBalance)
+
   function confirmTransfer() {
-    emit('transfer', { to: props.contact, amount: amount.value })
-    showConfirm.value = false
-    amount.value = 0
-  }
+  store.agregarTransaccion(amount.value, 'egreso')
+  emit('transfer', { to: props.contact, amount: amount.value })
+  showConfirm.value = false
+  amount.value = 0
+}
+
   </script>
   
   <style scoped>
