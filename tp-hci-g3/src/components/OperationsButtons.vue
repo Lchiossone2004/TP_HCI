@@ -2,7 +2,7 @@
   <div class="card">
     <div class="grid-container">
       <div class="grid-item">
-        <button class="operation-button" @click="openInfoModal">
+        <button class="operation-button" @click="abrirModalIngreso">
           <span class="material-symbols-rounded icon">add</span>
         </button>
         <h4>Ingresar</h4>
@@ -27,29 +27,31 @@
       </div>
     </div>
   </div>
-  <Modal v-model="showMyInfoModal" title="Ingresar dinero" subtitle="Copiar tus datos para ingresar dinero desde otra cuenta.">
-      <div class="enter-money-form">
-        <div class="form-group">
-          <label for="cvu">CVU</label>
-          <div class="info-row">
-            <div class="info-value-container">
-              <span class="info-value">{{ accountInfo.cvu }}</span>
-              <span class="material-symbols-rounded copy-icon" @click="copyToClipboard(accountInfo.cvu)" title="Copiar CVU">content_copy</span>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="alias">Alias</label>
-          <div class="info-row">
-            <div class="info-value-container">
-              <span class="info-value">{{ accountInfo.alias }}</span>
-              <span class="material-symbols-rounded copy-icon" @click="copyToClipboard(accountInfo.alias)" title="Copiar Alias">content_copy</span>
-            </div>
-          </div>
-        </div>
-        <button class="submit-button" @click="closeModal">Cerrar</button>
-      </div>
-    </Modal>
+  <Modal
+  v-model:modelValue="mostrarModal"
+  :title="'Ingresar dinero'"
+  :subtitle="'Introducir la cantidad de dinero a ingresar a WingPay'" 
+>
+  <template #default>
+    <div class="input-wrapper">
+  <span class="input-prefix">$</span>
+    <input
+  v-model.number="monto"
+  type="number"
+  min="1"
+  placeholder="Monto"
+  class="input-monto"
+  style="width: 100%; padding: 0.5rem; margin-top: 1rem; font-size: 1rem; background-color: #f0f0f0; border-radius: 8px;"
+/>
+    </div>
+
+    <div class="modal-actions">
+      <button class="submit-button" @click="confirmarIngreso">Confirmar</button>
+      <button class="cancel-button" @click="cerrarModalIngreso">Cancelar</button>
+    </div>
+  </template>
+</Modal>
+
 
 </template>
 
@@ -57,34 +59,33 @@
   import { useRouter } from 'vue-router';
   import { ref } from 'vue';
   import Modal from '@/components/Modal.vue';
+  import { usePaymentStore } from '@/stores/PaymetStore';
   const router = useRouter();
   const showMyInfoModal = ref(false);
   function irATransferencias() {
   router.push({ name: 'Transfer' });
 }
 
-const copyToClipboard = async (text) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    // Podés mostrar un mensaje de confirmación si querés
-    console.log('Texto copiado:', text);
-  } catch (err) {
-    console.error('Error al copiar al portapapeles:', err);
+
+const store = usePaymentStore()
+const mostrarModal = ref(false)
+const monto = ref(0)
+
+function abrirModalIngreso() {
+  mostrarModal.value = true
+}
+
+function cerrarModalIngreso() {
+  mostrarModal.value = false
+  monto.value = 0
+}
+
+function confirmarIngreso() {
+  if (monto.value > 0) {
+    store.agregarTransaccion(monto.value, 'ingreso')
+    cerrarModalIngreso()
   }
-};
-
-// Account information
-const accountInfo = ref({
-  cvu: '0000003100064484890001',
-  alias: 'mateo.gorriti'
-});
-const openInfoModal = () => {
-  showMyInfoModal.value = true;
-};
-
-const closeModal = () => {
-  showMyInfoModal.value = false;
-};
+}
 
 function irAServicios(tab) {
   router.push({ 
@@ -96,6 +97,69 @@ function irAServicios(tab) {
 </script>
 
 <style scoped>
+.input-wrapper {
+  position: relative;
+  width: 100%;
+  display: block;
+}
+
+.input-prefix {
+  position: absolute;
+  top: 50%;
+  left: 12px; 
+  transform: translateY(-50%);
+  color: #666666;
+  font-size: 1rem;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+.input-monto {
+  width: 100%;
+  padding-left: 1.5rem !important; 
+  font-size: 1rem;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: block;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;          
+  margin-top: 1rem;
+}
+
+.submit-button,
+.cancel-button {
+  flex: 1;        
+  padding: 0.75rem 0; 
+  border-radius: var(--button-radius);
+  border: none;
+  font-size: var(--font-text);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-button {
+  background: var(--dark-blue);
+  color: var(--white-text);
+}
+
+.submit-button:hover {
+  background: var(--blue-button-hover);
+}
+
+.cancel-button {
+  background: var(--background-grey);
+  color: var(--dark-blue);
+}
+
+.cancel-button:hover {
+  background: var(--light-grey);
+}
   .card {
     width: 360px;
     height: 300px;
@@ -209,6 +273,7 @@ function irAServicios(tab) {
   background: var(--background-grey);
   color: var(--dark-blue);
 }
+
 
 .cancel-button:hover {
   background: var(--light-grey);
