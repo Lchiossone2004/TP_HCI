@@ -2,13 +2,30 @@
   <div class="auth-container">
     <h2>Registrarse</h2>
     <p>¡Hola! Comience su camino con WingPay</p>
-
+    <div class="input-with-icon">
+    <span class="material-symbols-rounded icon">id_card</span>
     <input type="text" placeholder="Nombre" v-model="nombre" />
+    </div>
+    <div class="input-with-icon">
+    <span class="material-symbols-rounded icon">id_card</span>
     <input type="text" placeholder="Apellido" v-model="apellido" />
+    </div>
+    <div class="input-with-icon">
+    <span class="material-symbols-rounded icon">calendar_month</span>
     <input type="date" placeholder="Fecha de nacimiento" v-model="nacimiento" />
+    </div>
+    <div class="input-with-icon">
+    <span class="material-symbols-rounded icon">mail</span>
     <input type="email" placeholder="Email" v-model="email" />
+    </div>
+    <div class="input-with-icon">
+    <span class="material-symbols-rounded icon">call</span>
     <input type="tel" placeholder="Teléfono celular" v-model="telefono" />
+    </div>
+    <div class="input-with-icon">
+    <span class="material-symbols-rounded icon">key</span>
     <input type="password" placeholder="Contraseña" v-model="password" />
+    </div>
 
     <p v-if="formError" class="error">{{ formError }}</p>
 
@@ -51,7 +68,7 @@ export default {
       const is18OrOlder = age > 18 || (age === 18 && (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)));
 
       if (!is18OrOlder) {
-        this.formError = 'Debes tener al menos 18 años para registrarte.';
+        this.formError = 'Debe tener al menos 18 años para registrarse.';
         return false;
       }
 
@@ -93,6 +110,28 @@ export default {
 
 
 <style scoped>
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon input {
+  padding-left: 2.5rem;
+  height: 40px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding-right: 1rem;
+}
+
+.input-with-icon .icon {
+  position: absolute;
+  left: 10px;
+  font-size: 20px;
+  color: #666;
+}
+
 .auth-container {
   padding: 2rem 1.5rem; /* Reduced padding */
   color: var(--white-text);

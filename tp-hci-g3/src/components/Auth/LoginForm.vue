@@ -3,8 +3,16 @@
     <h2>Bienvenido</h2>
     <p>Es bueno verte de nuevo</p>
     
-    <input type="email" placeholder="Email" v-model="email" />
-    <input type="password" placeholder="Contraseña" v-model="password" />
+    <div class="input-with-icon">
+  <span class="material-symbols-rounded icon">mail</span>
+  <input type="email" placeholder="Email" v-model="email" />
+  </div>
+
+  <div class="input-with-icon">
+  <span class="material-symbols-rounded icon">key</span>
+  <input type="password" placeholder="Contraseña" v-model="password" />
+  </div>
+
 
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 
@@ -60,6 +68,28 @@ export default {
 </script>
 
 <style scoped>
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon input {
+  padding-left: 2.5rem;
+  height: 40px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding-right: 1rem;
+}
+
+.input-with-icon .icon {
+  position: absolute;
+  left: 10px;
+  font-size: 20px;
+  color: #666;
+}
+
 .auth-container {
   padding: 2rem 1.5rem;
   color: var(--white-text);
