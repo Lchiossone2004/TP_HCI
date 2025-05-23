@@ -11,11 +11,11 @@
       <span class="material-symbols-rounded arrow">chevron_right</span>
     </button>
 
-    <!-- Modal para Administrar dinero -->
+    <!-- Modal principal -->
     <Modal v-model="showMoneyModal" title="Administrar dinero">
       <div class="money-actions">
         <ShowInfoButton>
-          <button class="money-action-btn">
+          <button class="money-action-btn" @click="handleEnterMoney">
             <span class="material-symbols-rounded">add</span>
             <span>Ingresar dinero</span>
           </button>
@@ -34,6 +34,9 @@
         </button>
       </div>
     </Modal>
+
+    <!-- Modal de ingreso de dinero -->
+    <EnterMoneyModal v-model="mostrarModal" />
   </div>
 </template>
 
@@ -41,12 +44,13 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Modal from './Modal.vue'
-import ShowInfoButton from './ShowInfoButton.vue'
+import EnterMoneyModal from './EnterMoneyModal.vue'
 
 const router = useRouter()
 const emit = defineEmits(['edit'])
-const showMoneyModal = ref(false)
 
+const showMoneyModal = ref(false)
+const mostrarModal = ref(false)
 
 const actions = [
   { label: 'Datos de mi cuenta', icon: 'person', action: 'edit' },
@@ -69,6 +73,7 @@ const handleClick = (action) => {
 
 const handleEnterMoney = () => {
   showMoneyModal.value = false
+  mostrarModal.value = true
 }
 
 const handleTransfer = () => {
@@ -90,8 +95,8 @@ const handlePay = () => {
   })
   showMoneyModal.value = false
 }
-
 </script>
+
 
 <style scoped>
 .actions-container {
