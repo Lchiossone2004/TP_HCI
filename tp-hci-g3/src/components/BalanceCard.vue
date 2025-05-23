@@ -8,7 +8,7 @@
     </div>
     <div class="balance-amount">
       <span class="balance-value">
-        {{ visible ? formatted : '***' }}
+        {{ visible ? formattedBalance : '***' }}
       </span>
       <span class="coin">ARS</span>
     </div>
@@ -17,14 +17,27 @@
       <span>+24,6%</span>
     </div>
   </div>
-  
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { usePaymentStore } from '@/stores/PaymetStore'
+
+const store = usePaymentStore()
+
 const visible = ref(true)
-const formatted = '$205.768,63'
-function toggle() { visible.value = !visible.value }
+function toggle() {
+  visible.value = !visible.value
+}
+
+// Formatea el balance a moneda con separadores de miles
+const formattedBalance = computed(() => {
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    minimumFractionDigits: 2
+  }).format(store.getBalance)
+})
 </script>
 
 <style scoped>
@@ -38,8 +51,8 @@ function toggle() { visible.value = !visible.value }
   display: flex; 
   flex-direction: column;
   justify-content: space-between;
-  flex-shrink: 0; /* Agregamos esto para evitar que la tarjeta se encoja */
-  margin: 0 auto; /* Para centrar la tarjeta */
+  flex-shrink: 0;
+  margin: 0 auto;
 }
 .balance-header {
   display: flex; 
@@ -80,5 +93,4 @@ function toggle() { visible.value = !visible.value }
   font-size: var(--font-mini); 
   color: var(--green);
 }
-
 </style>
