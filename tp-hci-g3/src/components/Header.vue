@@ -1,5 +1,5 @@
 <template>
-  <div :class="['header', { 'special-header': isActivityPage }]">
+  <div class="header">
     <button v-if="!isHomePage" @click="goBack" class="back-btn">
       <span class="material-symbols-rounded">arrow_back</span>
       Volver
@@ -22,21 +22,19 @@ export default {
     const router = useRouter()
 
     const isHomePage = computed(() => route.name === 'Home')
-    const isActivityPage = computed(() => route.name === 'Actividad')
 
     const goBack = () => {
       router.go(-1)
     }
     const goToHelp = () => {
-  router.push({
-    path: '/help',
-    query: { from: route.name }
-  })
-}
+      router.push({
+        path: '/help',
+        query: { from: route.name }
+      })
+    }
 
     return {
       isHomePage,
-      isActivityPage,
       goBack,
       goToHelp
     }
@@ -59,10 +57,6 @@ export default {
   background-color: var(--background-grey);
   height: 50px;
   transition: background-color 0.3s ease;
-}
-
-.special-header {
-  background-color: var(--background-grey);
 }
 
 .top-icons {
