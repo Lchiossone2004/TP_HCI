@@ -21,6 +21,8 @@
       <div class="transfer-row">
         <div class="amount-input">
           <label for="amount">Monto a transferir</label>
+          <div class="input-wrapper">
+            <span class="input-prefix">$</span>
           <input
             id="amount"
             v-model.number="amount"
@@ -28,7 +30,9 @@
             min="0"
             :max="availableBalance"
             placeholder="0.00"
+            class="input-monto"
           />
+        </div>
         </div>
         <button class="transfer-btn" :disabled="!canTransfer" @click="openConfirm">
           Transferir
@@ -98,6 +102,33 @@ const store = usePaymetStore()
   .detail-avatar { width:60px;height:60px;border-radius:50%;object-fit:cover; }
   .balance-info { display:flex; justify-content:space-between; }
   
+  .input-wrapper {
+    position: relative;
+    width: 100%;
+    display: block;
+    margin-top: 1rem;
+  }
+  .input-monto {
+    width: 100%; 
+    padding-left: 10rem;
+    font-size: 1rem;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+  
+  .input-prefix {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #666666;
+    font-size: 1rem;
+    pointer-events: none;
+    user-select: none;
+    line-height: 1;
+  }
   
   .transfer-row { display:flex; align-items:flex-end; gap:1rem; }
   .amount-input { flex:1; display:flex; flex-direction:column; }
@@ -109,7 +140,7 @@ const store = usePaymetStore()
     background:#1f2937;
     border:none;
     border-radius:8px;
-    padding:0.75rem 1rem;
+    padding:0.75rem 2rem;
     color:#fff;
   }
   .amount-input input::placeholder { color:#aaa; }
