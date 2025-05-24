@@ -78,7 +78,7 @@ export default {
   cursor: pointer;
   color: white; 
   transition: color 0.3s ease;
-  font-size: var(--font-subtitle);
+  font-size: var(--font-title);
 }
 
 .icon:hover {

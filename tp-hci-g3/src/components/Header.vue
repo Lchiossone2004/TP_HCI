@@ -72,7 +72,7 @@ export default {
 }
 
 .top-icons .material-symbols-rounded {
-  font-size: var(--font-subtitle);
+  font-size: var(--font-title);
   cursor: pointer;
   color: var(--black-text);
   transition: color 0.2s ease;
