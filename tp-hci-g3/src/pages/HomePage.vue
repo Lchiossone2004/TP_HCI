@@ -70,7 +70,6 @@ const currentMonthActivities = computed(() => {
   margin-left: 21vw;
   padding: 1rem;
   min-height: 100vh;
-  background-color: #eeeeee;
   display: flex;
   align-items: flex-start;
   flex-direction: column;

@@ -132,10 +132,10 @@ function logout() {
 
 .text {
   font-size: 20px;
-  white-space: nowrap;        /* No hacer saltos de línea */
-  overflow: hidden;           /* Ocultar el exceso de texto */
-  text-overflow: ellipsis;    /* Mostrar "..." al final si se corta */
-  max-width: 100%;            /* Respetar el ancho del contenedor */
+  white-space: nowrap;       
+  overflow: hidden;           
+  text-overflow: ellipsis;    
+  max-width: 100%;     
 }
 .sidebar {
     position: fixed;

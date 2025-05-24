@@ -75,7 +75,6 @@ const from = computed(() => route.query.from || '')
   flex-direction: column;
   align-items: center;
   margin-left: 21vw;
-  background-color: #eeeeee;
   min-height: 100vh;
   padding: 2rem;
   text-align: center;

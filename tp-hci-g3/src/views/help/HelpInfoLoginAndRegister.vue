@@ -27,6 +27,7 @@
             No, cada cuenta necesita un correo único. Si ya se ha utilizado ese correo, inicia sesión o restablece la contraseña.
         </h4>
     </div>
+    
     </div>
 </template>
 <style scoped>
@@ -38,4 +39,5 @@
 .ans {
     padding-top:0.5rem;
 }
+
 </style>

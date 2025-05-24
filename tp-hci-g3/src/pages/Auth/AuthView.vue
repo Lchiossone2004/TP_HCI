@@ -76,9 +76,9 @@ export default {
 .icon {
   margin-left: auto; 
   cursor: pointer;
-  font-size: 2rem;
   color: white; 
   transition: color 0.3s ease;
+  font-size: var(--font-subtitle);
 }
 
 .icon:hover {
