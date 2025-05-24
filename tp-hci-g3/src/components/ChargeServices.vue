@@ -70,6 +70,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { usePaymentStore  } from '@/stores/PaymetStore'
 
 const amount = ref('')
 const errors = ref({
@@ -78,7 +79,8 @@ const errors = ref({
 const currentPayment = ref(null)
 const pendingPayments = ref([])
 
-const generatePayment = () => {
+const generatePayment = async () => {
+  const paymentStore = usePaymentStore()
   errors.value.amount = ''
   
   if (!amount.value) {
@@ -87,14 +89,15 @@ const generatePayment = () => {
   }
 
   const newPayment = {
-    id: generateId(),
+    description: "test",
     amount: parseFloat(amount.value),
-    link: generateLink(),
-    timestamp: Date.now()
+    metadata: {}
   }
-  
-  currentPayment.value = newPayment
-  pendingPayments.value.push(newPayment)
+
+  const payment = await paymentStore.pullPayment(newPayment)
+  console.log(payment.uuid)
+  await paymentStore.pushPayment(payment.uuid,10)
+
   amount.value = ''
   
   localStorage.setItem('pendingPayments', JSON.stringify(pendingPayments.value))

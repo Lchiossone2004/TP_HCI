@@ -21,7 +21,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { usePaymetStore } from '@/stores/PaymetStore'
+import { usePaymentStore } from '@/stores/PaymetStore'
 import { useAccountStore } from '@/stores/AccountStore'
 const accountStore = useAccountStore()
 

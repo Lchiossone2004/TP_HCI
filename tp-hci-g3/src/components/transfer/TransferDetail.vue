@@ -60,13 +60,13 @@
   
   <script setup>
   import { ref, computed } from 'vue'
-  import { usePaymetStore } from '@/stores/PaymetStore'
+  import { usePaymentStore } from '@/stores/PaymetStore'
 
 const props = defineProps({
   contact: Object
 })
 
-const store = usePaymetStore()
+const store = usePaymentStore()
   const emit = defineEmits(['back','transfer'])
   
   const amount = ref(0)
