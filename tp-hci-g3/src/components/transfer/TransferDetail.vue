@@ -1,6 +1,9 @@
 <template>
     <div class="detail-panel dark-panel">
-      <button class="back-btn" @click="$emit('back')">← Volver</button>
+      <button class="back-btn" @click="$emit('back')">
+        <span class="material-symbols-rounded">arrow_back</span>
+      Volver
+    </button>
   
       <div class="contact-header">
         <img :src="contact.avatar" class="detail-avatar" />
@@ -15,7 +18,6 @@
         <strong>{{ formatCurrency(availableBalance) }}</strong>
       </div>
   
-      <!-- fila: monto input a la izquierda, botón a la derecha -->
       <div class="transfer-row">
         <div class="amount-input">
           <label for="amount">Monto a transferir</label>
@@ -34,7 +36,7 @@
       </div>
   
       <div class="remaining-info" v-if="amount > 0">
-        <span>Quedará:</span>
+        <span>Saldo luego de realizar la transferencia: </span>
         <strong>{{ formatCurrency(remaining) }}</strong>
       </div>
   
@@ -44,7 +46,7 @@
           <p>Confirmar transferencia de <strong>{{ formatCurrency(amount) }}</strong> a <strong>{{ contact.name }}</strong>?</p>
           <div class="modal-actions">
             <button class="btn-cancel" @click="showConfirm = false">Cancelar</button>
-            <button class="btn-confirm" @click="confirmTransfer">Sí, transferir</button>
+            <button class="btn-confirm" @click="confirmTransfer">Confirmar</button>
           </div>
         </div>
       </div>
@@ -95,7 +97,7 @@ const store = usePaymetStore()
   .detail-avatar { width:60px;height:60px;border-radius:50%;object-fit:cover; }
   .balance-info { display:flex; justify-content:space-between; }
   
-  /* fila de transferencia */
+  
   .transfer-row { display:flex; align-items:flex-end; gap:1rem; }
   .amount-input { flex:1; display:flex; flex-direction:column; }
   .amount-input input::-webkit-inner-spin-button, .amount-input input::-webkit-outer-spin-button { -webkit-appearance: none; margin:0; }
@@ -120,7 +122,7 @@ const store = usePaymetStore()
   .transfer-btn:disabled { background:#555; cursor:not-allowed; }
   .transfer-btn:hover:enabled { background:#1b5edb; }
   
-  /* modal gris */
+
   .modal-overlay {
     position: fixed; top:0; left:0; right:0; bottom:0;
     background: rgba(0,0,0,0.2);
@@ -145,5 +147,22 @@ const store = usePaymetStore()
   .btn-cancel { background:#ccc; }
   .btn-confirm { background:#2e7dff; color:#fff; }
   .btn-confirm:hover { background:#1b5edb; }
+  .back-btn {
+  color: white;
+  font-size: var(--font-text);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.back-btn .material-symbols-outlined {
+  margin-right: 0.5rem;
+  font-size: 0.5rem; 
+  vertical-align: middle;
+}
+.back-btn:hover {
+  color: var(--blue-button-hover);
+}
   </style>
   
