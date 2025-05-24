@@ -34,11 +34,12 @@
           Transferir
         </button>
       </div>
-  
+  <div class="transfer-row">
       <div class="remaining-info" v-if="amount > 0">
         <span>Saldo luego de realizar la transferencia: </span>
         <strong>{{ formatCurrency(remaining) }}</strong>
       </div>
+    </div>
   
       <!-- modal gris -->
       <div v-if="showConfirm" class="modal-overlay">
@@ -100,7 +101,9 @@ const store = usePaymetStore()
   
   .transfer-row { display:flex; align-items:flex-end; gap:1rem; }
   .amount-input { flex:1; display:flex; flex-direction:column; }
-  .amount-input input::-webkit-inner-spin-button, .amount-input input::-webkit-outer-spin-button { -webkit-appearance: none; margin:0; }
+  .amount-input input::-webkit-inner-spin-button, .amount-input input::-webkit-outer-spin-button { 
+    -webkit-appearance: none; margin:0; 
+  }
   .amount-input input {
     appearance: none;
     background:#1f2937;
