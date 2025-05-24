@@ -67,6 +67,7 @@
 <script setup>
 import { ref, computed } from 'vue'  // Added computed import
 import Modal from './Modal.vue'
+import { useAccountStore } from '@/stores/AccountStore'
 
 const isSuccess = computed(() => error.value === 'Pago procesado exitosamente')
 const searchQuery = ref('')
@@ -99,9 +100,12 @@ const searchPayment = () => {
 }
 
 const processPayment = () => {
+  const accountStore = useAccountStore()
   const pendingPayments = JSON.parse(localStorage.getItem('pendingPayments') || '[]')
   const updatedPayments = pendingPayments.filter(p => p.id !== paymentFound.value.id)
   localStorage.setItem('pendingPayments', JSON.stringify(updatedPayments))
+
+  accountStore.balance = accountStore.balance - paymentFound.value.amount
   
   paymentFound.value = null
   searchQuery.value = ''

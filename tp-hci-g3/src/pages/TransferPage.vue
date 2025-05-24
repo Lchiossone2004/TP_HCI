@@ -36,18 +36,9 @@
         <!-- Vista principal de transferencias -->
         <div class="transfer-main-view">
           <div class="left-section">
-            <div class="search-section panel">
-              <h2>Transferir a</h2>
-              <div class="search-container">
-                <input
-                  v-model="searchQuery"
-                  class="search-input"
-                  placeholder="Buscar por alias, CVU, CBU, teléfono o nombre..."
-                  @input="handleSearch"
-                />
-                <span class="material-symbols-rounded search-icon">search</span>
-              </div>
-            </div>
+           <div class="search-section panel">
+            <TransferSearch @search="handleSearch" />
+          </div>
             
             <div class="recent-transfers-section">
               <div class="panel">

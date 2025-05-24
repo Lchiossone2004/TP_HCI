@@ -22,8 +22,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { usePaymetStore } from '@/stores/PaymetStore'
-
-const store = usePaymetStore()
+import { useAccountStore } from '@/stores/AccountStore'
+const accountStore = useAccountStore()
 
 const visible = ref(true)
 function toggle() {
@@ -36,7 +36,7 @@ const formattedBalance = computed(() => {
     style: 'currency',
     currency: 'ARS',
     minimumFractionDigits: 2
-  }).format(store.getBalance)
+  }).format(accountStore.balance)
 })
 </script>
 

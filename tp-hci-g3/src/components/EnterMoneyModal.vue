@@ -35,7 +35,8 @@
   import { ref, computed, onMounted } from 'vue'
   import Modal from './Modal.vue'
   import { usePaymetStore } from '@/stores/PaymetStore'
-  
+  import { useAccountStore } from '@/stores/AccountStore';
+
   const props = defineProps(['modelValue']);
   const emit = defineEmits(['update:modelValue']);
   
@@ -49,9 +50,10 @@
   const montoTotal = ref(0);
   
   onMounted(() => {
-    const guardado = localStorage.getItem('montoTotal');
+    const accountStore = useAccountStore()
+    const guardado = accountStore.balance;
     if (guardado) {
-      montoTotal.value = Number(guardado);
+      accountStore.balance = Number(guardado);
     }
   });
   
@@ -64,9 +66,9 @@
     monto.value = 0;
   }
   
-  function confirmarIngreso() {
+  async function confirmarIngreso() {
     if (monto.value > 0) {
-      store.agregarTransaccion(monto.value, 'ingreso');
+      await store.agregarTransaccion(monto.value, 'ingreso');
       cerrarModalIngreso();
     }
   }

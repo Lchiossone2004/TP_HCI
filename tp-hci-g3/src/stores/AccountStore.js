@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useAccountStore = defineStore('account', () => {
 
-    const balance = ref('100.000,30')
+    const balance = ref(100.000,30)
     const alias =  ref('wing.pya.alias')
     
     async function getAccountInfo(){

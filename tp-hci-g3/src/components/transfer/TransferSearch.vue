@@ -1,40 +1,87 @@
 <template>
-  <div class="search-panel">
-    <h2 class="search-title">Transferir a…</h2>
-    <div class="search-row">
-      <input
-        v-model="query"
-        class="search-input"
-        placeholder="Buscar por CBU, CVU o alias"
-        @keyup.enter="emitSearch"
-      />
-      <button class="search-btn" @click="emitSearch" :disabled="!query.trim()">
-        Buscar
-      </button>
-    </div>
-  </div>
+<div class="search-row">
+  <input
+    v-model="query"
+    class="search-input"
+    placeholder="Buscar por CBU, CVU o alias"
+    @keyup.enter="emitSearch"
+  />
+  <input
+    v-model.number="monto"
+    class="search-input"
+    type="number"
+    placeholder="Monto"
+    min="1"
+  />
+  <button class="search-btn" @click="emitSearch" :disabled="!query.trim() || !monto">
+    Transferir
+  </button>
+</div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { usePaymetStore } from '@/stores/PaymetStore'
+
 const query = ref('')
+const monto = ref(null)
 const emit = defineEmits(['search'])
+const paymetStore = usePaymetStore()
+
+function detectTipoEntrada(entrada) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const cvuRegex = /^\d{22}$/
+
+  if (emailRegex.test(entrada)) return 'email'
+  if (cvuRegex.test(entrada)) return 'cvu'
+  return 'alias'
+}
+
+async function transferirPorEmail(email, monto) {
+  console.log('Transferir a EMAIL:', email, 'Monto:', monto)
+  await paymetStore.transferViaEmail(email,1,"test", monto)
+}
+
+function transferirPorCVU(cvu, monto) {
+  console.log('Transferir a CVU:', cvu, 'Monto:', monto)
+  // lógica de transferencia por CVU
+}
+
+function transferirPorAlias(alias, monto) {
+  console.log('Transferir a ALIAS:', alias, 'Monto:', monto)
+  // lógica de transferencia por alias
+}
+
 function emitSearch() {
   const term = query.value.trim()
-  if (term) {
-    emit('search', { term })
+  if (!term || !monto.value) return
+
+  const tipo = detectTipoEntrada(term)
+
+  switch (tipo) {
+    case 'email':
+      transferirPorEmail(term, monto.value)
+      break
+    case 'cvu':
+      transferirPorCVU(term, monto.value)
+      break
+    case 'alias':
+      transferirPorAlias(term, monto.value)
+      break
   }
 }
+
+
 </script>
 
 <style scoped>
 .search-panel {
-  background: #03192C;
+  background: #ffffff;
   border-radius: 16px;
   padding: 1.5rem;
 }
 .search-title {
-  color: #fff;
+  color: #1f2937;
   font-size: 1.25rem;
   margin-bottom: 0.75rem;
 }
@@ -46,13 +93,18 @@ function emitSearch() {
   flex: 1;
   padding: 0.75rem 1rem;
   border-radius: 8px;
-  border: none;
   font-size: 1rem;
-  background: #1f2937;
-  color: #fff;
+  background: #dbdbdb;
+  color: #1f2937;
+  border: 2px solid #ffffff;
+  transition: border-color 0.2s;
 }
 .search-input::placeholder {
   color: #aaa;
+}
+.search-input:focus {
+  outline: none;
+  border-color: #1f2937;
 }
 .search-btn {
   background: #2e7dff;
@@ -65,7 +117,7 @@ function emitSearch() {
   transition: background 0.2s;
 }
 .search-btn:disabled {
-  background: #555;
+  background: #134297;
   cursor: not-allowed;
 }
 .search-btn:hover:enabled {
