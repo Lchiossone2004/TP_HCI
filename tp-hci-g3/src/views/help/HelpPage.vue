@@ -18,6 +18,10 @@ const from = computed(() => route.query.from || '')
 
 <template>
   <div class="help-page">
+    <button class="back-button" @click="$router.back()">
+      <span class="material-symbols-rounded">arrow_back</span>
+      Volver
+    </button>
     <div v-if="from === 'ProfilePage'">
       <h1>Ayuda - Perfil</h1>
       <HelpInfoProfile/>
@@ -74,7 +78,6 @@ const from = computed(() => route.query.from || '')
     display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 21vw;
   min-height: 100vh;
   padding: 2rem;
   text-align: center;
@@ -99,4 +102,25 @@ const from = computed(() => route.query.from || '')
     align-items: left;
     text-align: left;
 }
+.back-button {
+  color: var(--black-text);
+  font-size: var(--font-text);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.back-button .material-symbols-outlined {
+  margin-right: 0.5rem;
+  font-size: 0.5rem; 
+  vertical-align: middle;
+}
+.back-button:hover {
+  color: var(--blue-button-hover);
+}
+
 </style>
