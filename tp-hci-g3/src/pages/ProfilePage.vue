@@ -39,7 +39,8 @@ const actualizarPerfil = (nuevoPerfil) => {
   console.log(nuevoPerfil)
   perfil.value = {
     ...perfil.value,
-    ...nuevoPerfil
+    ...nuevoPerfil,
+    avatar: nuevoPerfil.metadata?.avatar || perfil.value.avatar
   }
 }
 

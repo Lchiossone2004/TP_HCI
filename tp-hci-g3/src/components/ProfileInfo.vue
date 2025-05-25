@@ -8,7 +8,7 @@
     
     <div class="profile-content">
       <div class="profile-image">
-        <img :src="perfil.avatar" :alt="perfil.nombre" />
+        <img :src="perfil.avatar"  :alt="perfil.nombre" />
         <h2>{{ perfil.nombre }}</h2>
         <a :href="`mailto:${perfil.email}`">{{ perfil.email }}</a>
       </div>
