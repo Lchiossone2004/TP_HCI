@@ -168,7 +168,7 @@ export default {
   font-family: 'Inter', sans-serif;
 }
 
-/* TITULOS */
+
 .verification-page h1 {
   font-size: 1.8rem;
   margin-bottom: 0.5rem;
@@ -181,7 +181,7 @@ export default {
   color: var(--text-dark);
 }
 
-/* INPUTS */
+
 .verification-page input {
   width: 100%;
   padding: 12px;
@@ -198,8 +198,6 @@ export default {
   outline: none;
   background-color: #fff;
 }
-
-/* BOTONES */
 .verification-page button {
   background-color: #03192c;
   color: rgb(255, 255, 255);
@@ -215,7 +213,6 @@ export default {
   background-color: #0056b3;
 }
 
-/* MENSAJES */
 .error {
   color: var(--danger);
   font-size: 0.95rem;
@@ -235,4 +232,3 @@ hr {
 }
 
 </style>
-h
