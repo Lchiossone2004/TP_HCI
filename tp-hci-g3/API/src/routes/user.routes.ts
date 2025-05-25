@@ -7,7 +7,8 @@ import {
     changeUserPassword,
     resetUserPassword,
     resendUserVerification,
-    verifyUser
+    verifyUser,
+    updateUser 
 } from "../controllers/user.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -245,5 +246,37 @@ router.post("/logout", authenticate, logoutUser);
  *              $ref: '#/responses/ServerError'
  */
 router.get("", authenticate, getUser);
+
+/**
+ * @swagger
+ * /api/user:
+ *  put:
+ *      security:
+ *        - bearerAuth: []
+ *      summary: Update user
+ *      tags: [User]
+ *      operationId: updateUser
+ *      produces:
+ *         - application/json
+ *      requestBody:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/UpdateUserData'
+ *      responses:
+ *          200:
+ *              description: Successful operation
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    $ref: '#/definitions/UserData'
+ *          400:
+ *              $ref: '#/responses/BadRequest'
+ *          401:
+ *              $ref: '#/responses/Unauthorized'
+ *          500:
+ *              $ref: '#/responses/ServerError'
+ */
+router.put("", authenticate, updateUser); 
 
 export default router;

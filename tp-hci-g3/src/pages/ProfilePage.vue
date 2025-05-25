@@ -6,52 +6,61 @@
         @edit="handleEditProfile"
       />
       <ProfileActions @edit="handleEditProfile" />
-      <EditProfileModal 
-        v-model="showEditModal"
-        v-model:perfil="perfil"
-      />
+      <EditProfileModal
+  v-model="showEditModal"
+  :perfil="perfil"
+  @update:perfil="actualizarPerfil"
+/>
+
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
 import ProfileInfo from '@/components/ProfileInfo.vue'
 import ProfileActions from '@/components/ProfileActions.vue'
 import EditProfileModal from '@/components/EditProfileModal.vue'
 
-const router = useRouter()
+import { useUserStore } from '@/stores/UserStore'
+import { useAccountStore } from '@/stores/AccountStore'
+
 const showEditModal = ref(false)
+const perfil = ref({})
 
-// Cargar datos del localStorage o usar valores por defecto
-const perfil = ref(
-  JSON.parse(localStorage.getItem('userProfile')) || {
-    nombre: 'Mateo',
-    apellido: 'Gorriti',
-    email: 'mateo.go@gmail.com',
-    dni: '40.527.004',
-    telefono: '+54 11 7385-4992',
-    avatar: '/src/assets/images/FotoPerfil.jpeg',
-    cvu: '0000003100064484890001',
-    alias: 'mateo.gorriti'
-  }
-)
-
-// Guardar cambios en localStorage cuando el perfil cambie
-watch(perfil, (newValue) => {
-  localStorage.setItem('userProfile', JSON.stringify(newValue))
-}, { deep: true })
+const userStore = useUserStore()
+const accountStore = useAccountStore()
 
 const handleEditProfile = () => {
   showEditModal.value = true
 }
 
-// Opcional: Cargar datos al montar el componente
-onMounted(() => {
-  const savedProfile = localStorage.getItem('userProfile')
-  if (savedProfile) {
-    perfil.value = JSON.parse(savedProfile)
+const actualizarPerfil = (nuevoPerfil) => {
+  console.log(nuevoPerfil)
+  perfil.value = {
+    ...perfil.value,
+    ...nuevoPerfil
+  }
+}
+
+
+onMounted(async () => {
+  try {
+    const userData = await userStore.getUser()
+    const accountData = await accountStore.getAccountInfo()
+
+    perfil.value = {
+  ...userData,
+  nombre: userData.firstName || '',
+  apellido: userData.lastName || '',
+  email: userData.email || '',
+  alias: accountData.alias || '',
+  cvu: accountData.cvu || '',
+  avatar: '/src/assets/images/FotoPerfil.jpeg'
+}
+
+  } catch (error) {
+    console.error('Error cargando datos del perfil:', error)
   }
 })
 </script>

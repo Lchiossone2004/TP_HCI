@@ -15,20 +15,16 @@
       
       <div class="profile-details">
         <div class="detail-row">
-          <span>DNI:</span>
-          <span>{{ perfil.dni }}</span>
+          <span>Nombre y apellido:</span>
+          <span>{{ perfil.nombre }} {{ perfil.apellido }}</span>
         </div>
         <div class="detail-row">
-          <span>Nombre:</span>
-          <span>{{ perfil.nombre }}</span>
+          <span>Alias:</span>
+          <span>{{ perfil.alias }}</span>
         </div>
         <div class="detail-row">
-          <span>Apellido:</span>
-          <span>{{ perfil.apellido }}</span>
-        </div>
-        <div class="detail-row">
-          <span>Número:</span>
-          <span>{{ perfil.telefono }}</span>
+          <span>CVU:</span>
+          <span>{{ perfil.cvu }}</span>
         </div>
       </div>
     </div>
@@ -36,15 +32,16 @@
 </template>
 
 <script setup>
-  defineProps({
-    perfil: {
-      type: Object,
-      required: true
-    }
-  })
+defineProps({
+  perfil: {
+    type: Object,
+    required: true
+  }
+})
 
-  defineEmits(['edit'])
+defineEmits(['edit'])
 </script>
+
 
 <style scoped>
   .profile-container {

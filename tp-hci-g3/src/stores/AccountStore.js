@@ -2,138 +2,164 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useAccountStore = defineStore('account', () => {
+  const balance = ref(100.0)
+  const alias = ref('wing.pya.alias')
+  const cvu = ref('') 
 
-    const balance = ref(100.000,30)
-    const alias =  ref('wing.pya.alias')
-    
-    async function getAccountInfo(){
-        try{
-            const token = localStorage.getItem('auth-token');
+  async function getAccountInfo() {
+    try {
+      const token = localStorage.getItem('auth-token')
 
-            if (!token) {
-                throw new Error('No hay token de autenticación guardado.');
-            }
-            const response = await fetch(`http://localhost:8080/api/account`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
-                });
+      if (!token) {
+        throw new Error('No hay token de autenticación guardado.')
+      }
 
-            if (!response.ok) {
-                // Lanza un error si la respuesta no fue satisfactoria
-                throw new Error(`Error obteniendo informacion de cuenta: ${response.status}`);
-            }
-            const data = await response.json()
-            return data
+      const response = await fetch(`http://localhost:8080/api/account`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
         }
-        catch(error){
-            console.error('Error obteniendo informacion de cuenta:', error);
-            throw error; // vuelve a lanzar para que el componente pueda capturarlo
-        }
-    }       
+      })
 
-    async function chargeBalance(amount){
-        try{
-            const token = localStorage.getItem('auth-token');
+      if (!response.ok) {
+        throw new Error(`Error obteniendo información de cuenta: ${response.status}`)
+      }
 
-            if (!token) {
-                throw new Error('No hay token de autenticación guardado.');
-            }
-            const response = await fetch(`http://localhost:8080/api/account/recharge?amount=${amount}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
-                });
+      const data = await response.json()
+      alias.value = data.alias || ''
+      cvu.value = data.cvu || ''
+      balance.value = data.balance || 0
 
-            if (!response.ok) {
-                // Lanza un error si la respuesta no fue satisfactoria
-                throw new Error(`Error obteniendo informacion de cuenta: ${response.status}`);
-            }
-        }
-        catch(error){
-            console.error('Error obteniendo informacion de cuenta:', error);
-            throw error; // vuelve a lanzar para que el componente pueda capturarlo
-        }
+      return data
+    } catch (error) {
+      console.error('Error obteniendo información de cuenta:', error)
+      throw error
     }
-    async function updateAlias(alias){
-        try{
-            const token = localStorage.getItem('auth-token');
+  }
 
-            if (!token) {
-                throw new Error('No hay token de autenticación guardado.');
-            }
-            const response = await fetch(`http://localhost:8080/api/account/update-alias?alias=${alias}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
-                });
+  async function chargeBalance(amount) {
+    try {
+      const token = localStorage.getItem('auth-token')
 
-            if (!response.ok) {
-                // Lanza un error si la respuesta no fue satisfactoria
-                throw new Error(`Error obteniendo informacion de cuenta: ${response.status}`);
-            }
+      if (!token) {
+        throw new Error('No hay token de autenticación guardado.')
+      }
+
+      const response = await fetch(
+        `http://localhost:8080/api/account/recharge?amount=${amount}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
         }
-        catch(error){
-            console.error('Error obteniendo informacion de cuenta:', error);
-            throw error; // vuelve a lanzar para que el componente pueda capturarlo
-        }
+      )
+
+      if (!response.ok) {
+        throw new Error(`Error recargando el saldo: ${response.status}`)
+      }
+    } catch (error) {
+      console.error('Error recargando el saldo:', error)
+      throw error
     }
-    async function checkCVU(cvu){
-        try{
-            const token = localStorage.getItem('auth-token');
+  }
 
-            if (!token) {
-                throw new Error('No hay token de autenticación guardado.');
-            }
-            const response = await fetch(`http://localhost:8080/api/account/verify-cvu?cvu=${cvu}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
-                });
+  async function updateAlias(newAlias) {
+    try {
+      const token = localStorage.getItem('auth-token')
 
-            if (!response.ok) {
-                // Lanza un error si la respuesta no fue satisfactoria
-                throw new Error(`Error verificando el cvu: ${response.status}`);
-            }
+      if (!token) {
+        throw new Error('No hay token de autenticación guardado.')
+      }
+
+      const response = await fetch(
+        `http://localhost:8080/api/account/update-alias?alias=${newAlias}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
         }
-        catch(error){
-            console.error('Error verificando el cvu:', error);
-            throw error; // vuelve a lanzar para que el componente pueda capturarlo
-        }
+      )
+
+      if (!response.ok) {
+        throw new Error(`Error actualizando alias: ${response.status}`)
+      }
+
+      alias.value = newAlias // ✅ actualizamos el alias en el estado
+    } catch (error) {
+      console.error('Error actualizando alias:', error)
+      throw error
     }
-    async function checkAlias(alias){
-        try{
-            const token = localStorage.getItem('auth-token');
+  }
 
-            if (!token) {
-                throw new Error('No hay token de autenticación guardado.');
-            }
-            const response = await fetch(`http://localhost:8080/api/account/verify-alias?alias=${alias}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
-                });
+  async function checkCVU(cvuToCheck) {
+    try {
+      const token = localStorage.getItem('auth-token')
 
-            if (!response.ok) {
-                // Lanza un error si la respuesta no fue satisfactoria
-                throw new Error(`Error verificando el alias: ${response.status}`);
-            }
+      if (!token) {
+        throw new Error('No hay token de autenticación guardado.')
+      }
+
+      const response = await fetch(
+        `http://localhost:8080/api/account/verify-cvu?cvu=${cvuToCheck}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
         }
-        catch(error){
-            console.error('Error verificando el alias:', error);
-            throw error; // vuelve a lanzar para que el componente pueda capturarlo
-        }
+      )
+
+      if (!response.ok) {
+        throw new Error(`Error verificando el cvu: ${response.status}`)
+      }
+    } catch (error) {
+      console.error('Error verificando el cvu:', error)
+      throw error
     }
+  }
 
-    return {getAccountInfo, chargeBalance, updateAlias, checkAlias, checkCVU, balance}
+  async function checkAlias(aliasToCheck) {
+    try {
+      const token = localStorage.getItem('auth-token')
+
+      if (!token) {
+        throw new Error('No hay token de autenticación guardado.')
+      }
+
+      const response = await fetch(
+        `http://localhost:8080/api/account/verify-alias?alias=${aliasToCheck}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error(`Error verificando el alias: ${response.status}`)
+      }
+    } catch (error) {
+      console.error('Error verificando el alias:', error)
+      throw error
+    }
+  }
+
+  return {
+    getAccountInfo,
+    chargeBalance,
+    updateAlias,
+    checkAlias,
+    checkCVU,
+    balance,
+    alias,
+    cvu 
+  }
 })
