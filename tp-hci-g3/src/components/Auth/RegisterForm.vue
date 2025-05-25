@@ -110,7 +110,9 @@ export default {
   display: flex;
   align-items: center;
 }
-
+.error {
+  font-size: medium;
+}
 .input-with-icon input {
   padding-left: 2.5rem;
   height: 40px;
@@ -128,10 +130,10 @@ export default {
 }
 
 .auth-container {
-  padding: 2rem 1.5rem; /* Reduced padding */
+  padding: 2rem 1.5rem;
   color: var(--white-text);
   width: 100%;
-  max-width: 500px; /* Reduced from 600px */
+  max-width: 500px;
   margin: 0 auto;
 }
 
