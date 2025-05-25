@@ -44,14 +44,13 @@ export default {
       apellido: '',
       nacimiento: '',
       email: '',
-      telefono: '',
       password: '',
       formError: ''
     }
   },
   methods: {
     validarFormulario() {
-      if (!this.nombre || !this.apellido || !this.nacimiento || !this.email || !this.telefono || !this.password) {
+      if (!this.nombre || !this.apellido || !this.nacimiento || !this.email  || !this.password) {
         this.formError = 'Por favor complete todos los campos.';
         return false;
       }
