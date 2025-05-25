@@ -91,14 +91,16 @@ const passportOptions = {
 };
 
 
-passport.use(new passportJwt.Strategy(passportOptions, async function (payload: JwtPayload, done: passportJwt.VerifiedCallback) {
-    const user: User = await User.findOne({ where: { id: parseInt(payload.sub!) } });
+passport.use(new passportJwt.Strategy(passportOptions, async function (payload, done) {
+    const user = await db.getRepository(User).findOne({ where: { id: parseInt(payload.sub) } })
+  
     if (!user) {
-        return done(null, false);
+      return done(null, false)
     } else {
-        return done(null, user);
+      return done(null, user)
     }
-}));
+  }))
+  
 
 const middleware = auth(passport);
 

@@ -36,8 +36,12 @@
             {{ error }}
         </div>
         </div>
+        <div class="balance-container">
+          <h2 class="title"> Saldo disponible</h2>
+          <BalanceCard />
+        </div>
 
-        <!-- Modal de confirmación -->
+  
         <Modal v-model="showConfirmPayment" title="Confirmar pago">
         <div class="confirm-payment">
             <p>¿Está seguro que desea realizar este pago?</p>
@@ -129,15 +133,24 @@ const handleSubmit = () => {
   width: 100%;
   max-width: min(600px, 100%);
   margin: 0 auto;
-}
 
+}
+.balance-container {
+  background: var(--dark-blue);
+  border-radius: var(--general-radius);
+  padding: 2rem;
+  margin-top: 2rem;
+  color: var(--white-text);
+}
 .payment-form {
   background: white;
   border-radius: var(--general-radius);
   padding: 2rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
+.title {
+  margin-bottom: 1rem;
+}
 .search-form {
   margin-top: 1.5rem;
 }

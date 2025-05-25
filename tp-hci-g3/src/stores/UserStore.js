@@ -3,20 +3,26 @@ import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', () => {
 
-    async function createUser(datos){
-        try{
-            fetch("http://localhost:8080/api/user",{
-                method: 'POST',
-                headers:{
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(datos)
-            })
-        }
-        catch(error){
-            console.error('Error al crear el usuario:', error);
-        }
+  async function createUser(datos) {
+    try {
+      const response = await fetch("http://localhost:8080/api/user", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos)
+      })
+  
+      if (!response.ok) {
+        const errorBody = await response.text()
+        throw new Error(`Error al registrar: ${response.status} - ${errorBody}`)
+      }
+  
+      return await response.json()
+    } catch (error) {
+      console.error('Error al crear el usuario:', error)
+      throw error
     }
+  }
+  
 
     async function logIn(email, password) {
         try {
@@ -136,5 +142,41 @@ export const useUserStore = defineStore('user', () => {
             console.error('Error al renviar el email:', error);
         }
     }
-    return{createUser, logIn ,getUser, verifyUser,resendVerification, sendRecoveryCode, changePassword}
+    async function updateUser({ firstname, lastname, email, avatar }) {
+      console.log('INTENTANDO guardar usuario:', firstname, lastname, email, avatar)
+    
+      const token = localStorage.getItem('auth-token')
+      const response = await fetch('http://localhost:8080/api/user', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ firstname, lastname, email, avatar }) 
+      })
+    
+      const text = await response.text()
+     
+    
+      if (!response.ok) {
+        throw new Error(`Error al actualizar perfil: ${response.status} - ${text}`)
+      }
+    }
+    
+      async function getDefaultAccountData() {
+        const token = localStorage.getItem('auth-token')
+        const response = await fetch('http://localhost:8080/api/account/default', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
+        })
+        if (!response.ok) throw new Error('Error al obtener datos por defecto')
+        return await response.json()
+      }
+      
+      
+    return{createUser, logIn ,getUser, verifyUser,resendVerification, sendRecoveryCode, changePassword, updateUser}
+    
 })

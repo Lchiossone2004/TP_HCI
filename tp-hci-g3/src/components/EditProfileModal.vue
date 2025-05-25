@@ -1,7 +1,11 @@
 <template>
   <Modal v-model="show" title="Datos de mi cuenta">
     <div class="edit-form">
-      <div v-for="(value, key) in editableFields" :key="key" class="form-field">
+      <div
+        v-for="key in editableKeys"
+        :key="key"
+        class="form-field"
+      >
         <div class="field-header">
           <label>{{ labels[key] }}</label>
           <button 
@@ -20,22 +24,44 @@
           </button>
         </div>
         <input
-          v-if="editingField[key]"
-          v-model="editableFields[key]"
-          :type="inputTypes[key]"
-          class="edit-input"
-          @keyup.enter="saveField(key)"
-        />
+  v-if="editingField[key]"
+  v-model="editableFields[key]"
+  :type="inputTypes[key]"
+  class="edit-input"
+  @keyup.enter="saveField(key)"
+  :readonly="key === 'cvu'"
+/>
         <div v-else class="field-value">
-          {{ value }}
-          <span v-if="key === 'cvu' || key === 'alias'" 
-                class="material-symbols-rounded copy-icon" 
-                @click="copyToClipboard(value)">
+          {{ editableFields[key] }}
+        </div>
+      </div>
+
+    
+      <div class="form-field">
+        <label>CVU</label>
+        <div class="field-value">
+          {{ editableFields.cvu }}
+          <span class="material-symbols-rounded copy-icon" @click="copyToClipboard(editableFields.cvu)">
             content_copy
           </span>
         </div>
       </div>
     </div>
+    <div class="form-field">
+  <label>Avatar</label>
+  <div class="avatar-options">
+  <div
+    v-for="avatar in avatarList"
+    :key="avatar"
+    :class="['avatar-box', { selected: selectedAvatar === avatar }]"
+    @click="selectAvatar(avatar)"
+  >
+    <img :src="avatar" />
+  </div>
+</div>
+
+</div>
+
     <div class="buttons-container">
       <button class="submit-button" @click="saveChanges">Guardar cambios</button>
       <button class="cancel-button" @click="closeModal">Cancelar</button>
@@ -43,9 +69,29 @@
   </Modal>
 </template>
 
+
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import Modal from './Modal.vue'
+import { useUserStore } from '@/stores/UserStore'
+import { useAccountStore } from '@/stores/AccountStore'
+
+const userStore = useUserStore()
+const accountStore = useAccountStore()
+const avatarList = [
+'src/assets/images/avatars/default-profile-picture.png',
+  'src/assets/images/avatars/Avatar1.jpg',
+  'src/assets/images/avatars/Avatar2.jpg',
+  'src/assets/images/avatars/Avatar4.jpg',
+  'src/assets/images/avatars/Avatar5.jpg'
+
+]
+
+const selectedAvatar = ref('')
+
+function selectAvatar(avatar) {
+  selectedAvatar.value = avatar
+}
 
 const props = defineProps({
   modelValue: Boolean,
@@ -63,27 +109,34 @@ const show = computed({
 })
 
 const labels = {
-  dni: 'DNI',
   nombre: 'Nombre',
   apellido: 'Apellido',
   email: 'Email',
-  telefono: 'Número',
   cvu: 'CVU',
   alias: 'Alias'
 }
 
 const inputTypes = {
-  dni: 'text',
   nombre: 'text',
   apellido: 'text',
   email: 'email',
-  telefono: 'tel',
   cvu: 'text',
   alias: 'text'
 }
 
-const editableFields = ref({ ...props.perfil })
+const editableFields = ref({
+  nombre: props.perfil.firstname || props.perfil.nombre || '',
+  apellido: props.perfil.lastname || props.perfil.apellido || '',
+  email: props.perfil.email || '',
+  cvu: '',
+  alias: ''
+})
+
 const editingField = ref({})
+
+const editableKeys = computed(() =>
+  Object.keys(editableFields.value).filter(k => k !== 'cvu')
+)
 
 const startEditing = (field) => {
   editingField.value[field] = true
@@ -93,15 +146,60 @@ const saveField = (field) => {
   editingField.value[field] = false
 }
 
-const saveChanges = () => {
-  emit('update:perfil', { ...editableFields.value })
-  show.value = false
+const saveChanges = async () => {
+  try {
+    const { nombre, apellido, email, alias } = editableFields.value
+    await userStore.updateUser({
+      firstname: nombre,
+      lastname: apellido,
+      email
+    })
+    await accountStore.updateAlias(alias)
+
+    await userStore.updateUser({
+  firstName: nombre,
+  lastName: apellido,
+  email,
+  avatar: selectedAvatar.value
+
+})
+
+
+emit('update:perfil', {
+  ...props.perfil,
+  nombre,
+  apellido,
+  email,
+  alias,
+  firstName: nombre,
+  lastName: apellido
+})
+    show.value = false
+    alert('Perfil actualizado correctamente')
+  } catch (error) {
+    console.error('ERROR al guardar cambios:', error)
+    alert('Hubo un error al guardar los cambios')
+  }
+}
+
+const resetFields = () => {
+  editableFields.value = {
+    nombre: props.perfil.firstName || props.perfil.nombre || '',
+    apellido: props.perfil.lastName || props.perfil.apellido || '',
+    email: props.perfil.email || '',
+    alias: props.perfil.alias || '',
+    cvu: accountStore.cvu || ''
+  }
 }
 
 const closeModal = () => {
-  editableFields.value = { ...props.perfil }
+  resetFields()
   show.value = false
 }
+
+watch(() => props.perfil, () => {
+  resetFields()
+}, { immediate: true, deep: true })
 
 const copyToClipboard = async (text) => {
   try {
@@ -110,7 +208,19 @@ const copyToClipboard = async (text) => {
     console.error('Failed to copy text: ', err)
   }
 }
+
+onMounted(async () => {
+  try {
+    await accountStore.getAccountInfo()
+    editableFields.value.alias = accountStore.alias
+    editableFields.value.cvu = accountStore.cvu
+  } catch (err) {
+    console.error('No se pudo cargar alias/cvu:', err)
+  }
+})
 </script>
+
+
 
 <style scoped>
 .edit-form {
@@ -213,13 +323,48 @@ const copyToClipboard = async (text) => {
 }
 
 .copy-icon {
+  color: var(--dark-blue);
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  padding: 0.2rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  gap: 0.5rem;
 }
 
 .copy-icon:hover {
-  background-color: var(--button-grey-hover);
+  color: var(--blue-button-hover);
 }
+.avatar-options {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.avatar-box {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s;
+  background-color: #f2f2f2;
+}
+
+.avatar-box.selected {
+  border-color: #4caf50;
+}
+
+.avatar-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-options img.selected {
+  border-color: #4caf50;
+}
+
 </style>

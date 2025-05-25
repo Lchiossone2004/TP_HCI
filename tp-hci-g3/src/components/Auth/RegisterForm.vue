@@ -19,10 +19,6 @@
     <input type="email" placeholder="Email" v-model="email" />
     </div>
     <div class="input-with-icon">
-    <span class="material-symbols-rounded icon">call</span>
-    <input type="tel" placeholder="Teléfono celular" v-model="telefono" />
-    </div>
-    <div class="input-with-icon">
     <span class="material-symbols-rounded icon">key</span>
     <input type="password" placeholder="Contraseña" v-model="password" />
     </div>
@@ -48,14 +44,13 @@ export default {
       apellido: '',
       nacimiento: '',
       email: '',
-      telefono: '',
       password: '',
       formError: ''
     }
   },
   methods: {
     validarFormulario() {
-      if (!this.nombre || !this.apellido || !this.nacimiento || !this.email || !this.telefono || !this.password) {
+      if (!this.nombre || !this.apellido || !this.nacimiento || !this.email  || !this.password) {
         this.formError = 'Por favor complete todos los campos.';
         return false;
       }
@@ -115,7 +110,9 @@ export default {
   display: flex;
   align-items: center;
 }
-
+.error {
+  font-size: medium;
+}
 .input-with-icon input {
   padding-left: 2.5rem;
   height: 40px;
@@ -133,10 +130,10 @@ export default {
 }
 
 .auth-container {
-  padding: 2rem 1.5rem; /* Reduced padding */
+  padding: 2rem 1.5rem;
   color: var(--white-text);
   width: 100%;
-  max-width: 500px; /* Reduced from 600px */
+  max-width: 500px;
   margin: 0 auto;
 }
 

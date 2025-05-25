@@ -8,27 +8,25 @@
     
     <div class="profile-content">
       <div class="profile-image">
-        <img :src="perfil.avatar" :alt="perfil.nombre" />
+        <img :src="perfil.avatar"  :alt="perfil.nombre" />
         <h2>{{ perfil.nombre }}</h2>
         <a :href="`mailto:${perfil.email}`">{{ perfil.email }}</a>
       </div>
       
       <div class="profile-details">
         <div class="detail-row">
-          <span>DNI:</span>
-          <span>{{ perfil.dni }}</span>
+          <span>Nombre y apellido:</span>
+          <span>{{ perfil.nombre }} {{ perfil.apellido }}</span>
         </div>
         <div class="detail-row">
-          <span>Nombre:</span>
-          <span>{{ perfil.nombre }}</span>
+          <span>Alias:</span>
+          <span>{{ perfil.alias }}</span>
+          <span class="material-symbols-rounded icon" @click="copyToClipboard(perfil.alias)">content_copy</span>
         </div>
         <div class="detail-row">
-          <span>Apellido:</span>
-          <span>{{ perfil.apellido }}</span>
-        </div>
-        <div class="detail-row">
-          <span>Número:</span>
-          <span>{{ perfil.telefono }}</span>
+          <span>CVU:</span>
+          <span>{{ perfil.cvu }}</span>
+          <span class="material-symbols-rounded icon" @click="copyToClipboard(perfil.cvu)">content_copy</span>
         </div>
       </div>
     </div>
@@ -36,15 +34,23 @@
 </template>
 
 <script setup>
-  defineProps({
-    perfil: {
-      type: Object,
-      required: true
-    }
-  })
+defineProps({
+  perfil: {
+    type: Object,
+    required: true
+  }
+})
 
-  defineEmits(['edit'])
+defineEmits(['edit'])
+const copyToClipboard = async (text) => {
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch (err) {
+    console.error('Error al copiar:', err)
+  }
+}
 </script>
+
 
 <style scoped>
   .profile-container {
@@ -56,13 +62,23 @@
     margin: 0 auto;
     overflow: hidden;
   }
-
   .profile-header {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
     padding: 1rem;
   }
+  .icon {
+  color: var(--white-text);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.icon:hover {
+  color: var(--blue-button-hover);
+}
 
   .edit-btn {
     background: transparent;
