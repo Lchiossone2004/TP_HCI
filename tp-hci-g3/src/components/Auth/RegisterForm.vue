@@ -19,10 +19,6 @@
     <input type="email" placeholder="Email" v-model="email" />
     </div>
     <div class="input-with-icon">
-    <span class="material-symbols-rounded icon">call</span>
-    <input type="tel" placeholder="Teléfono celular" v-model="telefono" />
-    </div>
-    <div class="input-with-icon">
     <span class="material-symbols-rounded icon">key</span>
     <input type="password" placeholder="Contraseña" v-model="password" />
     </div>

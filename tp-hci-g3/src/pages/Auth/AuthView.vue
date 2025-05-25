@@ -43,7 +43,6 @@ export default {
     const route = useRoute()
 
     const goToHelp = () => {
-      console.log('Redirigiendo a /help desde', route.name)
       router.push({
         name: 'HelpPage',
         query: { from: route.name || 'unknown' }
