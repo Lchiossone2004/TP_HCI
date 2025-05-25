@@ -48,7 +48,8 @@ export class User extends BaseEntity {
     isVerified: boolean;
 
     @Column({ type: "simple-json", nullable: true })
-    metadata?: object;
+    metadata?: Record<string, any>;
+
 
     @CreateDateColumn()
     createdAt: Date;

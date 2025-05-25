@@ -145,12 +145,15 @@ export function logoutUser(
 export async function updateUser(req: Request, res: Response): Promise<void> {
     try {
       const user = req.user as User
-      const { firstname, lastname, email } = req.body
+      const { firstname, lastname, email, avatar } = req.body
   
       user.firstName = firstname
       user.lastName = lastname
       user.email = email
-  
+      user.metadata = {
+        ...(user.metadata || {}),
+        avatar
+      }
       const userRepository = db.getRepository(User)
       const updatedUser = await userRepository.save(user)
   

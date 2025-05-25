@@ -56,7 +56,8 @@ onMounted(async () => {
   email: userData.email || '',
   alias: accountData.alias || '',
   cvu: accountData.cvu || '',
-  avatar: '/src/assets/images/FotoPerfil.jpeg'
+  avatar: userData.metadata?.avatar || '/src/assets/images/avatars/default-profile-picture.png'
+
 }
 
   } catch (error) {

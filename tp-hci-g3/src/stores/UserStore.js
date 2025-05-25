@@ -136,25 +136,27 @@ export const useUserStore = defineStore('user', () => {
             console.error('Error al renviar el email:', error);
         }
     }
-    async function updateUser({ firstname, lastname, email }) {
-        console.log('INTENTANDO guardar usuario:', firstname, lastname, email)
-        const token = localStorage.getItem('auth-token')
-        const response = await fetch('http://localhost:8080/api/user', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          },
-          body: JSON.stringify({ firstname, lastname, email })
-        })
-      
-        const text = await response.text()
-        console.log('RESPUESTA DE LA API:', response.status, text)
-      
-        if (!response.ok) {
-          throw new Error(`Error al actualizar perfil: ${response.status} - ${text}`)
-        }
+    async function updateUser({ firstname, lastname, email, avatar }) {
+      console.log('INTENTANDO guardar usuario:', firstname, lastname, email, avatar)
+    
+      const token = localStorage.getItem('auth-token')
+      const response = await fetch('http://localhost:8080/api/user', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ firstname, lastname, email, avatar }) 
+      })
+    
+      const text = await response.text()
+      console.log('RESPUESTA DE LA API:', response.status, text)
+    
+      if (!response.ok) {
+        throw new Error(`Error al actualizar perfil: ${response.status} - ${text}`)
       }
+    }
+    
       async function getDefaultAccountData() {
         const token = localStorage.getItem('auth-token')
         const response = await fetch('http://localhost:8080/api/account/default', {

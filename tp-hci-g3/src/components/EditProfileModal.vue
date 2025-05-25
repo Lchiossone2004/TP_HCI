@@ -47,6 +47,18 @@
         </div>
       </div>
     </div>
+    <div class="form-field">
+  <label>Elegí tu avatar</label>
+  <div class="avatar-options">
+    <img
+      v-for="avatar in avatarList"
+      :key="avatar"
+      :src="avatar"
+      :class="{ selected: selectedAvatar === avatar }"
+      @click="selectAvatar(avatar)"
+    />
+  </div>
+</div>
 
     <div class="buttons-container">
       <button class="submit-button" @click="saveChanges">Guardar cambios</button>
@@ -64,6 +76,20 @@ import { useAccountStore } from '@/stores/AccountStore'
 
 const userStore = useUserStore()
 const accountStore = useAccountStore()
+const avatarList = [
+'src/assets/images/avatars/default-profile-picture.png',
+  'src/assets/images/avatars/Avatar1.jpg',
+  'src/assets/images/avatars/Avatar2.jpg',
+  'src/assets/images/avatars/Avatar4.jpg',
+  'src/assets/images/avatars/Avatar5.jpg'
+
+]
+
+const selectedAvatar = ref('')
+
+function selectAvatar(avatar) {
+  selectedAvatar.value = avatar
+}
 
 const props = defineProps({
   modelValue: Boolean,
@@ -131,7 +157,9 @@ const saveChanges = async () => {
     await userStore.updateUser({
   firstName: nombre,
   lastName: apellido,
-  email
+  email,
+  avatar: selectedAvatar.value
+
 })
 
 
@@ -302,4 +330,23 @@ onMounted(async () => {
 .copy-icon:hover {
   background-color: var(--button-grey-hover);
 }
+.avatar-options {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.avatar-options img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.avatar-options img.selected {
+  border-color: #4caf50;
+}
+
 </style>

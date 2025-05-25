@@ -14,12 +14,12 @@
     <!-- Modal principal -->
     <Modal v-model="showMoneyModal" title="Administrar dinero">
       <div class="money-actions">
-        <ShowInfoButton>
+        
           <button class="money-action-btn" @click="handleEnterMoney">
             <span class="material-symbols-rounded">add</span>
             <span>Ingresar dinero</span>
           </button>
-        </ShowInfoButton>
+        
         <button class="money-action-btn" @click="handleTransfer">
           <span class="material-symbols-rounded">sync_alt</span>
           <span>Transferir</span>
