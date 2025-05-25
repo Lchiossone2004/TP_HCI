@@ -1,4 +1,12 @@
 <template>
+  <div class="main-content">
+    <div class="header">
+      <button class="back-btn" @click="goBack">
+        <span class="material-symbols-rounded">arrow_back</span>
+        <span>Volver</span>
+        </button>
+        <span class="material-symbols-rounded icon" @click="goToHelp">help</span>
+        </div>
   <div class="verification-page">
     <h1>Verificación de Código</h1>
     <p>Por favor, ingresa el código que recibiste por correo electrónico para continuar.</p>
@@ -22,12 +30,31 @@
 
     <p v-if="resendMessage" :class="{ success: resendSuccess, error: !resendSuccess }">{{ resendMessage }}</p>
   </div>
+  </div>
 </template>
 
 <script>
 import { useUserStore } from '@/stores/UserStore';
+import { useRouter, useRoute } from 'vue-router'
 
 export default {
+  setup() {
+    const route = useRoute()
+    const router = useRouter()
+    const goBack = () => {
+      router.push('/')
+    }
+    const goToHelp = () => {
+      router.push({
+    path: '/help',
+    query: { from: route.name }
+  })
+} 
+    return {
+      goBack,
+      goToHelp
+    }
+  },
   data() {
     return {
       code: '',
@@ -68,12 +95,72 @@ export default {
 </script>
 
 <style scoped>
+.header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding: 0 20px; 
+  background-color: transparent; 
+}
 
-/* CONTENEDOR GENERAL */
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.back-btn span {
+  color: white;
+}
+
+.back-btn:hover {
+  background: none;
+  color: var(--blue-button-hover);
+}
+
+.back-btn:hover span {
+  color: var(--blue-button-hover);
+}
+
+.material-symbols-rounded:hover {
+  color: var(--blue-button-hover);
+}
+
+.material-symbols-rounded {
+  color: white;
+}
+
+.icon {
+  cursor: default; /* sin pointer */
+  color: white;
+}
+
+
+.main-content {
+  min-height: 100vh;
+  background-color: #03192c; /* azul oscuro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
 .verification-page {
   max-width: 500px;
   margin: 4rem auto;
-  background-color: white;
+  background-color: var(--background-grey);
   padding: 2rem;
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
@@ -114,7 +201,7 @@ export default {
 
 /* BOTONES */
 .verification-page button {
-  background-color: blue;
+  background-color: #03192c;
   color: rgb(255, 255, 255);
   border: none;
   padding: 12px 24px;

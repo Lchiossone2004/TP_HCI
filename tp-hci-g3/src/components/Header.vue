@@ -5,7 +5,6 @@
       Volver
     </button>
     <div class="top-icons">
-      <span v-if="isHomePage" class="material-symbols-rounded icon">notifications</span>
       <span class="material-symbols-rounded icon" @click="goToHelp">help</span>
     </div>
   </div>

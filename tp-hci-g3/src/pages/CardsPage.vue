@@ -10,7 +10,7 @@
               Ingresar dinero
             </button>
         </div>
-        <div class="balance-container">
+        <div>
           <BalanceCard />
         </div>
       </div>
