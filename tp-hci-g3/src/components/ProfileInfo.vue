@@ -21,10 +21,12 @@
         <div class="detail-row">
           <span>Alias:</span>
           <span>{{ perfil.alias }}</span>
+          <span class="material-symbols-rounded icon" @click="copyToClipboard(perfil.alias)">content_copy</span>
         </div>
         <div class="detail-row">
           <span>CVU:</span>
           <span>{{ perfil.cvu }}</span>
+          <span class="material-symbols-rounded icon" @click="copyToClipboard(perfil.cvu)">content_copy</span>
         </div>
       </div>
     </div>
@@ -40,6 +42,13 @@ defineProps({
 })
 
 defineEmits(['edit'])
+const copyToClipboard = async (text) => {
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch (err) {
+    console.error('Error al copiar:', err)
+  }
+}
 </script>
 
 
@@ -53,13 +62,23 @@ defineEmits(['edit'])
     margin: 0 auto;
     overflow: hidden;
   }
-
   .profile-header {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
     padding: 1rem;
   }
+  .icon {
+  color: var(--white-text);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.icon:hover {
+  color: var(--blue-button-hover);
+}
 
   .edit-btn {
     background: transparent;

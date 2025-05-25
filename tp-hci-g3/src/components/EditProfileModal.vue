@@ -48,16 +48,18 @@
       </div>
     </div>
     <div class="form-field">
-  <label>Elegí tu avatar</label>
+  <label>Avatar</label>
   <div class="avatar-options">
-    <img
-      v-for="avatar in avatarList"
-      :key="avatar"
-      :src="avatar"
-      :class="{ selected: selectedAvatar === avatar }"
-      @click="selectAvatar(avatar)"
-    />
+  <div
+    v-for="avatar in avatarList"
+    :key="avatar"
+    :class="['avatar-box', { selected: selectedAvatar === avatar }]"
+    @click="selectAvatar(avatar)"
+  >
+    <img :src="avatar" />
   </div>
+</div>
+
 </div>
 
     <div class="buttons-container">
@@ -321,14 +323,15 @@ onMounted(async () => {
 }
 
 .copy-icon {
+  color: var(--dark-blue);
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  padding: 0.2rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  gap: 0.5rem;
 }
 
 .copy-icon:hover {
-  background-color: var(--button-grey-hover);
+  color: var(--blue-button-hover);
 }
 .avatar-options {
   display: flex;
@@ -336,13 +339,28 @@ onMounted(async () => {
   margin-top: 0.5rem;
 }
 
-.avatar-options img {
+.avatar-box {
   width: 60px;
   height: 60px;
   border-radius: 50%;
+  overflow: hidden;
   border: 2px solid transparent;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: border-color 0.2s;
+  background-color: #f2f2f2;
+}
+
+.avatar-box.selected {
+  border-color: #4caf50;
+}
+
+.avatar-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .avatar-options img.selected {
