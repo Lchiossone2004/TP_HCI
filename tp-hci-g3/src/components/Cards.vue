@@ -1,16 +1,24 @@
 <template>
   <div class="credit-card" :class="cardTypeClass">
     <div class="card-header">
-      <img 
-        :src="getCardLogo(card.number)" 
-        :alt="getCardType(card.number)" 
-        :class="['card-logo', `card-logo-${getCardType(card.number).toLowerCase()}`]"
-      />
-      <span class="card-type">{{ card.type }}</span>
-      <button class="delete-btn" @click="showConfirmDelete = true">
-        <span class="material-symbols-rounded">delete</span>
-      </button>
-    </div>
+      <template v-if="cardBrand">
+  <img 
+    :src="getCardLogo(props.card.number)" 
+    :alt="cardBrand" 
+    :class="['card-logo', `card-logo-${cardBrand}`]"
+  />
+</template>
+<template v-else>
+  <span class="material-symbols-rounded generic-icon">credit_card</span>
+</template>
+
+  <span class="card-type">{{ props.card.type }}</span>
+  <button class="delete-btn" @click="showConfirmDelete = true">
+    <span class="material-symbols-rounded">delete</span>
+  </button>
+</div>
+
+
     <div class="card-number">
       •••• •••• •••• {{ card.number.slice(-4) }}
     </div>
@@ -56,13 +64,22 @@ const props = defineProps({
 const emit = defineEmits(['delete'])
 const showConfirmDelete = ref(false)
 
+const cardBrand = computed(() => {
+  const type = getCardType(props.card.number)
+  return type ? type.toLowerCase() : null
+})
+
+
+
 const getCardType = (number) => {
+  if (!number) return null
   const firstDigit = number[0]
   if (firstDigit === '4') return 'visa'
   if (firstDigit === '5') return 'mastercard'
   if (firstDigit === '3') return 'amex'
-  return 'TARJETA'
+  return null
 }
+
 
 const getCardLogo = (number) => {
   const firstDigit = number[0]
@@ -74,8 +91,10 @@ const getCardLogo = (number) => {
 
 const cardTypeClass = computed(() => {
   const type = getCardType(props.card.number)
-  return `card-${type}`
+  return type ? `card-${type}` : 'card-generic'
 })
+
+
 
 const handleConfirmDelete = () => {
   emit('delete')
@@ -84,6 +103,12 @@ const handleConfirmDelete = () => {
 </script>
 
 <style scoped>
+.card-generic {
+  background: linear-gradient(135deg, #ffffff, #6a6a6a);
+
+}
+
+
 .credit-card {
   border-radius: var(--general-radius);
   padding: 1.5rem;
