@@ -4,12 +4,12 @@ import { useAccountStore } from './AccountStore'
 import { ro } from 'vuetify/locale'
 
 
-export const usePaymetStore = defineStore('payment', () => {
+export const usePaymentStore = defineStore('payment', () => {
 
   const pendingPayments = ref([])
   const transferencias = ref([])
 
-  async function createPayment(payment){
+  async function pullPayment(payment){
     try{
       const token = localStorage.getItem('auth-token');
 
@@ -17,7 +17,7 @@ export const usePaymetStore = defineStore('payment', () => {
           throw new Error('No hay token de autenticación guardado.');
       }
       const response = await fetch(`http://localhost:8080/api/payment/pull`, {
-          method: 'GET',
+          method: 'POST',
           headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -30,7 +30,8 @@ export const usePaymetStore = defineStore('payment', () => {
           throw new Error(`Error creando el pago: ${response.status}`);
       }
       const data = await response.json()
-      pendingPayments.push(payment)
+      //pendingPayments.push(payment)
+      console.log(data)
       return data
     }
     catch(error){
@@ -40,7 +41,7 @@ export const usePaymetStore = defineStore('payment', () => {
   } 
 
 
-  async function payPendingPayment(uuid, cardId){
+  async function pushPayment(uuid, cardId){
     try{
       const token = localStorage.getItem('auth-token');
 
@@ -48,7 +49,7 @@ export const usePaymetStore = defineStore('payment', () => {
           throw new Error('No hay token de autenticación guardado.');
       }
       const response = await fetch(`http://localhost:8080/api/payment/push?uuid=${uuid}&card=${cardId}`, {
-          method: 'GET',
+          method: 'PUT',
           headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -61,6 +62,7 @@ export const usePaymetStore = defineStore('payment', () => {
       }
       const data = await response.json()
       pendingPayments = pendingPayments.filter(p => p.uuid !== uuid);
+      console.log(data)
       return data
     }
     catch(error){
@@ -111,7 +113,7 @@ export const usePaymetStore = defineStore('payment', () => {
           throw new Error('No hay token de autenticación guardado.');
       }
       const response = await fetch(`http://localhost:8080/api/payment/transfer-cvu?cvu=${cvu}&cardId=${cardId}`, {
-          method: 'GET',
+          method: 'POST',
           headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -140,7 +142,7 @@ export const usePaymetStore = defineStore('payment', () => {
           throw new Error('No hay token de autenticación guardado.');
       }
       const response = await fetch(`http://localhost:8080/api/payment/transfer-alias?alias=${alias}&cardId=${cardId}`, {
-          method: 'GET',
+          method: 'POST',
           headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
@@ -201,5 +203,5 @@ export const usePaymetStore = defineStore('payment', () => {
     }
 
 
-  return { createPayment, payPendingPayment, transferViaEmail, transferViaCVU, transferViaAlias, getAllPayments, agregarTransaccion, transferencias, pendingPayments}
+  return { pullPayment, pushPayment, transferViaEmail, transferViaCVU, transferViaAlias, getAllPayments, agregarTransaccion, transferencias, pendingPayments}
 })

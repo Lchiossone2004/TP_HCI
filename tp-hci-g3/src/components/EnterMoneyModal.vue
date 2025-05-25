@@ -34,7 +34,7 @@
   <script setup>
   import { ref, computed, onMounted } from 'vue'
   import Modal from './Modal.vue'
-  import { usePaymetStore } from '@/stores/PaymetStore'
+  import { usePaymentStore } from '@/stores/PaymetStore'
   import { useAccountStore } from '@/stores/AccountStore';
 
   const props = defineProps(['modelValue']);
@@ -45,7 +45,7 @@
     set: (value) => emit('update:modelValue', value),
   });
   
-  const store = usePaymetStore();
+  const store = usePaymentStore();
   const monto = ref(0);
   const montoTotal = ref(0);
   

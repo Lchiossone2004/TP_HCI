@@ -21,12 +21,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import { usePaymetStore } from '@/stores/PaymetStore'
+import { usePaymentStore  } from '@/stores/PaymetStore'
 
 const query = ref('')
 const monto = ref(null)
 const emit = defineEmits(['search'])
-const paymetStore = usePaymetStore()
+const paymetStore = usePaymentStore()
 
 function detectTipoEntrada(entrada) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

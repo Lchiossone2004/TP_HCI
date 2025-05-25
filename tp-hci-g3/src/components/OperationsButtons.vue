@@ -39,10 +39,10 @@
 import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import EnterMoneyModal from '@/components/EnterMoneyModal.vue';
-import { usePaymetStore } from '@/stores/PaymetStore';
+import { usePaymentStore } from '@/stores/PaymetStore';
 
 const router = useRouter();
-const store = usePaymetStore();
+const store = usePaymentStore();
 
 const showMyInfoModal = ref(false);
 const mostrarModal = ref(false);
