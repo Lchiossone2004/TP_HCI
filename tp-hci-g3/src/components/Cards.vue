@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <!-- Confirmation Modal -->
+    
     <Modal v-model="showConfirmDelete" title="Confirmar eliminación">
       <div class="confirm-delete">
         <p>¿Está seguro que desea eliminar esta tarjeta?</p>
@@ -66,11 +66,10 @@ const getCardType = (number) => {
 
 const getCardLogo = (number) => {
   const firstDigit = number[0]
-  // Usar directamente las imágenes importadas
   if (firstDigit === '4') return visaLogo
   if (firstDigit === '5') return mastercardLogo
   if (firstDigit === '3') return amexLogo
-  return '' // o una imagen por defecto si la tienes
+  return '' 
 }
 
 const cardTypeClass = computed(() => {

@@ -234,6 +234,25 @@ const formatName = (event) => {
   width: 100%;
   max-width: 100%;
 }
+.form-group > div {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.form-group input[type="radio"] {
+  margin-right: 0.5rem;
+  accent-color: var(--blue-link); 
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  gap: 0.25rem;
+}
+
 
 .form-row {
   display: flex;
