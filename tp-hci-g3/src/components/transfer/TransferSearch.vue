@@ -1,5 +1,6 @@
 
 <template>
+  <div class="search-title"> <h2>Transferir a</h2></div>
   <div class="search-row">
     <input
       v-model="query"
@@ -14,42 +15,61 @@
       placeholder="Monto"
       min="1"
     />
-    <button class="search-btn" @click="emitSearch" :disabled="!query.trim() || !monto">
+  </div>
+  <div class="search-row">
+    <input
+      v-model="cardId"
+      class="search-input"
+      type="search-input"
+      placeholder="numero de la tarjeta"
+    />
+    <input
+      v-model="detalle"
+      class="search-input"
+      type="search-input"
+      placeholder="detalle"
+    />
+  </div>
+  <button class="search-btn" @click="emitSearch" :disabled="!query.trim() || !monto || !detalle " >
       Transferir
     </button>
-  </div>
   </template>
   
   <script setup>
   import { ref } from 'vue'
   import { usePaymentStore  } from '@/stores/PaymetStore'
-  
+  import { useCardStore } from '@/stores/CardStore'
   const query = ref('')
-  const monto = ref(null)
+  const monto = ref('')
+  const cardId = ref(null)
+  const detalle = ref('')
   const emit = defineEmits(['search'])
   const paymetStore = usePaymentStore()
-  
+  const cardStore = useCardStore()
+
   function detectTipoEntrada(entrada) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     const cvuRegex = /^\d{22}$/
+    const cvuAlphanumericRegex = /^[A-Z0-9]{20}$/ // Matches alphanumeric CVU strings
   
     if (emailRegex.test(entrada)) return 'email'
-    if (cvuRegex.test(entrada)) return 'cvu'
+    if (cvuRegex.test(entrada) || cvuAlphanumericRegex.test(entrada)) return 'cvu'
     return 'alias'
   }
-  
-  async function transferirPorEmail(email, monto) {
-    console.log('Transferir a EMAIL:', email, 'Monto:', monto)
-    await paymetStore.transferViaEmail(email,1,"test", monto)
+  async function transferirPorEmail(email, cardId, detalle, monto) {
+    console.log('Transferir a EMAIL:', email, detalle, monto, cardId)
+    await paymetStore.transferViaEmail(email,cardId,detalle, monto)
   }
   
-  function transferirPorCVU(cvu, monto) {
+  async function transferirPorCVU(cvu,  cardId, detalle, monto) {
     console.log('Transferir a CVU:', cvu, 'Monto:', monto)
+    await paymetStore.transferViaCVU(cvu,cardId,detalle, monto)
     // lógica de transferencia por CVU
   }
   
-  function transferirPorAlias(alias, monto) {
+  async function transferirPorAlias(alias,  cardId, detalle, monto) {
     console.log('Transferir a ALIAS:', alias, 'Monto:', monto)
+    await paymetStore.transferViaAlias(alias,cardId,detalle, monto)
     // lógica de transferencia por alias
   }
   
@@ -61,13 +81,13 @@
   
     switch (tipo) {
       case 'email':
-        transferirPorEmail(term, monto.value)
+      transferirPorEmail(term, cardId.value, detalle.value,monto.value)
         break
       case 'cvu':
-        transferirPorCVU(term, monto.value)
+        transferirPorCVU(term, cardId.value, detalle.value,monto.value)
         break
       case 'alias':
-        transferirPorAlias(term, monto.value)
+        transferirPorAlias(term, cardId.value, detalle.value,monto.value)
         break
     }
   }
@@ -88,7 +108,8 @@
   }
   .search-row {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
   }
   .search-input {
     flex: 1;
@@ -110,10 +131,11 @@
   .search-btn {
     background: #2e7dff;
     color: #fff;
-    padding: 0 1rem;
+    padding: 1rem;
     border: none;
     border-radius: 8px;
     font-size: 1rem;
+    margin-top: 0.75rem;
     cursor: pointer;
     transition: background 0.2s;
   }

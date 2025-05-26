@@ -71,46 +71,51 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   }
 
-  async function transferViaEmail(email, cardId, motivo, monto){
-    try{
+  async function transferViaEmail(email, cardId, motivo, monto) {
+    try {
       const token = localStorage.getItem('auth-token');
       const accountStore = useAccountStore();
-
+  
       if (!token) {
-          throw new Error('No hay token de autenticación guardado.');
+        throw new Error('No hay token de autenticación guardado.');
       }
-
+  
       // Verificar si hay saldo suficiente
       if (accountStore.balance < monto) {
-          throw new Error('Saldo insuficiente para realizar la transferencia.');
+        throw new Error('Saldo insuficiente para realizar la transferencia.');
       }
-
-      const response = await fetch(`http://localhost:8080/api/payment/transfer-email?email=${email}&cardId=${cardId}`, {
-          method: 'POST',
-          headers: {
+  
+      // Construir URL con o sin cardId
+      let url = `http://localhost:8080/api/payment/transfer-email?email=${encodeURIComponent(email)}`;
+      if (cardId != null) {
+        url += `&cardId=${encodeURIComponent(cardId)}`;
+      }
+  
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
-          },
-          body: JSON.stringify({
-            description: motivo || "Transferencia",
-            amount: monto,
-            metadata: {}
-          })
+        },
+        body: JSON.stringify({
+          description: motivo || "Transferencia",
+          amount: monto,
+          metadata: {},
+        })
       });
-
+  
       if (!response.ok) {
-          throw new Error(`Error al transferir via email: ${response.status}`);
+        throw new Error(`Error al transferir via email: ${response.status}`);
       }
-      const data = await response.json()
-      
+  
+      const data = await response.json();
+  
       // Actualizar el balance después de la transferencia exitosa
       await agregarTransaccion(monto, 'egreso');
-      transferencias.push(data)
-      return data
-    }
-    catch(error){
-        console.error('Error al transferir via email:', error);
-        throw error;
+      return data;
+    } catch (error) {
+      console.error('Error al transferir via email:', error);
+      throw error;
     }
   }
 
@@ -128,7 +133,13 @@ export const usePaymentStore = defineStore('payment', () => {
           throw new Error('Saldo insuficiente para realizar la transferencia.');
       }
 
-      const response = await fetch(`http://localhost:8080/api/payment/transfer-cvu?cvu=${cvu}&cardId=${cardId}`, {
+
+      let url = `http://localhost:8080/api/payment/transfer-cvu?cvu=${encodeURIComponent(cvu)}`;
+      if (cardId != null) {
+        url += `&cardId=${encodeURIComponent(cardId)}`;
+      }
+
+      const response = await fetch(url, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -171,7 +182,12 @@ export const usePaymentStore = defineStore('payment', () => {
           throw new Error('Saldo insuficiente para realizar la transferencia.');
       }
 
-      const response = await fetch(`http://localhost:8080/api/payment/transfer-alias?alias=${alias}&cardId=${cardId}`, {
+      let url = `http://localhost:8080/api/payment/transfer-alias?alias=${encodeURIComponent(alias)}`;
+      if (cardId != null) {
+        url += `&cardId=${encodeURIComponent(cardId)}`;
+      }
+
+      const response = await fetch(url, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
