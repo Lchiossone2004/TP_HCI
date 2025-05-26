@@ -89,7 +89,7 @@ export const useAccountStore = defineStore('account', () => {
         throw new Error(`Error actualizando alias: ${response.status}`)
       }
 
-      alias.value = newAlias // ✅ actualizamos el alias en el estado
+      alias.value = newAlias 
     } catch (error) {
       console.error('Error actualizando alias:', error)
       throw error

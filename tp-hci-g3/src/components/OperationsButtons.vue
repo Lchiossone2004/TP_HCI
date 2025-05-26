@@ -66,14 +66,6 @@ function cerrarModalIngreso() {
   monto.value = 0;
 }
 
-function confirmarIngreso() {
-  if (monto.value > 0) {
-    store.agregarTransaccion(monto.value, 'ingreso');
-    montoTotal.value += monto.value;
-    localStorage.setItem('montoTotal', montoTotal.value); // Guardar persistente
-    cerrarModalIngreso();
-  }
-}
 
 function irATransferencias() {
   router.push({ name: 'Transfer' });

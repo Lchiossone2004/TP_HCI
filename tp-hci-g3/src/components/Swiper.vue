@@ -39,13 +39,12 @@ import { useCardStore } from '@/stores/CardStore'
 const cardStore = useCardStore()
 const activeSlide = ref(0)
 
-// Usar directamente las tarjetas del store
 const slides = computed(() => {
   const cardComponents = cardStore.tarjetas.map((card, index) => ({
     type: Cards,
     props: {
       card,
-      onDelete: () => handleDeleteCard(card.id) // Usar el ID de la tarjeta
+      onDelete: () => handleDeleteCard(card.id) 
     }
   }))
   

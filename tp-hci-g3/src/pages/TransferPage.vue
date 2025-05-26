@@ -33,7 +33,7 @@
           </div>
           </template>
       <template v-else>
-        <!-- Vista principal de transferencias -->
+       
         <div class="transfer-main-view">
           <div class="left-section">
            <div class="search-section panel">
@@ -102,10 +102,10 @@ const transferenciasRecientes = ref([
 
 const searchQuery = ref('')
 const selectedContact = ref(null)
-const favoriteIds = ref(new Set()) // Guardar IDs de favoritos
+const favoriteIds = ref(new Set()) 
 const balance = ref(205768.63)
 
-// Contactos con información adicional
+
 const allContacts = [
   { 
     id: 1, 
@@ -199,7 +199,7 @@ function toggleFavorite(contactId) {
   localStorage.setItem('favoriteContacts', JSON.stringify([...newFavorites]))
 }
 
-// Cargar favoritos al montar
+
 onMounted(() => {
   const saved = localStorage.getItem('favoriteContacts')
   if (saved) {
@@ -211,9 +211,8 @@ function getFullContact(contactId) {
   return allContacts.find(c => c.id === contactId)
 }
 
-// Actualizar el handler de selección
+
 function handleContactSelect(contact) {
-  // Siempre buscar la información completa del contacto
   const fullContact = getFullContact(contact.id)
   selectedContact.value = fullContact || contact
 }
@@ -223,7 +222,6 @@ function handleSearch(event) {
 }
 
 function onTransfer({ to, amount }) {
-  // Actualizar transferencias recientes
   const newTransfer = {
     id: to.id,
     name: to.name,
@@ -263,7 +261,7 @@ function onTransfer({ to, amount }) {
   color: var(--black-text);
 }
 
-/* Panel común para todas las secciones */
+
 .panel {
   background-color: var(--white-inputs);
   border-radius: var(--general-radius);
@@ -277,7 +275,7 @@ function onTransfer({ to, amount }) {
   margin-bottom: 1rem;
 }
 
-/* Vista principal de transferencias */
+
 .transfer-main-view {
   display: flex;
   gap: 1rem;
@@ -300,7 +298,6 @@ function onTransfer({ to, amount }) {
   margin-bottom: 1rem;
 }
 
-/* Vista de detalle de transferencia */
 .transfer-detail-view {
   display: flex;
   gap: 1rem;

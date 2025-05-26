@@ -35,7 +35,6 @@ export const useUserStore = defineStore('user', () => {
           });
       
           if (!response.ok) {
-            // Lanza un error si la respuesta no fue satisfactoria
             throw new Error(`Error en login: ${response.status}`);
           }
       
@@ -44,7 +43,7 @@ export const useUserStore = defineStore('user', () => {
           return data;
         } catch (error) {
           console.error('Error en logIn:', error);
-          throw error; // vuelve a lanzar para que el componente pueda capturarlo
+          throw error; 
         }
       }
       async function sendRecoveryCode(email){
@@ -56,13 +55,12 @@ export const useUserStore = defineStore('user', () => {
                   },
             })
             if (!response.ok) {
-                // Lanza un error si la respuesta no fue satisfactoria
                 throw new Error(`Error sending code: ${response.status}`);
               }
         }
         catch(error){
             console.error('Error en sendReocveryCode:', error);
-            throw error; // vuelve a lanzar para que el componente pueda capturarlo
+            throw error; 
         }
       }
       
@@ -76,13 +74,12 @@ export const useUserStore = defineStore('user', () => {
                 body: JSON.stringify({ code: code, password: password })
             })
             if (!response.ok) {
-                // Lanza un error si la respuesta no fue satisfactoria
                 throw new Error(`Error cambiando password: ${response.status}`);
               }
         }
         catch(error){
             console.error('Error en changePassword:', error);
-            throw error; // vuelve a lanzar para que el componente pueda capturarlo
+            throw error; 
         }
       }
     async function getUser(){

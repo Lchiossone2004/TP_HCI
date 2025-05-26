@@ -37,14 +37,13 @@ import PayServices from '@/components/PayServices.vue'
 const route = useRoute()
 const activeTab = ref('collect')
 
-// Establecer pestaña activa basada en el query parameter
+
 onMounted(() => {
   if (route.query.tab) {
     activeTab.value = route.query.tab
   }
 })
 
-// Actualizar pestaña cuando cambie la URL
 watch(() => route.query.tab, (newTab) => {
   if (newTab) {
     activeTab.value = newTab

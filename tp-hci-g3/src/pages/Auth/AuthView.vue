@@ -164,7 +164,7 @@ export default {
   display: flex;
   flex-direction: row;
   gap: 3rem;
-  margin-left: auto; /* Push auth-section to the right */
+  margin-left: auto; 
 }
 
 .auth-tabs-vertical {
@@ -199,10 +199,10 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 350px; /* Reduced from 450px */
+  min-width: 350px; 
   max-width: 500px;
-  margin: 0 auto; /* Center the form */
-  padding: 0 1rem; /* Add padding for gap from edges */
+  margin: 0 auto; 
+  padding: 0 1rem; 
 }
 
 @media (max-width: 1200px) {

@@ -11,7 +11,7 @@
       <span class="material-symbols-rounded arrow">chevron_right</span>
     </button>
 
-    <!-- Modal principal -->
+  
     <Modal v-model="showMoneyModal" title="Administrar dinero">
       <div class="money-actions">
         
@@ -35,7 +35,7 @@
       </div>
     </Modal>
 
-    <!-- Modal de ingreso de dinero -->
+    
     <EnterMoneyModal v-model="mostrarModal" />
   </div>
 </template>

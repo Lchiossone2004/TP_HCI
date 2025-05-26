@@ -30,7 +30,6 @@ function toggle() {
   visible.value = !visible.value
 }
 
-// Formatea el balance a moneda con separadores de miles
 const formattedBalance = computed(() => {
   return new Intl.NumberFormat('es-AR', {
     style: 'currency',

@@ -4,7 +4,7 @@
       <div class="top-section">
         <h2 class="main-title">Movimientos y gastos</h2>
         <div class="menu-row">
-          <!-- Menú de meses -->
+      
           <div class="select-wrapper">
             <select 
               v-model="selectedMonth" 
@@ -22,7 +22,7 @@
               expand_more
             </span>
           </div>
-          <!-- Menú de años -->
+        
           <div class="select-wrapper">
             <select 
               v-model="selectedYear" 
@@ -127,16 +127,15 @@ const selectedMonth = ref(new Date().getMonth())
 const selectedYear = ref(currentYear)
 const search = ref('')
 
-// Cargar actividades al montar el componente
+
 onMounted(() => {
   activityStore.loadActivities()
 })
 
-// Filtrado de actividades
+
 const filteredActivities = computed(() => {
   let activities = activityStore.getFilteredActivities(selectedMonth.value, selectedYear.value)
   
-  // Aplicar búsqueda si hay un término de búsqueda
   if (search.value) {
     const searchTerm = search.value.toLowerCase()
     activities = activities.filter(activity => 
@@ -236,10 +235,10 @@ const filteredActivities = computed(() => {
   padding: 0.5rem 2.5rem 0.5rem 1.5rem;
   border-radius: 20px;
   cursor: pointer;
-  transition: all 0.2s; /* Cambiado de background a all para animar también el width */
+  transition: all 0.2s; 
   display: flex;
-  min-width: 160px; /* Mantenemos el min-width */
-  width: 200px; /* Ancho inicial */
+  min-width: 160px;
+  width: 200px; 
 }
 
 .menu-btn:hover {

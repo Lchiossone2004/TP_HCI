@@ -66,10 +66,10 @@ async function logout() {
   color: white;
   margin-top: 1rem;
   margin-bottom: 5rem;
-  white-space: nowrap;        /* No hacer saltos de línea */
-  overflow: hidden;           /* Ocultar el exceso de texto */
-  text-overflow: ellipsis;    /* Mostrar "..." al final si se corta */
-  max-width: 100%;            /* Respetar el ancho del contenedor */
+  white-space: nowrap;        
+  overflow: hidden;    
+  text-overflow: ellipsis;    
+  max-width: 100%;
   text-align: left;
   
 }
@@ -102,7 +102,7 @@ async function logout() {
 
 .menu-btn:hover {
   background-color: #093256;
-  border-radius: 15px; /* Esquinas redondeadas en hover */
+  border-radius: 15px;
 }
 
 .icon {
@@ -117,7 +117,7 @@ async function logout() {
 
 .menu-btn.danger:hover {
   background-color: #ff4d4d1a;
-  border-radius: 15px; /* Esquinas redondeadas en hover */
+  border-radius: 15px;
 }
 
 .menu-btn.active {

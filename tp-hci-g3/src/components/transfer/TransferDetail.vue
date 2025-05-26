@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <!-- modal gris -->
+    
     <div v-if="showConfirm" class="modal-overlay">
       <div class="modal-card">
         <p>Confirmar transferencia de <strong>{{ formatCurrency(amount) }}</strong> a <strong>{{ contact.name }}</strong>?</p>

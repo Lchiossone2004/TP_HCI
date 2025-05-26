@@ -52,7 +52,7 @@ export default {
 
       try {
         await userStore.logIn(this.email, this.password);
-        this.errorMessage = ''; // limpia errores previos
+        this.errorMessage = ''; 
 
         this.$router.push({ name: 'Home' });
       } catch (error) {
@@ -94,9 +94,9 @@ export default {
   padding: 2rem 1.5rem;
   color: var(--white-text);
   width: 100%;
-  max-width: 450px; /* Ajustado para ser consistente */
+  max-width: 450px; 
   margin: 0 auto;
-  box-sizing: border-box; /* Importante: incluye padding en el width */
+  box-sizing: border-box;
 }
 
 h2, p {
@@ -211,7 +211,7 @@ button:hover {
 @media (max-width: 1200px) {
   .auth-container {
     padding: 1.5rem 1rem;
-    max-width: 400px; /* Reducir el ancho máximo en pantallas más pequeñas */
+    max-width: 400px;
   }
 
   h2 {
@@ -227,7 +227,7 @@ button:hover {
   }
 
   .row-remember {
-    gap: 1rem; /* Reducir el gap en pantallas más pequeñas */
+    gap: 1rem; 
   }
 
   .remember-label, .forgot-link {
@@ -238,7 +238,7 @@ button:hover {
 @media (max-width: 992px) {
   .auth-container {
     padding: 1rem;
-    max-width: 350px; /* Reducir aún más en pantallas más pequeñas */
+    max-width: 350px;
   }
 
   h2 {
@@ -255,7 +255,7 @@ button:hover {
   }
 
   .row-remember {
-    flex-direction: column; /* Apilar en móviles */
+    flex-direction: column; 
     gap: 0.5rem;
     align-items: flex-start;
   }

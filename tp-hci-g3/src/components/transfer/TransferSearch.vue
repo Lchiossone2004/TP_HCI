@@ -55,15 +55,15 @@
   const tarjetas = ref([])
 
   onMounted(async () => {
-    await cardStore.getCards() // Asegurate que exista esta función
-    tarjetas.value = cardStore.tarjetas // Asegurate que `cards` esté en el store
+    await cardStore.getCards() 
+    tarjetas.value = cardStore.tarjetas 
     console.log(tarjetas.value)
   })
 
   function detectTipoEntrada(entrada) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     const cvuRegex = /^\d{22}$/
-    const cvuAlphanumericRegex = /^[A-Z0-9]{20}$/ // Matches alphanumeric CVU strings
+    const cvuAlphanumericRegex = /^[A-Z0-9]{20}$/ 
   
     if (emailRegex.test(entrada)) return 'email'
     if (cvuRegex.test(entrada) || cvuAlphanumericRegex.test(entrada)) return 'cvu'

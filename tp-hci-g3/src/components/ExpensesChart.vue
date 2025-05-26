@@ -70,7 +70,7 @@ let chartInstance = null
 
 const chartColors = ['#1E3A8A', '#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE']
 
-// Categorización
+
 const categoryMap = [
   { key: 'comida', label: 'Comida', icon: 'restaurant', match: ['restaurant', 'Pedidos Ya'] },
   { key: 'compras', label: 'Compras', icon: 'shopping_bag', match: ['shopping_bag'] },
@@ -79,7 +79,6 @@ const categoryMap = [
   { key: 'varios', label: 'Varios', icon: 'list', match: [] }
 ]
 
-// Datos por defecto para el modo simple (HomePage)
 const defaultData = computed(() => {
   if (props.activities.length > 0) return props.activities
   return [
@@ -91,7 +90,7 @@ const defaultData = computed(() => {
   ]
 })
 
-// Procesa los gastos
+
 const categories = computed(() => {
   const result = categoryMap.map(cat => ({ ...cat, amount: 0 }))
   const activitiesToProcess = props.activities.length > 0 ? props.activities : defaultData.value

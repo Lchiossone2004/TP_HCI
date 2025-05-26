@@ -72,7 +72,7 @@ export default {
         return false;
       }
 
-      this.formError = ''; // Todo ok
+      this.formError = ''; 
       return true;
     },
 

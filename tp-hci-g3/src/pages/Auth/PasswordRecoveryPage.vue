@@ -10,14 +10,14 @@
     <div class="reset-container">
       <h2>Recuperar Contraseña</h2>
 
-      <!-- Paso 1: Enviar código al email -->
+      
       <div v-if="step === 1">
         <p>Ingrese su email para recibir un código de verificación.</p>
         <input type="email" v-model="email" placeholder="Tu correo electrónico" required />
         <button @click="sendCode">Enviar código</button>
       </div>
 
-      <!-- Paso 2: Verificar código y nueva contraseña -->
+      
       <div v-if="step === 2">
         <p>Ingrese el código recibido y su nueva contraseña</p>
         <input type="text" v-model="code" placeholder="Código de verificación" required />
@@ -25,13 +25,13 @@
         <button @click="resetPassword">Actualizar contraseña</button>
       </div>
 
-      <!-- Paso 3: Confirmación -->
+      
       <div v-if="step === 3">
         <p class="success">¡Contraseña actualizada con éxito!</p>
         <button @click="$router.push('/')">Volver al inicio de sesión</button>
       </div>
 
-      <!-- Mensaje de error -->
+     
       <p v-if="error" class="error">{{ error }}</p>
     </div>
   </div>
@@ -152,7 +152,7 @@ export default {
   width: 100%;
   padding: 30px;
   border-radius: 12px;
-  background-color: #fff; /* cuadro blanco */
+  background-color: #fff; 
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   text-align: center;
 }

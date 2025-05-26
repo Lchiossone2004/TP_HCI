@@ -118,7 +118,7 @@ const currentMonthActivities = computed(() => {
   .inner2 {
     width: 100%;
     min-width: 0;
-    max-width: 750px; /* Mismo que en MovementsAndSpendings */
+    max-width: 750px;
     margin: 0 auto;
   }
 }

@@ -144,14 +144,14 @@ export default {
 }
 
 .icon {
-  cursor: default; /* sin pointer */
+  cursor: default; 
   color: white;
 }
 
 
 .main-content {
   min-height: 100vh;
-  background-color: #03192c; /* azul oscuro */
+  background-color: #03192c;
   display: flex;
   justify-content: center;
   align-items: center;

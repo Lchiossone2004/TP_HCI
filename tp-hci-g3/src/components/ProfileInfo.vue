@@ -111,7 +111,7 @@ const copyToClipboard = async (text) => {
     text-align: center;
     width: 400px;
     min-width: 300px;
-    flex-shrink: 0; /* Prevents the profile image from shrinking */
+    flex-shrink: 0; 
   }
 
   .profile-image img {
@@ -151,7 +151,7 @@ const copyToClipboard = async (text) => {
     gap: 1rem;
     font-size: var(--font-subtitle);
     width: 100%;
-    max-width: 600px; /* Add max-width to prevent too wide rows */
+    max-width: 600px; 
   }
 
   .detail-row span:first-child {

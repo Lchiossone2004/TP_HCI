@@ -21,7 +21,6 @@ export const useCardStore = defineStore('card', () => {
               });
 
             if (!response.ok) {
-                // Lanza un error si la respuesta no fue satisfactoria
                 throw new Error(`Error obteniendo tarjetas: ${response.status}`);
             }
 
@@ -31,7 +30,7 @@ export const useCardStore = defineStore('card', () => {
         }
         catch(error){
             console.error('Error al obtener las tarjetas:', error);
-            throw error; // vuelve a lanzar para que el componente pueda capturarlo
+            throw error; 
         }
     }
 
@@ -52,7 +51,6 @@ export const useCardStore = defineStore('card', () => {
               });
 
             if (!response.ok) {
-                // Lanza un error si la respuesta no fue satisfactoria
                 throw new Error(`Error agregando tarjeta: ${response.status}`);
             }
             const data = await response.json();
@@ -60,7 +58,7 @@ export const useCardStore = defineStore('card', () => {
         }
         catch(error){
             console.error('Error en cargando tarjeta:', error);
-            throw error; // vuelve a lanzar para que el componente pueda capturarlo
+            throw error; 
         }
     }
 
@@ -89,7 +87,6 @@ export const useCardStore = defineStore('card', () => {
                 body: JSON.stringify(bodyToSend)
               });
             if (!response.ok) {
-                // Lanza un error si la respuesta no fue satisfactoria
                 throw new Error(`Error agregando tarjeta: ${response.status}`);
             }
             const tarjetaAgregada = await response.json()
@@ -97,7 +94,7 @@ export const useCardStore = defineStore('card', () => {
         }
         catch(error){
             console.error('Error en cargando tarjeta:', error);
-            throw error; // vuelve a lanzar para que el componente pueda capturarlo
+            throw error;
         }
     }
 
@@ -117,14 +114,13 @@ export const useCardStore = defineStore('card', () => {
               });
 
             if (!response.ok) {
-                // Lanza un error si la respuesta no fue satisfactoria
                 throw new Error(`Error agregando tarjeta: ${response.status}`);
             }
              tarjetas.value = tarjetas.value.filter(t => t.id !== id);
         }
         catch(error){
             console.error('Error en cargando tarjeta:', error);
-            throw error; // vuelve a lanzar para que el componente pueda capturarlo
+            throw error; 
         }
     }
     

@@ -8,7 +8,7 @@ export const usePaymentStore = defineStore('payment', () => {
   const transferencias = ref([])
   const activityStore = useActivityStore()
 
-  // Función para formatear el monto
+ 
   function formatAmount(amount) {
     return amount.toLocaleString('es-AR', {
       style: 'currency',
@@ -18,7 +18,6 @@ export const usePaymentStore = defineStore('payment', () => {
     })
   }
 
-  // Función para formatear la fecha
   function formatDate(date) {
     const now = new Date()
     const activityDate = new Date(date)
@@ -52,17 +51,15 @@ export const usePaymentStore = defineStore('payment', () => {
           });
 
       if (!response.ok) {
-          // Lanza un error si la respuesta no fue satisfactoria
           throw new Error(`Error creando el pago: ${response.status}`);
       }
       const data = await response.json()
-      //pendingPayments.push(payment)
       console.log(data)
       return data
     }
     catch(error){
         console.error('Error creando el pago', error);
-        throw error; // vuelve a lanzar para que el componente pueda capturarlo
+        throw error; 
     }
   } 
 
@@ -83,7 +80,6 @@ export const usePaymentStore = defineStore('payment', () => {
           });
 
       if (!response.ok) {
-          // Lanza un error si la respuesta no fue satisfactoria
           throw new Error(`Error al pagar el pago pendiente: ${response.status}`);
       }
       const data = await response.json()
@@ -93,7 +89,7 @@ export const usePaymentStore = defineStore('payment', () => {
     }
     catch(error){
         console.error('Error al pagar el pago pendiente:', error);
-        throw error; // vuelve a lanzar para que el componente pueda capturarlo
+        throw error; 
     }
   }
 
@@ -103,7 +99,6 @@ export const usePaymentStore = defineStore('payment', () => {
     if (tipo === 'ingreso') {
       accountStore.balance += monto;
       
-      // Registrar la actividad de ingreso
       activityStore.addActivity({
         icon: 'add',
         title: 'Ingreso de dinero',
@@ -156,8 +151,7 @@ export const usePaymentStore = defineStore('payment', () => {
       }
   
       const data = await response.json();
-  
-      // Registrar la actividad de transferencia
+
       activityStore.addActivity({
         icon: 'sync_alt',
         title: `Transferencia a ${email}`,
@@ -218,8 +212,7 @@ export const usePaymentStore = defineStore('payment', () => {
           throw new Error(`Error al transferir via cvu: ${response.status}`);
       }
       const data = await response.json()
-      
-      // Registrar la actividad
+    
       activityStore.addActivity({
         icon: 'sync_alt',
         title: `Transferencia a CVU ${cvu.slice(-4)}`,
@@ -281,8 +274,7 @@ export const usePaymentStore = defineStore('payment', () => {
           throw new Error(`Error al transferir via alias: ${response.status}`);
       }
       const data = await response.json()
-      
-      // Registrar la actividad
+    
       activityStore.addActivity({
         icon: 'sync_alt',
         title: `Transferencia a ${alias}`,
@@ -325,7 +317,6 @@ export const usePaymentStore = defineStore('payment', () => {
           });
 
       if (!response.ok) {
-          // Lanza un error si la respuesta no fue satisfactoria
           throw new Error(`Error al trater de obterner los pagos: ${response.status}`);
       }
       const data = await response.json()
@@ -333,7 +324,7 @@ export const usePaymentStore = defineStore('payment', () => {
     }
     catch(error){
         console.error('Error al trater de obtener los pagos:', error);
-        throw error; // vuelve a lanzar para que el componente pueda capturarlo
+        throw error; 
     }
   }
 

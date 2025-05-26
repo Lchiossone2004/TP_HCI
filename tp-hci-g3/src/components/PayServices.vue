@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'  // Added computed import
+import { ref, computed } from 'vue' 
 import Modal from './Modal.vue'
 import { useAccountStore } from '@/stores/AccountStore'
 
