@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { usePaymentStore } from '@/stores/PaymetStore'
 import { useAccountStore } from '@/stores/AccountStore'
 const accountStore = useAccountStore()
@@ -37,6 +37,9 @@ const formattedBalance = computed(() => {
     currency: 'ARS',
     minimumFractionDigits: 2
   }).format(accountStore.balance)
+})
+onMounted(() => {
+  accountStore.getAccountInfo()
 })
 </script>
 
