@@ -175,8 +175,27 @@ export const useUserStore = defineStore('user', () => {
         if (!response.ok) throw new Error('Error al obtener datos por defecto')
         return await response.json()
       }
+      async function logOut() {
+        const token = localStorage.getItem('auth-token')
+        try {
+          await fetch("http://localhost:8080/api/user/logout", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            }
+          })
+        } catch (error) {
+          console.warn('Error al cerrar sesión en el backend:', error)
+        } finally {
+          localStorage.removeItem('auth-token')
+          localStorage.removeItem('email')
+          sessionStorage.removeItem('email')
+        }
+      }
       
       
-    return{createUser, logIn ,getUser, verifyUser,resendVerification, sendRecoveryCode, changePassword, updateUser}
+      
+    return{createUser, logIn ,getUser, verifyUser,resendVerification, sendRecoveryCode, changePassword, updateUser, logOut}
     
 })
