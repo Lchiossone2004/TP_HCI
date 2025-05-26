@@ -26,7 +26,7 @@ export const useCardStore = defineStore('card', () => {
             }
 
             const data = await response.json();
-            tarjetas.value = data; // Asigna la respuesta a tarjetas
+            return data
         }
         catch(error){
             console.error('Error al obtener las tarjetas:', error);

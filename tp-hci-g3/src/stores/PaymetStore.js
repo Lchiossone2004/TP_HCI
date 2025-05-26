@@ -111,7 +111,9 @@ export const usePaymentStore = defineStore('payment', () => {
       const data = await response.json();
   
       // Actualizar el balance después de la transferencia exitosa
-      await agregarTransaccion(monto, 'egreso');
+      if(cardId ==  null){
+        await agregarTransaccion(monto, 'egreso');
+      }
       return data;
     } catch (error) {
       console.error('Error al transferir via email:', error);
@@ -158,8 +160,9 @@ export const usePaymentStore = defineStore('payment', () => {
       const data = await response.json()
       
       // Actualizar el balance después de la transferencia exitosa
-      await agregarTransaccion(monto, 'egreso');
-      transferencias.push(data)
+      if(cardId ==  null){
+        await agregarTransaccion(monto, 'egreso');
+      }
       return data
     }
     catch(error){
@@ -206,8 +209,9 @@ export const usePaymentStore = defineStore('payment', () => {
       const data = await response.json()
       
       // Actualizar el balance después de la transferencia exitosa
-      await agregarTransaccion(monto, 'egreso');
-      transferencias.push(data)
+      if(cardId ==  null){
+        await agregarTransaccion(monto, 'egreso');
+      }
       return data
     }
     catch(error){

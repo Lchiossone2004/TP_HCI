@@ -17,12 +17,13 @@
     />
   </div>
   <div class="search-row">
-    <input
-      v-model="cardId"
-      class="search-input"
-      type="search-input"
-      placeholder="numero de la tarjeta"
-    />
+    <select v-model="cardId" class="search-input">
+    <option disabled value="">Seleccioná un metodo</option>
+    <option value="balance">Balance {{ accountStore.balance.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) }}</option> 
+    <option v-for="card in tarjetas" :key="card.id" :value="card.id">
+      {{ card.type }} - ****{{ card.number.slice(-4) }}
+    </option>
+  </select>
     <input
       v-model="detalle"
       class="search-input"
@@ -36,16 +37,28 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
+  import { onMounted, ref } from 'vue'
   import { usePaymentStore  } from '@/stores/PaymetStore'
   import { useCardStore } from '@/stores/CardStore'
+  import { useAccountStore
+
+   } from '@/stores/AccountStore'
   const query = ref('')
   const monto = ref('')
-  const cardId = ref(null)
+  const cardId = ref('')
   const detalle = ref('')
+
   const emit = defineEmits(['search'])
   const paymetStore = usePaymentStore()
   const cardStore = useCardStore()
+  const accountStore = useAccountStore()
+  const tarjetas = ref([])
+
+  onMounted(async () => {
+    const cards = await cardStore.getCards() // Asegurate que exista esta función
+    tarjetas.value = cards // Asegurate que `cards` esté en el store
+    console.log(tarjetas.value)
+  })
 
   function detectTipoEntrada(entrada) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -74,23 +87,26 @@
   }
   
   function emitSearch() {
-    const term = query.value.trim()
-    if (!term || !monto.value) return
-  
-    const tipo = detectTipoEntrada(term)
-  
-    switch (tipo) {
-      case 'email':
-      transferirPorEmail(term, cardId.value, detalle.value,monto.value)
-        break
-      case 'cvu':
-        transferirPorCVU(term, cardId.value, detalle.value,monto.value)
-        break
-      case 'alias':
-        transferirPorAlias(term, cardId.value, detalle.value,monto.value)
-        break
-    }
+  const term = query.value.trim()
+  if (!term || !monto.value) return
+
+  const tipo = detectTipoEntrada(term)
+
+  const idTarjeta = cardId.value === 'balance' ? null : cardId.value
+
+  switch (tipo) {
+    case 'email':
+      transferirPorEmail(term, idTarjeta, detalle.value, monto.value)
+      break
+    case 'cvu':
+      transferirPorCVU(term, idTarjeta, detalle.value, monto.value)
+      break
+    case 'alias':
+      transferirPorAlias(term, idTarjeta, detalle.value, monto.value)
+      break
   }
+}
+
   
   
   </script>
