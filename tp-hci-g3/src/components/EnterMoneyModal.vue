@@ -35,7 +35,8 @@
   import { ref, computed, onMounted } from 'vue'
   import Modal from './Modal.vue'
   import { usePaymentStore } from '@/stores/PaymetStore'
-  import { useAccountStore } from '@/stores/AccountStore';
+  import { useAccountStore } from '@/stores/AccountStore'
+  import { useActivityStore } from '@/stores/ActivityStore'
 
   const props = defineProps(['modelValue']);
   const emit = defineEmits(['update:modelValue']);
@@ -46,6 +47,7 @@
   });
   
   const store = usePaymentStore();
+  const activityStore = useActivityStore();
   const monto = ref(0);
   const montoTotal = ref(0);
   
@@ -69,6 +71,7 @@
   async function confirmarIngreso() {
     if (monto.value > 0) {
       await store.agregarTransaccion(monto.value, 'ingreso');
+      activityStore.loadActivities();
       cerrarModalIngreso();
     }
   }

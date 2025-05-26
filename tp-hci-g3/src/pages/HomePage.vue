@@ -25,40 +25,29 @@ import OperationsButtons from '@/components/OperationsButtons.vue';
 import ExpensesChart from '@/components/ExpensesChart.vue';
 import Swiper from '@/components/Swiper.vue';
 import Activity from '@/components/Activity.vue';
-import { ref,computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useActivityStore } from '@/stores/ActivityStore';
 
 const router = useRouter();
 const currentMonth = ref(new Date().getMonth());
 const currentYear = ref(new Date().getFullYear());
+const activityStore = useActivityStore();
+
+onMounted(() => {
+  activityStore.loadActivities();
+});
 
 function goToMovements() {
   router.push({ name: 'Actividad' });
 }
 
-const allActivities = ref([
-  { icon: 'shopping_bag', title: 'Prüne', subtitle: 'Hoy 19:43', amount: -57800, date: '2025-05-14T19:43:00' },
-  { icon: 'restaurant', title: 'Pedidos Ya', subtitle: 'Ayer 21:18', amount: -17550, date: '2025-05-13T21:18:00' },
-  { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '19/9 10:25', amount: 57800, date: '2025-09-19T10:25:00' },
-  { icon: 'sync_alt', title: 'Mónica Domínguez', subtitle: '17/9 15:56', amount: -1525, date: '2025-09-17T15:56:00' },
-  { icon: 'event', title: 'Mateo Gorriti', subtitle: '17/9 09:28', amount: 100000, date: '2025-09-17T09:28:00' },
-  { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '15/9 11:32', amount: 20000, date: '2025-09-15T11:32:00' },
-  { icon: 'shopping_cart', title: 'DISCO CENCOSUD', subtitle: '13/9 18:37', amount: -127845, date: '2025-09-13T18:37:00' },
-  { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '12/9 08:01', amount: 463, date: '2025-09-12T08:01:00' },
-])
-
 const recentActivities = computed(() => {
-  return [...allActivities.value]
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, 10);
+  return activityStore.getRecentActivities(10);
 });
 
 const currentMonthActivities = computed(() => {
-  return allActivities.value.filter(activity => {
-    const activityDate = new Date(activity.date);
-    return activityDate.getMonth() === currentMonth.value &&
-           activityDate.getFullYear() === currentYear.value;
-  });
+  return activityStore.getFilteredActivities(currentMonth.value, currentYear.value);
 });
 </script>
 

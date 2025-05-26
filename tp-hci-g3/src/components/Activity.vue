@@ -27,7 +27,7 @@
           class="amount"
           :class="{ positive: item.amount > 0, negative: item.amount < 0 }"
         >
-          {{ formatAmount(item.amount) }}
+          {{ formatAmount(item) }}
         </div>
       </div>
     </div>
@@ -62,10 +62,17 @@ const props = defineProps({
   }
 })
 
-
 function formatAmount(value) {
-  const formatted = Math.abs(value).toLocaleString('es-AR')
-  return (value > 0 ? '+' : '-') + '$' + formatted
+  if (value.formattedAmount) {
+    return value.formattedAmount
+  }
+  const formatted = Math.abs(value.amount || value).toLocaleString('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })
+  return (value.amount < 0 || value < 0 ? '-' : '+') + formatted
 }
 
 function handleClick(item) {

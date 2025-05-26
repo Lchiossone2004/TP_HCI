@@ -1,13 +1,39 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useAccountStore } from './AccountStore'
-import { ro } from 'vuetify/locale'
-
+import { useActivityStore } from './ActivityStore'
 
 export const usePaymentStore = defineStore('payment', () => {
-
   const pendingPayments = ref([])
   const transferencias = ref([])
+  const activityStore = useActivityStore()
+
+  // Función para formatear el monto
+  function formatAmount(amount) {
+    return amount.toLocaleString('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+  }
+
+  // Función para formatear la fecha
+  function formatDate(date) {
+    const now = new Date()
+    const activityDate = new Date(date)
+    const diffTime = Math.abs(now - activityDate)
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+    
+    if (diffDays === 0) {
+      return 'Hoy ' + activityDate.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+    } else if (diffDays === 1) {
+      return 'Ayer ' + activityDate.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+    } else {
+      return activityDate.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' }) + ' ' + 
+             activityDate.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+    }
+  }
 
   async function pullPayment(payment){
     try{
@@ -71,6 +97,29 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   }
 
+  async function agregarTransaccion(monto, tipo) {
+    const accountStore = useAccountStore();
+    
+    if (tipo === 'ingreso') {
+      accountStore.balance += monto;
+      
+      // Registrar la actividad de ingreso
+      activityStore.addActivity({
+        icon: 'add',
+        title: 'Ingreso de dinero',
+        subtitle: 'Ingreso a tu cuenta',
+        amount: monto,
+        formattedAmount: formatAmount(monto),
+        type: 'income',
+        method: 'balance',
+        date: new Date().toISOString(),
+        details: {
+          description: 'Ingreso a tu cuenta'
+        }
+      });
+    }
+  }
+
   async function transferViaEmail(email, cardId, motivo, monto) {
     try {
       const token = localStorage.getItem('auth-token');
@@ -80,12 +129,10 @@ export const usePaymentStore = defineStore('payment', () => {
         throw new Error('No hay token de autenticación guardado.');
       }
   
-      // Verificar si hay saldo suficiente
       if (accountStore.balance < monto) {
         throw new Error('Saldo insuficiente para realizar la transferencia.');
       }
   
-      // Construir URL con o sin cardId
       let url = `http://localhost:8080/api/payment/transfer-email?email=${encodeURIComponent(email)}`;
       if (cardId != null) {
         url += `&cardId=${encodeURIComponent(cardId)}`;
@@ -110,9 +157,24 @@ export const usePaymentStore = defineStore('payment', () => {
   
       const data = await response.json();
   
-      // Actualizar el balance después de la transferencia exitosa
-      if(cardId ==  null){
-        await agregarTransaccion(monto, 'egreso');
+      // Registrar la actividad de transferencia
+      activityStore.addActivity({
+        icon: 'sync_alt',
+        title: `Transferencia a ${email}`,
+        subtitle: motivo || "Transferencia",
+        amount: -monto,
+        formattedAmount: formatAmount(-monto),
+        type: 'transfer',
+        method: cardId ? 'card' : 'balance',
+        date: new Date().toISOString(),
+        details: {
+          recipient: email,
+          description: motivo || "Transferencia"
+        }
+      });
+  
+      if(cardId == null){
+        accountStore.balance -= monto;
       }
       return data;
     } catch (error) {
@@ -130,11 +192,9 @@ export const usePaymentStore = defineStore('payment', () => {
           throw new Error('No hay token de autenticación guardado.');
       }
 
-      // Verificar si hay saldo suficiente
       if (accountStore.balance < monto) {
           throw new Error('Saldo insuficiente para realizar la transferencia.');
       }
-
 
       let url = `http://localhost:8080/api/payment/transfer-cvu?cvu=${encodeURIComponent(cvu)}`;
       if (cardId != null) {
@@ -159,9 +219,24 @@ export const usePaymentStore = defineStore('payment', () => {
       }
       const data = await response.json()
       
-      // Actualizar el balance después de la transferencia exitosa
-      if(cardId ==  null){
-        await agregarTransaccion(monto, 'egreso');
+      // Registrar la actividad
+      activityStore.addActivity({
+        icon: 'sync_alt',
+        title: `Transferencia a CVU ${cvu.slice(-4)}`,
+        subtitle: motivo || "Transferencia",
+        amount: -monto,
+        formattedAmount: formatAmount(-monto),
+        type: 'transfer',
+        method: cardId ? 'card' : 'balance',
+        date: new Date().toISOString(),
+        details: {
+          recipient: cvu,
+          description: motivo || "Transferencia"
+        }
+      });
+
+      if(cardId == null){
+        accountStore.balance -= monto;
       }
       return data
     }
@@ -180,7 +255,6 @@ export const usePaymentStore = defineStore('payment', () => {
           throw new Error('No hay token de autenticación guardado.');
       }
 
-      // Verificar si hay saldo suficiente
       if (accountStore.balance < monto) {
           throw new Error('Saldo insuficiente para realizar la transferencia.');
       }
@@ -208,9 +282,24 @@ export const usePaymentStore = defineStore('payment', () => {
       }
       const data = await response.json()
       
-      // Actualizar el balance después de la transferencia exitosa
-      if(cardId ==  null){
-        await agregarTransaccion(monto, 'egreso');
+      // Registrar la actividad
+      activityStore.addActivity({
+        icon: 'sync_alt',
+        title: `Transferencia a ${alias}`,
+        subtitle: motivo || "Transferencia",
+        amount: -monto,
+        formattedAmount: formatAmount(-monto),
+        type: 'transfer',
+        method: cardId ? 'card' : 'balance',
+        date: new Date().toISOString(),
+        details: {
+          recipient: alias,
+          description: motivo || "Transferencia"
+        }
+      });
+
+      if(cardId == null){
+        accountStore.balance -= monto;
       }
       return data
     }
@@ -248,17 +337,5 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   }
 
-
-    async function agregarTransaccion(monto, tipo) {
-      const accountStore = useAccountStore()
-      if (tipo === 'ingreso') {
-        accountStore.balance += monto
-        await accountStore.chargeBalance(monto)
-      } else if (tipo === 'egreso') {
-        accountStore.balance -= monto
-      }
-    }
-
-
-  return { pullPayment, pushPayment, transferViaEmail, transferViaCVU, transferViaAlias, getAllPayments, agregarTransaccion, transferencias, pendingPayments}
+  return { pullPayment, pushPayment, transferViaEmail, transferViaCVU, transferViaAlias, getAllPayments, transferencias, pendingPayments, agregarTransaccion }
 })

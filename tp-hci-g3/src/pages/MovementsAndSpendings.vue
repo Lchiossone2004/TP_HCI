@@ -72,12 +72,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Activity from '@/components/Activity.vue'
 import ExpensesChart from '@/components/ExpensesChart.vue'
+import { useActivityStore } from '@/stores/ActivityStore'
 
 const router = useRouter();
+const activityStore = useActivityStore();
 
 const goToHome = () => {
   router.back();
@@ -125,29 +127,24 @@ const selectedMonth = ref(new Date().getMonth())
 const selectedYear = ref(currentYear)
 const search = ref('')
 
-// Datos de ejemplo con fechas válidas
-const allActivities = ref([
-  { icon: 'shopping_bag', title: 'Prüne', subtitle: 'Hoy 19:43', amount: -57800, date: '2025-05-14T19:43:00' },
-  { icon: 'restaurant', title: 'Pedidos Ya', subtitle: 'Ayer 21:18', amount: -17550, date: '2025-05-13T21:18:00' },
-  { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '19/9 10:25', amount: 57800, date: '2025-09-19T10:25:00' },
-  { icon: 'sync_alt', title: 'Mónica Domínguez', subtitle: '17/9 15:56', amount: -1525, date: '2025-09-17T15:56:00' },
-  { icon: 'event', title: 'Mateo Gorriti', subtitle: '17/9 09:28', amount: 100000, date: '2025-09-17T09:28:00' },
-  { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '15/9 11:32', amount: 20000, date: '2025-09-15T11:32:00' },
-  { icon: 'shopping_cart', title: 'DISCO CENCOSUD', subtitle: '13/9 18:37', amount: -127845, date: '2025-09-13T18:37:00' },
-  { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '12/9 08:01', amount: 463, date: '2025-09-12T08:01:00' },
-])
+// Cargar actividades al montar el componente
+onMounted(() => {
+  activityStore.loadActivities()
+})
 
 // Filtrado de actividades
 const filteredActivities = computed(() => {
-  return allActivities.value.filter(activity => {
-    const activityDate = new Date(activity.date)
-    const matchesMonth = selectedMonth.value === -1 || activityDate.getMonth() === selectedMonth.value
-    const matchesYear = selectedYear.value === -1 || activityDate.getFullYear() === selectedYear.value
-    const matchesSearch = search.value === '' || 
-      `${activity.title} ${activity.subtitle}`.toLowerCase().includes(search.value.toLowerCase())
-    
-    return matchesMonth && matchesYear && matchesSearch
-  })
+  let activities = activityStore.getFilteredActivities(selectedMonth.value, selectedYear.value)
+  
+  // Aplicar búsqueda si hay un término de búsqueda
+  if (search.value) {
+    const searchTerm = search.value.toLowerCase()
+    activities = activities.filter(activity => 
+      `${activity.title} ${activity.subtitle}`.toLowerCase().includes(searchTerm)
+    )
+  }
+  
+  return activities
 })
 </script>
 

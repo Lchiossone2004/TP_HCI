@@ -1,10 +1,9 @@
-
 <template>
   <div class="detail-panel dark-panel">
     <button class="back-btn" @click="$emit('back')">
       <span class="material-symbols-rounded">arrow_back</span>
-    Volver
-  </button>
+      Volver
+    </button>
 
     <div class="contact-header">
       <img :src="contact.avatar" class="detail-avatar" />
@@ -24,27 +23,27 @@
         <label for="amount">Monto a transferir</label>
         <div class="input-wrapper">
           <span class="input-prefix">$</span>
-        <input
-          id="amount"
-          v-model.number="amount"
-          type="number"
-          min="0"
-          :max="availableBalance"
-          placeholder="0.00"
-          class="input-monto"
-        />
-      </div>
+          <input
+            id="amount"
+            v-model.number="amount"
+            type="number"
+            min="0"
+            :max="availableBalance"
+            placeholder="0.00"
+            class="input-monto"
+          />
+        </div>
       </div>
       <button class="transfer-btn" :disabled="!canTransfer" @click="openConfirm">
         Transferir
       </button>
     </div>
-<div class="transfer-row">
-    <div class="remaining-info" v-if="amount > 0">
-      <span>Saldo luego de realizar la transferencia: </span>
-      <strong>{{ formatCurrency(remaining) }}</strong>
+    <div class="transfer-row">
+      <div class="remaining-info" v-if="amount > 0">
+        <span>Saldo luego de realizar la transferencia: </span>
+        <strong>{{ formatCurrency(remaining) }}</strong>
+      </div>
     </div>
-  </div>
 
     <!-- modal gris -->
     <div v-if="showConfirm" class="modal-overlay">
@@ -65,37 +64,36 @@ import { usePaymentStore } from '@/stores/PaymetStore'
 import { useAccountStore } from '@/stores/AccountStore'
 
 const props = defineProps({
-contact: Object
+  contact: Object
 })
 
 const store = usePaymentStore()
 const accountStore = useAccountStore()
-const emit = defineEmits(['back','transfer'])
+const emit = defineEmits(['back', 'transfer'])
 
 const amount = ref(0)
 const showConfirm = ref(false)
 
 const remaining = computed(() =>
-amount.value > 0 ? accountStore.balance - amount.value : accountStore.balance
+  amount.value > 0 ? accountStore.balance - amount.value : accountStore.balance
 )
 const canTransfer = computed(() =>
-amount.value > 0 && amount.value <= accountStore.balance
+  amount.value > 0 && amount.value <= accountStore.balance
 )
 
 function formatCurrency(v) {
-return new Intl.NumberFormat('es-AR',{ style:'currency',currency:'ARS' }).format(v)
+  return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(v)
 }
 function openConfirm() {
-if (canTransfer.value) showConfirm.value = true
+  if (canTransfer.value) showConfirm.value = true
 }
 
 const availableBalance = computed(() => accountStore.balance)
 
 function confirmTransfer() {
-store.agregarTransaccion(amount.value, 'egreso')
-emit('transfer', { to: props.contact, amount: amount.value })
-showConfirm.value = false
-amount.value = 0
+  emit('transfer', { to: props.contact, amount: amount.value })
+  showConfirm.value = false
+  amount.value = 0
 }
 
 </script>
@@ -186,20 +184,20 @@ amount.value = 0
 .btn-confirm { background:#2e7dff; color:#fff; }
 .btn-confirm:hover { background:#1b5edb; }
 .back-btn {
-color: white;
-font-size: var(--font-text);
-display: flex;
-align-items: center;
-cursor: pointer;
-gap: 0.5rem;
+  color: white;
+  font-size: var(--font-text);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
 }
 
 .back-btn .material-symbols-outlined {
-margin-right: 0.5rem;
-font-size: 0.5rem; 
-vertical-align: middle;
+  margin-right: 0.5rem;
+  font-size: 0.5rem; 
+  vertical-align: middle;
 }
 .back-btn:hover {
-color: var(--blue-button-hover);
+  color: var(--blue-button-hover);
 }
 </style>
