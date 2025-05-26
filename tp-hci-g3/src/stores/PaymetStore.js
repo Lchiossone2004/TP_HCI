@@ -74,92 +74,129 @@ export const usePaymentStore = defineStore('payment', () => {
   async function transferViaEmail(email, cardId, motivo, monto){
     try{
       const token = localStorage.getItem('auth-token');
+      const accountStore = useAccountStore();
 
       if (!token) {
           throw new Error('No hay token de autenticación guardado.');
       }
+
+      // Verificar si hay saldo suficiente
+      if (accountStore.balance < monto) {
+          throw new Error('Saldo insuficiente para realizar la transferencia.');
+      }
+
       const response = await fetch(`http://localhost:8080/api/payment/transfer-email?email=${email}&cardId=${cardId}`, {
-          method: 'POST', // Cambiar el método a POST para enviar un cuerpo
+          method: 'POST',
           headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
           },
-          body: JSON.stringify({ // Convertir el cuerpo a JSON
-            description: "Store purchase",
-            amount: 12000.5,
+          body: JSON.stringify({
+            description: motivo || "Transferencia",
+            amount: monto,
             metadata: {}
           })
       });
 
       if (!response.ok) {
-          // Lanza un error si la respuesta no fue satisfactoria
           throw new Error(`Error al transferir via email: ${response.status}`);
       }
       const data = await response.json()
+      
+      // Actualizar el balance después de la transferencia exitosa
+      await agregarTransaccion(monto, 'egreso');
       transferencias.push(data)
       return data
     }
     catch(error){
         console.error('Error al transferir via email:', error);
-        throw error; // vuelve a lanzar para que el componente pueda capturarlo
+        throw error;
     }
   }
 
-  async function transferViaCVU(cvu, cardId){
+  async function transferViaCVU(cvu, cardId, motivo, monto){
     try{
       const token = localStorage.getItem('auth-token');
+      const accountStore = useAccountStore();
 
       if (!token) {
           throw new Error('No hay token de autenticación guardado.');
       }
+
+      // Verificar si hay saldo suficiente
+      if (accountStore.balance < monto) {
+          throw new Error('Saldo insuficiente para realizar la transferencia.');
+      }
+
       const response = await fetch(`http://localhost:8080/api/payment/transfer-cvu?cvu=${cvu}&cardId=${cardId}`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
           },
-          });
+          body: JSON.stringify({
+            description: motivo || "Transferencia",
+            amount: monto,
+            metadata: {}
+          })
+      });
 
       if (!response.ok) {
-          // Lanza un error si la respuesta no fue satisfactoria
           throw new Error(`Error al transferir via cvu: ${response.status}`);
       }
       const data = await response.json()
+      
+      // Actualizar el balance después de la transferencia exitosa
+      await agregarTransaccion(monto, 'egreso');
       transferencias.push(data)
       return data
     }
     catch(error){
         console.error('Error al transferir via cvu:', error);
-        throw error; // vuelve a lanzar para que el componente pueda capturarlo
+        throw error;
     }
   }
 
-  async function transferViaAlias(alias, cardId){
+  async function transferViaAlias(alias, cardId, motivo, monto){
     try{
       const token = localStorage.getItem('auth-token');
+      const accountStore = useAccountStore();
 
       if (!token) {
           throw new Error('No hay token de autenticación guardado.');
       }
+
+      // Verificar si hay saldo suficiente
+      if (accountStore.balance < monto) {
+          throw new Error('Saldo insuficiente para realizar la transferencia.');
+      }
+
       const response = await fetch(`http://localhost:8080/api/payment/transfer-alias?alias=${alias}&cardId=${cardId}`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
           },
-          });
+          body: JSON.stringify({
+            description: motivo || "Transferencia",
+            amount: monto,
+            metadata: {}
+          })
+      });
 
       if (!response.ok) {
-          // Lanza un error si la respuesta no fue satisfactoria
           throw new Error(`Error al transferir via alias: ${response.status}`);
       }
       const data = await response.json()
+      
+      // Actualizar el balance después de la transferencia exitosa
+      await agregarTransaccion(monto, 'egreso');
       transferencias.push(data)
       return data
     }
     catch(error){
         console.error('Error al transferir via alias:', error);
-        throw error; // vuelve a lanzar para que el componente pueda capturarlo
+        throw error;
     }
   }
 
