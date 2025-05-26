@@ -1,15 +1,14 @@
 import { leafActiveStrategy } from 'vuetify/lib/composables/nested/activeStrategies.mjs';
 
-import { leafActiveStrategy } from 'vuetify/lib/composables/nested/activeStrategies.mjs';
 <script setup>
 import { useRoute } from 'vue-router'
-import HelpInfoActivity from '@/views/help/HelpInfoActivity.vue'
-import HelpInfoTransfer from '@/views/help/HelpInfoTransfer.vue'
-import HelpInfoProfile from '@/views/help/HelpInfoProfile.vue'
-import HelpInfoHomePage from '@/views/help/HelpInfoHomePage.vue'
-import HelpInfoForgotPassword from './HelpInfoForgotPassword.vue'
-import HelpInfoLoginAndRegister from './HelpInfoLoginAndRegister.vue'
-import HelpInfoVerificationCode from './HelpInfoVerificationCode.vue'
+import HelpInfoActivity from '@/pages/help/HelpInfoActivity.vue'
+import HelpInfoTransfer from '@/pages/help/HelpInfoTransfer.vue'
+import HelpInfoProfile from '@/pages/help/HelpInfoProfile.vue'
+import HelpInfoHomePage from '@/pages/help/HelpInfoHomePage.vue'
+import HelpInfoForgotPassword from '@/pages/help/HelpInfoForgotPassword.vue'
+import HelpInfoLoginAndRegister from '@/pages/help/HelpInfoLoginAndRegister.vue'
+import HelpInfoVerificationCode from '@/pages/help/HelpInfoVerificationCode.vue'
 const route = useRoute()
 import { computed } from 'vue'
 

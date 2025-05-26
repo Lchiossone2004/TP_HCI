@@ -44,7 +44,7 @@ const routes = [
   {
     path: '/help',
     name: 'HelpPage',
-    component: () => import('@/views/help/HelpPage.vue')
+    component: () => import('@/pages/help/HelpPage.vue')
   },
   {
     path: '/:pathMatch(.*)*',
