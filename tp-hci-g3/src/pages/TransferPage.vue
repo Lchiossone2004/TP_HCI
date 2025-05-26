@@ -119,7 +119,7 @@ const allContacts = [
     id: 2, 
     name: 'Mónica Domínguez', 
     alias: '@monica', 
-    avatar: getAvatar(2),
+    avatar: getAvatar(5),
     cvu: '0000003100064484890003',
     phone: '+5491145678902'
   },
@@ -135,7 +135,7 @@ const allContacts = [
     id: 4, 
     name: 'Juan Perez', 
     alias: '@juanp', 
-    avatar: getAvatar(3),
+    avatar: getAvatar(2),
     cvu: '0000003100064484890005',
     phone: '+5491145678904'
   },
@@ -167,7 +167,7 @@ const allContacts = [
     id: 8, 
     name: 'Lucas Martinez', 
     alias: '@lucas', 
-    avatar: getAvatar(3),
+    avatar: getAvatar(1),
     cvu: '0000003100064484890009',
     phone: '+5491145678908'
   }
