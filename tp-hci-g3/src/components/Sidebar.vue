@@ -53,16 +53,11 @@ const menuItems = [
 function goTo(name) {
   router.push(name)
 }
-function logout() {
-  // Eliminar el usuario del localStorage y sessionStorage
-  localStorage.removeItem('email')
-  sessionStorage.removeItem('email')
-
-  // Lógica para cerrar sesión
-  console.log('Cerrando sesión...')
-  localStorage.removeItem('auth-token')
-  router.push('/login') // Redirigir al usuario a la página de inicio de sesión
+async function logout() {
+  await userStore.logOut()
+  router.push('/login')
 }
+
 </script>
 
 <style scoped>

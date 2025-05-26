@@ -91,13 +91,13 @@ function getAvatar(n) {
 
 const transferenciasRecientes = ref([
   { id: 1, name: 'Pablo Gomez', alias: '@pablog', avatar: getAvatar(1), amount: '$1200' },
-  { id: 2, name: 'Mónica Domínguez', alias: '@monica', avatar: getAvatar(2), amount: '$850' },
+  { id: 2, name: 'Mónica Domínguez', alias: '@monica', avatar: getAvatar(5), amount: '$850' },
   { id: 3, name: 'Josefina Grimolti', alias: '@josefina', avatar: getAvatar(4), amount: '$430' },
-  { id: 4, name: 'Juan Perez', alias: '@juanp', avatar: getAvatar(3), amount: '$2500' },
+  { id: 4, name: 'Juan Perez', alias: '@juanp', avatar: getAvatar(2), amount: '$2500' },
   { id: 5, name: 'Micaela Trevi', alias: '@micaela', avatar: getAvatar(1), amount: '$1800' },
   { id: 6, name: 'Guillermo Rivas', alias: '@guillermo', avatar: getAvatar(2), amount: '$950' },
   { id: 7, name: 'Flor Margalo', alias: '@flor', avatar: getAvatar(4), amount: '$3200' },
-  { id: 8, name: 'Lucas Martinez', alias: '@lucas', avatar: getAvatar(3), amount: '$1500' }
+  { id: 8, name: 'Lucas Martinez', alias: '@lucas', avatar: getAvatar(1), amount: '$1500' }
 ].slice(0, 15))
 
 const searchQuery = ref('')
