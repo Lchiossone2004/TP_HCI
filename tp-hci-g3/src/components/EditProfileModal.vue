@@ -197,9 +197,6 @@ const closeModal = () => {
   show.value = false
 }
 
-watch(() => props.perfil, () => {
-  resetFields()
-}, { immediate: true, deep: true })
 
 const copyToClipboard = async (text) => {
   try {
@@ -214,10 +211,17 @@ onMounted(async () => {
     await accountStore.getAccountInfo()
     editableFields.value.alias = accountStore.alias
     editableFields.value.cvu = accountStore.cvu
+    selectedAvatar.value = props.perfil.avatar || avatarList[0]
   } catch (err) {
     console.error('No se pudo cargar alias/cvu:', err)
   }
 })
+
+watch(() => props.perfil, () => {
+  resetFields()
+  selectedAvatar.value = props.perfil.avatar || avatarList[0]
+}, { immediate: true, deep: true })
+
 </script>
 
 
