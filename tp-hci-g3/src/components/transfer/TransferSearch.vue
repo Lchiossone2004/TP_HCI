@@ -31,9 +31,8 @@
       placeholder="detalle"
     />
   </div>
-  <button class="search-btn" @click="emitSearch" :disabled="!query.trim() || !monto || !detalle " >
-      Transferir
-    </button>
+  <button class="search-btn" @click="emitSearch" :disabled="!query.trim() || !monto || !detalle " >Transferir</button>
+    <p v-if="mensajeExito" class="success-message">{{ mensajeExito }}</p>
   </template>
   
   <script setup>
@@ -47,6 +46,7 @@
   const monto = ref('')
   const cardId = ref('')
   const detalle = ref('')
+  const mensajeExito = ref('')
 
   const emit = defineEmits(['search'])
   const paymetStore = usePaymentStore()
@@ -55,8 +55,8 @@
   const tarjetas = ref([])
 
   onMounted(async () => {
-    const cards = await cardStore.getCards() // Asegurate que exista esta función
-    tarjetas.value = cards // Asegurate que `cards` esté en el store
+    await cardStore.getCards() // Asegurate que exista esta función
+    tarjetas.value = cardStore.tarjetas // Asegurate que `cards` esté en el store
     console.log(tarjetas.value)
   })
 
@@ -70,21 +70,37 @@
     return 'alias'
   }
   async function transferirPorEmail(email, cardId, detalle, monto) {
-    console.log('Transferir a EMAIL:', email, detalle, monto, cardId)
-    await paymetStore.transferViaEmail(email,cardId,detalle, monto)
+  try {
+    await paymetStore.transferViaEmail(email, cardId, detalle, monto)
+    mensajeExito.value = 'Transferencia realizada con éxito'
+    resetFormulario()
+    setTimeout(() => mensajeExito.value = '', 3000)
+  } catch (err) {
+    console.error('Error al transferir por email:', err)
   }
-  
-  async function transferirPorCVU(cvu,  cardId, detalle, monto) {
-    console.log('Transferir a CVU:', cvu, 'Monto:', monto)
-    await paymetStore.transferViaCVU(cvu,cardId,detalle, monto)
-    // lógica de transferencia por CVU
+}
+
+async function transferirPorCVU(cvu, cardId, detalle, monto) {
+  try {
+    await paymetStore.transferViaCVU(cvu, cardId, detalle, monto)
+    mensajeExito.value = 'Transferencia realizada con éxito'
+    resetFormulario()
+    setTimeout(() => mensajeExito.value = '', 3000)
+  } catch (err) {
+    console.error('Error al transferir por CVU:', err)
   }
-  
-  async function transferirPorAlias(alias,  cardId, detalle, monto) {
-    console.log('Transferir a ALIAS:', alias, 'Monto:', monto)
-    await paymetStore.transferViaAlias(alias,cardId,detalle, monto)
-    // lógica de transferencia por alias
+}
+
+async function transferirPorAlias(alias, cardId, detalle, monto) {
+  try {
+    await paymetStore.transferViaAlias(alias, cardId, detalle, monto)
+    mensajeExito.value = 'Transferencia realizada con éxito'
+    resetFormulario()
+    setTimeout(() => mensajeExito.value = '', 3000)
+  } catch (err) {
+    console.error('Error al transferir por alias:', err)
   }
+}
   
   function emitSearch() {
   const term = query.value.trim()
@@ -107,7 +123,13 @@
   }
 }
 
-  
+function resetFormulario() {
+  query.value = ''
+  monto.value = ''
+  cardId.value = ''
+  detalle.value = ''
+}
+ 
   
   </script>
   
@@ -162,5 +184,10 @@
   .search-btn:hover:enabled {
     background: #1b5edb;
   }
+  .success-message {
+  color: green;
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
   </style>
   

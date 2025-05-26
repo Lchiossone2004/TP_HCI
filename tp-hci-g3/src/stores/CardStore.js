@@ -26,6 +26,7 @@ export const useCardStore = defineStore('card', () => {
             }
 
             const data = await response.json();
+            tarjetas.value = data
             return data
         }
         catch(error){
