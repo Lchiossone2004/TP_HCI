@@ -10,7 +10,17 @@
 
   <div class="input-with-icon">
   <span class="material-symbols-rounded icon">key</span>
-  <input type="password" placeholder="Contraseña" v-model="password" />
+  <input 
+      :type="showPassword ? 'text' : 'password'" 
+      placeholder="Contraseña" 
+      v-model="password" 
+    />
+    <span 
+      class="material-symbols-rounded right-icon" 
+      @click="togglePasswordVisibility"
+    >
+      {{ showPassword ? 'visibility' : 'visibility_off' }}
+    </span>
   </div>
 
 
@@ -43,10 +53,14 @@ export default {
       email: '',
       password: '',
       remember: false,
-      errorMessage: ''
+      errorMessage: '',
+      showPassword: false,
     };
   },
   methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    },
     async login() {
   const userStore = useUserStore();
 
@@ -95,6 +109,17 @@ async forgotPassword() {
   font-size: 20px;
   color: #666;
 }
+.input-with-icon .right-icon {
+  position: absolute;
+  right: 10px;
+  font-size: 20px;
+  color: black;
+  cursor: pointer;
+}
+.input-with-icon .right-icon:hover {
+  color: navy;
+}
+
 
 .auth-container {
   padding: 2rem 1.5rem;
