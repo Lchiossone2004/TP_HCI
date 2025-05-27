@@ -50,7 +50,6 @@ async function loadActivities({
 
       const g = get(p)
 
-      // Metadata como array con objeto date
       let metadata = g('metadata')
       if (!Array.isArray(metadata)) metadata = []
       if (!metadata.find(item => item.date)) {

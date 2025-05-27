@@ -5,12 +5,12 @@
     
       <div class="form-field">
         <label>Nombre</label>
-        <div class="field-value">{{ editableFields.nombre }}</div>
+        <div class="field-value">{{ editableFields.firstName }}</div>
       </div>
 
       <div class="form-field">
         <label>Apellido</label>
-        <div class="field-value">{{ editableFields.apellido }}</div>
+        <div class="field-value">{{ editableFields.lastName }}</div>
       </div>
 
       <div class="form-field">
@@ -76,7 +76,7 @@ import { ref, computed, onMounted } from 'vue'
 import Modal from './Modal.vue'
 import { useAccountStore } from '@/stores/AccountStore'
 
-
+import { watch } from 'vue'
 const accountStore = useAccountStore()
 
 const props = defineProps({
@@ -95,12 +95,34 @@ const show = computed({
 })
 
 const editableFields = ref({
-  nombre:  props.perfil.nombre || '',
-  apellido: props.perfil.apellido || '',
-  email: props.perfil.email || '',
+  firstName: '',
+  lastName: '',
+  email: '',
   cvu: '',
   alias: ''
 })
+
+
+watch(() => props.perfil, (newPerfil) => {
+  if (newPerfil) {
+    editableFields.value.firstName = newPerfil.firstName || newPerfil.nombre || ''
+    editableFields.value.lastName = newPerfil.lastName || newPerfil.apellido || ''
+    editableFields.value.email = newPerfil.email || ''
+    editableFields.value.alias = newPerfil.alias || ''
+    editableFields.value.cvu = accountStore.cvu || ''
+  }
+}, { immediate: true }) 
+
+const resetFields = () => {
+  editableFields.value = {
+    firstName: props.perfil.firstName || props.perfil.nombre || '',
+    lastName: props.perfil.lastName || props.perfil.apellido || '',
+    email: props.perfil.email || '',
+    alias: props.perfil.alias || '',
+    cvu: accountStore.cvu || ''
+  }
+}
+
 
 const editingField = ref({})
 
@@ -131,15 +153,6 @@ const saveChanges = async () => {
 }
 
 
-const resetFields = () => {
-  editableFields.value = {
-    nombre: props.perfil.firstName || props.perfil.nombre || '',
-    apellido: props.perfil.lastName || props.perfil.apellido || '',
-    email: props.perfil.email || '',
-    alias: props.perfil.alias || '',
-    cvu: accountStore.cvu || ''
-  }
-}
 
 const closeModal = () => {
   resetFields()
