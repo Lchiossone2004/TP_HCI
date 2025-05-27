@@ -6,6 +6,11 @@ export const useActivityStore = defineStore('activity', () => {
   const isLoading    = ref(false)
   const errorMessage = ref(null)
 
+  /**
+   * @param {{ page?: number, direction?: string, pending?: boolean|null,
+   *           method?: string|null, range?: string|null,
+   *           role?: 'PAYER'|'RECEIVER'|null, cardId?: number|null }} opts
+   */
   async function loadActivities({
     page      = 1,
     direction = 'DESC',
@@ -15,72 +20,81 @@ export const useActivityStore = defineStore('activity', () => {
     role      = null,
     cardId    = null
   } = {}) {
-    isLoading.value    = true
+    isLoading.value = true
     errorMessage.value = null
 
     try {
       const token = localStorage.getItem('auth-token')
-      if (!token) throw new Error('No hay token de autenticación guardado.')
+      if (!token) throw new Error('No hay token guardado.')
 
       const params = new URLSearchParams({ page, direction })
-      if (pending !== null) params.set('pending', pending)
-      if (method)        params.set('method', method)
-      if (range)         params.set('range', range)
-      if (role)          params.set('role', role)
-      if (cardId)        params.set('cardId', cardId)
+      if (pending  !== null) params.set('pending',  pending)
+      if (method)          params.set('method',   method)
+      if (range)           params.set('range',    range)
+      if (role)            params.set('role',     role)
+      if (cardId)          params.set('cardId',   cardId)
 
-      const res = await fetch(`http://localhost:8080/api/payment?${params.toString()}`, {
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      })
-
-      if (!res.ok) {
-        throw new Error(`Error ${res.status} cargando actividades`)
-      }
+      const res = await fetch(
+        `http://localhost:8080/api/payment?${params.toString()}`,
+        { headers: { 'Authorization': 'Bearer ' + token } }
+      )
+      if (!res.ok) throw new Error(`Error ${res.status} cargando actividades`)
 
       const { results } = await res.json()
-      activities.value = results.map(p => ({
-        id: p.id,
-        title: p.description || (p.amount < 0 ? 'Pago' : 'Cobro'),
-        subtitle: new Date(p.date).toLocaleDateString('es-AR', {
-          day:   '2-digit',
-          month: '2-digit',
-          year:  'numeric'
-        }),
-        date:            p.date,
-        amount:          p.amount,
-        formattedAmount: p.amount.toLocaleString('es-AR', {
-          style:                'currency',
-          currency:             'ARS',
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        }),
-        icon: p.method === 'CARD' ? 'credit_card' : 'account_balance'
-      }))
+
+      activities.value = results.map(p => {
+        const get = obj =>
+          obj && typeof obj.get === 'function'
+            ? obj.get.bind(obj)
+            : key => obj[key]
+
+        const g = get(p)
+        const rawAmount = g('amount')
+        const date      = g('date')
+        const isPayerRole = role === 'PAYER'
+        const signedAmount = isPayerRole ? -rawAmount : rawAmount
+
+        return {
+          id:         g('id'),
+          title:      g('description') || (signedAmount < 0 ? 'Pago' : 'Cobro'),
+          subtitle:   new Date(date).toLocaleDateString('es-AR', {
+                        day: '2-digit', month: '2-digit', year: 'numeric'
+                      }),
+          date,
+          amount:     signedAmount,
+          formattedAmount: Math.abs(signedAmount).toLocaleString('es-AR', {
+                             style:    'currency',
+                             currency: 'ARS',
+                             minimumFractionDigits: 2,
+                             maximumFractionDigits: 2
+                           }),
+          icon:       (g('method') === 'CARD' ? 'credit_card' : 'account_balance'),
+          payerId:    get(g('payer'))('id'),
+          receiverId: get(g('receiver'))('id')
+        }
+      })
     }
     catch (err) {
-      console.error('Error cargando actividades:', err)
+      console.error(err)
       errorMessage.value = err.message || 'Error desconocido'
-      activities.value  = []
+      activities.value   = []
     }
     finally {
       isLoading.value = false
     }
   }
 
-  const getFilteredActivities = computed(() => {
-    return (month, year) =>
-      activities.value.filter(a => {
-        const d = new Date(a.date)
-        return (month === -1 || d.getMonth() === month)
-            && (year  === -1 || d.getFullYear() === year)
-      })
-  })
+  const getFilteredActivities = computed(() => (m, y) =>
+    activities.value.filter(a => {
+      const d = new Date(a.date)
+      return (m === -1 || d.getMonth() === m)
+          && (y === -1 || d.getFullYear() === y)
+    })
+  )
 
-  const getRecentActivities = computed(() => {
-    return (limit = 10) => activities.value.slice(0, limit)
-  })
+  const getRecentActivities = computed(() => (limit = 10) =>
+    activities.value.slice(0, limit)
+  )
 
   return {
     activities,

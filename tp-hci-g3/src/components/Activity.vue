@@ -25,7 +25,7 @@
         </div>
         <div 
           class="amount"
-          :class="{ positive: item.amount > 0, negative: item.amount < 0 }"
+          :class="{ negative: item.amount < 0, positive: item.amount >= 0 }"
         >
           {{ formatAmount(item) }}
         </div>
@@ -35,9 +35,9 @@
   </div>
 </template>
 
-
 <script setup>
 import { computed } from 'vue'
+import { useUserStore } from '@/stores/UserStore'
 
 const props = defineProps({
   activities: {
@@ -62,17 +62,8 @@ const props = defineProps({
   }
 })
 
-function formatAmount(value) {
-  if (value.formattedAmount) {
-    return value.formattedAmount
-  }
-  const formatted = Math.abs(value.amount || value).toLocaleString('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  })
-  return (value.amount < 0 || value < 0 ? '-' : '+') + formatted
+function formatAmount(item) {
+  return `${item.amount < 0 ? '-' : '+'}${item.formattedAmount}`
 }
 
 function handleClick(item) {
@@ -81,13 +72,14 @@ function handleClick(item) {
 
 const filteredActivities = computed(() => {
   return props.activities.filter(activity => {
-    const activityDate = new Date(activity.date)
-    const matchesMonth = props.month === -1 || activityDate.getMonth() === props.month
-    const matchesYear = props.year === -1 || activityDate.getFullYear() === props.year
+    const d = new Date(activity.date)
+    const matchesMonth = props.month === -1 || d.getMonth() === props.month
+    const matchesYear  = props.year  === -1 || d.getFullYear() === props.year
     return matchesMonth && matchesYear
   })
 })
 </script>
+
 
 <style scoped>
 .activity-card-outer {
@@ -201,7 +193,6 @@ const filteredActivities = computed(() => {
   padding: 2rem 0;
 }
 
-
 @media (max-width: 500px) {
   .info {
     flex-direction: column;
@@ -228,4 +219,5 @@ const filteredActivities = computed(() => {
     margin-top: 0;
   }
 }
+
 </style>
