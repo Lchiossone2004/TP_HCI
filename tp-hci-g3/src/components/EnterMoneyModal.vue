@@ -37,6 +37,9 @@
   import { usePaymentStore } from '@/stores/PaymetStore'
   import { useAccountStore } from '@/stores/AccountStore'
   import { useActivityStore } from '@/stores/ActivityStore'
+ 
+
+  const accountStore = useAccountStore();
 
   const props = defineProps(['modelValue']);
   const emit = defineEmits(['update:modelValue']);

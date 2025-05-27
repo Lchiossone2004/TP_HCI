@@ -100,7 +100,8 @@ export const usePaymentStore = defineStore('payment', () => {
     const accountStore = useAccountStore();
     
     if (tipo === 'ingreso') {
-      accountStore.balance += monto;
+      await accountStore.chargeBalance(monto);
+    
       
       activityStore.addActivity({
         icon: 'add',
@@ -115,6 +116,7 @@ export const usePaymentStore = defineStore('payment', () => {
           description: 'Ingreso a tu cuenta'
         }
       });
+      await accountStore.getAccountInfo();
     }
   }
 
