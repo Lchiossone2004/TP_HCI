@@ -3,12 +3,12 @@
     <h2>Transferir a</h2>
   </div>
 
-  <!-- Fila: búsqueda por CBU/CVU/alias -->
+
   <div class="search-row">
     <input
       v-model="query"
       class="search-input"
-      placeholder="Introducir CBU, CVU o alias..."
+      placeholder="Introducir email, CVU o alias..."
       @input="errors.query = ''"
       @keyup.enter="emitSearch"
       :class="{ error: errors.query }"
@@ -18,7 +18,7 @@
     </span>
   </div>
 
-  <!-- Fila: título opcional -->
+
   <div class="search-row">
     <input
       v-model="title"
@@ -28,23 +28,26 @@
     />
   </div>
 
-  <!-- Fila: monto -->
+
   <div class="search-row">
+    <div class="input-wrapper">
+    <span class="input-prefix">$</span>
     <input
       v-model.number="monto"
-      class="search-input"
+      class="input-monto"
       type="number"
       placeholder="Monto"
       min="1"
       @input="errors.monto = ''"
       :class="{ error: errors.monto }"
     />
+    </div>
     <span class="error-message" v-if="errors.monto">
       {{ errors.monto }}
     </span>
   </div>
 
-  <!-- Fila: método de pago -->
+
   <div class="search-row">
     <select
       v-model="cardId"
@@ -85,10 +88,10 @@ import { useCardStore } from '@/stores/CardStore'
 import { useAccountStore } from '@/stores/AccountStore'
 
 const query = ref('')
-const title = ref('')        // Nuevo: estado para el título
+const title = ref('')       
 const monto = ref('')
 const cardId = ref('')
-const detalle = ref('')      // Ya existía para descripción libre
+const detalle = ref('')      
 const mensajeExito = ref('')
 const mensajeError = ref('')
 
@@ -103,7 +106,7 @@ onMounted(async () => {
   tarjetas.value = cardStore.tarjetas
 })
 
-// --- Nuevo: estado de errores de validación ---
+
 const errors = ref({
   query: '',
   monto: '',
@@ -115,19 +118,19 @@ function validate() {
   errors.value = { query: '', monto: '', cardId: '' }
 
   if (!query.value.trim()) {
-    errors.value.query = 'Campo obligatorio'
+    errors.value.query = 'Campo obligatorio.'
     isValid = false
   }
   if (!monto.value || monto.value <= 0) {
-    errors.value.monto = 'Campo obligatorio'
+    errors.value.monto = 'Campo obligatorio.'
     isValid = false
   }
   if (!cardId.value) {
-    errors.value.cardId = 'Seleccionar un método de pago'
+    errors.value.cardId = 'Seleccionar un método de pago.'
     isValid = false
   }
   if (cardId.value === 'balance' && monto.value > accountStore.balance) {
-    errors.value.monto = 'No tenés saldo suficiente'
+    errors.value.monto = 'Saldo insuficiente.'
     isValid = false
   }
 
@@ -145,37 +148,46 @@ function detectTipoEntrada(entrada) {
 }
 
 async function transferirPorEmail(email, cardId, motivo, monto) {
+  mensajeError.value = ''
+  mensajeExito.value = ''
   try {
     await paymetStore.transferViaEmail(email, cardId, motivo, monto)
-    mensajeExito.value = 'Transferencia realizada con éxito'
+    mensajeExito.value = 'Transferencia realizada con éxito!'
+    mensajeError.value = ''
     resetFormulario()
     setTimeout(() => (mensajeExito.value = ''), 3000)
   } catch (err) {
-    mensajeError.value = "Error al hacer la transferecia"
+    mensajeError.value = "Error al realizar la transferencia."
+    mensajeExito.value = ''
     console.error('Error al transferir por email:', err)
   }
 }
 
+
 async function transferirPorCVU(cvu, cardId, motivo, monto) {
+  mensajeError.value = ''
+  mensajeExito.value = ''
   try {
     await paymetStore.transferViaCVU(cvu, cardId, motivo, monto)
-    mensajeExito.value = 'Transferencia realizada con éxito'
+    mensajeExito.value = 'Transferencia realizada con éxito!'
     resetFormulario()
     setTimeout(() => (mensajeExito.value = ''), 3000)
   } catch (err) {
-    mensajeError.value = "Error al hacer la transferecia"
+    mensajeError.value = "Error al realizar la transferecia."
     console.error('Error al transferir por CVU:', err)
   }
 }
 
 async function transferirPorAlias(alias, cardId, motivo, monto) {
+  mensajeError.value = ''
+  mensajeExito.value = ''
   try {
     await paymetStore.transferViaAlias(alias, cardId, motivo, monto)
-    mensajeExito.value = 'Transferencia realizada con éxito'
+    mensajeExito.value = 'Transferencia realizada con éxito!'
     resetFormulario()
     setTimeout(() => (mensajeExito.value = ''), 3000)
   } catch (err) {
-    mensajeError.value = "Error al hacer la transferecia"
+    mensajeError.value = "Error al realizar la transferecia."
     console.error('Error al transferir por alias:', err)
   }
 }
@@ -185,7 +197,7 @@ function emitSearch() {
 
   const term = query.value.trim()
 
-  // Nuevo: combinar título y detalle en un único 'motivo'
+ 
   const textoDetalle = detalle.value.trim()
   const textoTitulo = title.value.trim()
   const motivo = textoTitulo
@@ -210,7 +222,7 @@ function emitSearch() {
 
 function resetFormulario() {
   query.value = ''
-  title.value = ''         // Nuevo: limpiar título
+  title.value = ''         
   monto.value = ''
   cardId.value = ''
   detalle.value = ''
@@ -233,7 +245,7 @@ function resetFormulario() {
     gap: 0.75rem;
     margin-top: 0.75rem;
   }
-  .search-input {
+  .search-input, .input-monto {
     flex: 1;
     padding: 0.75rem 1rem;
     border-radius: 8px;
@@ -282,6 +294,29 @@ function resetFormulario() {
   color: var(--red-error-message);
   font-size: var(--font-mini);
   margin-top: 0.25rem;
+}
+.input-wrapper {
+  position: relative;
+  width: 100%;
+  display: block;
+  margin-top: 1rem;
+}
+
+.input-prefix {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #666666;
+  font-size: 1rem;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+.input-monto {
+  width: 100%;
+  padding-left: 3rem; 
+  
 }
   </style>
   
