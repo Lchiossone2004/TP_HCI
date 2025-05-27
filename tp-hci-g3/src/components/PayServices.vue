@@ -1,76 +1,36 @@
 <template>
-    <div class="pay-services">
-        <div class="payment-form">
-        <h2>Pagar servicio</h2>
-        <form @submit.prevent="handleSubmit" class="search-form">
-            <div class="form-group">
-            <label>ID o Link del pago</label>
-            <div class="input-container" :class="{ 'error': errors.search }">
-                <input 
-                v-model="searchQuery"
-                type="text"
-                placeholder="Ingrese el ID o link del pago"
-                >
-            </div>
-            <span class="error-message" v-if="errors.search">{{ errors.search }}</span>
-            </div>
-            <button type="submit" class="search-btn">Buscar</button>
-        </form>
+  <div class="pay-services">
+    <div class="payment-form">
+      <h2>Pagar servicio</h2>
+      <form @submit.prevent="handleSubmit" class="search-form">
+        <div class="form-group">
+          <label>Código o Link del pago</label>
+          <div class="input-container" :class="{ 'error': errors.search }">
+            <input 
+              v-model="searchQuery"
+              type="text"
+              placeholder="Ingrese el código o link"
+            >
+          </div>
+          <span class="error-message" v-if="errors.search">{{ errors.search }}</span>
+        </div>
+        <button type="submit" class="search-btn">Pagar</button>
+      </form>
 
-        <div v-if="paymentFound" class="payment-details">
-            <h3>Detalles del pago</h3>
-            <div class="detail-row">
-            <label>Monto:</label>
-            <span class="amount">${{ paymentFound.amount }}</span>
-            </div>
-            <div class="detail-row">
-            <label>ID:</label>
-            <div class="info-value-container">
-                <span class="payment-text">{{ paymentFound.id }}</span>
-            </div>
-            </div>
-            <button @click="showConfirmPayment = true" class="pay-btn">Pagar ahora</button>
-        </div>
-
-        <div v-if="error && !errors.search" :class="['notification-message', { 'success': isSuccess, 'error': !isSuccess }]">
-            {{ error }}
-        </div>
-        </div>
-        <div class="balance-container">
-          <h2 class="title"> Saldo disponible</h2>
-          <BalanceCard />
-        </div>
-
-  
-        <Modal v-model="showConfirmPayment" title="Confirmar pago">
-        <div class="confirm-payment">
-            <p>¿Está seguro que desea realizar este pago?</p>
-            <div class="payment-summary">
-            <div class="summary-row">
-                <span>Monto:</span>
-                <span class="amount">${{ paymentFound?.amount }}</span>
-            </div>
-            <div class="summary-row">
-                <span>ID:</span>
-                <span class="payment-text">{{ paymentFound?.id }}</span>
-            </div>
-            </div>
-            <div class="button-group">
-            <button @click="confirmPayment" class="confirm-btn">
-                Confirmar
-            </button>
-            <button @click="showConfirmPayment = false" class="cancel-btn">
-                Cancelar
-            </button>
-            </div>
-        </div>
-        </Modal>
+      <div v-if="error" :class="['notification-message', { 'success': isSuccess, 'error': !isSuccess }]">
+        {{ error }}
+      </div>
     </div>
+
+    <div class="balance-container">
+      <h2 class="title">Saldo disponible</h2>
+      <BalanceCard />
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import Modal from './Modal.vue'
 import BalanceCard from './BalanceCard.vue'
 import { useAccountStore } from '@/stores/AccountStore'
 import { usePaymentStore } from '@/stores/PaymetStore'
@@ -79,77 +39,53 @@ const accountStore = useAccountStore()
 const paymentStore = usePaymentStore()
 
 const searchQuery = ref('')
-const paymentFound = ref(null)
 const error = ref('')
 const errors = ref({
   search: ''
 })
-const showConfirmPayment = ref(false)
 
 const isSuccess = computed(() => error.value === 'Pago procesado exitosamente')
 
 const handleSubmit = async () => {
   errors.value.search = ''
   error.value = ''
-  
+
   if (!searchQuery.value.trim()) {
-    errors.value.search = 'Campo vacío, debe ingresar un valor'
+    errors.value.search = 'Debe ingresar un código o URL'
     return
   }
 
   try {
     let code = searchQuery.value
-    
-    // Si es un link, extraer el código
-    if (searchQuery.value.includes('?')) {
-      const urlParams = new URLSearchParams(searchQuery.value.split('?')[1])
+
+    if (code.includes('?')) {
+      const urlParams = new URLSearchParams(code.split('?')[1])
       code = urlParams.get('code')
     }
 
     if (!code) {
-      error.value = 'Código de pago inválido'
+      error.value = 'Código inválido'
       return
     }
 
-    const payment = await paymentStore.getPaymentByCode(code)
-    if (payment) {
-      paymentFound.value = payment
-      error.value = ''
-    }
-  } catch (err) {
-    error.value = 'No se encontró el pago especificado'
-    paymentFound.value = null
-    console.error('Error:', err)
-  }
-}
+    const payment = await paymentStore.makePayment(code)
 
-const processPayment = async () => {
-  try {
-    if (!paymentFound.value) {
-      error.value = 'No hay pago seleccionado'
+    if (!payment) {
+      error.value = 'No se encontró el pago'
       return
     }
 
-    if (accountStore.balance < paymentFound.value.amount) {
+    if (accountStore.balance < payment.amount) {
       error.value = 'Saldo insuficiente, por favor ingrese dinero'
       return
     }
-
-    const code = paymentFound.value.metadata?.code
-    await paymentStore.payService(code)
-    
-    paymentFound.value = null
-    searchQuery.value = ''
     error.value = 'Pago procesado exitosamente'
+    searchQuery.value = ''
+
   } catch (err) {
     error.value = err.message || 'Error al procesar el pago'
     console.error('Error:', err)
   }
-}
-
-const confirmPayment = () => {
-  processPayment()
-  showConfirmPayment.value = false
 }
 </script>
 

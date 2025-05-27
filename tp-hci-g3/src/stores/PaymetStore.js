@@ -64,14 +64,19 @@ export const usePaymentStore = defineStore('payment', () => {
   } 
 
 
-  async function pushPayment(uuid, cardId){
+  async function makePayment(uuid, cardId){
     try{
       const token = localStorage.getItem('auth-token');
 
       if (!token) {
           throw new Error('No hay token de autenticación guardado.');
       }
-      const response = await fetch(`http://localhost:8080/api/payment/push?uuid=${uuid}&card=${cardId}`, {
+      console.log(uuid)
+      let url = `http://localhost:8080/api/payment/push?uuid=${encodeURIComponent(uuid)}`;
+      if (cardId != null) {
+        url += `&cardId=${encodeURIComponent(cardId)}`;
+      }
+      const response = await fetch(url, {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json',
@@ -83,8 +88,6 @@ export const usePaymentStore = defineStore('payment', () => {
           throw new Error(`Error al pagar el pago pendiente: ${response.status}`);
       }
       const data = await response.json()
-      pendingPayments = pendingPayments.filter(p => p.uuid !== uuid);
-      console.log(data)
       return data
     }
     catch(error){
@@ -437,6 +440,39 @@ export const usePaymentStore = defineStore('payment', () => {
   }
 }
 
-  return { pullPayment, pushPayment, transferViaEmail, transferViaCVU, transferViaAlias, getAllPayments, transferencias, pendingPayments, agregarTransaccion, generateServicePayment,
+async function getSinglePayment(code) {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/payment?page=1&direction=ASC&pending=true&method=null&range=LAST_MONTH&role=NULLcardId=null`,
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth-token')}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Error al obtener el pago');
+    }
+
+    const data = await response.json();
+    console.log('Respuesta completa:', data);
+
+    const payment = data.results.find(p => p.metadata?.code === code);
+
+    if (!payment) {
+      throw new Error('No se encontró el pago con ese código');
+    }
+
+    return payment;
+
+  } catch (error) {
+    console.error('Error al obtener el pago:', error);
+    throw error;
+  }
+}
+
+
+  return { pullPayment, makePayment, transferViaEmail, transferViaCVU, transferViaAlias, getAllPayments, getSinglePayment,transferencias, pendingPayments, agregarTransaccion, generateServicePayment,
     getPendingServicePayments, deleteServicePayment }
 })

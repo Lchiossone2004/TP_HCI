@@ -65,12 +65,12 @@
     <div class="pending-section">
       <h2>Pagos pendientes</h2>
       <div class="pending-list">
-        <div v-for="payment in pendingPayments" :key="payment.id" class="pending-card">
+        <div v-for="payment in pendingPayments" :key="payment.uuid" class="pending-card">
           <div class="payment-amount">${{ payment.amount }}</div>
           <div class="payment-details">
             <div class="detail-row">
-              <span>ID: {{ payment.id }}</span>
-              <button @click="copyToClipboard(payment.id)" class="copy-btn">
+              <span>Code: {{ payment.uuid }}</span>
+              <button @click="copyToClipboard(payment.uuid)" class="copy-btn">
                 <span class="material-symbols-rounded">content_copy</span>
               </button>
             </div>
