@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useUserStore } from '@/stores/UserStore'
 
 export const useActivityStore = defineStore('activity', () => {
   const activities   = ref([])
   const isLoading    = ref(false)
   const errorMessage = ref(null)
+  const userStore    = useUserStore()
 
   /**
    * @param {{ page?: number, direction?: string, pending?: boolean|null,
@@ -41,6 +43,7 @@ async function loadActivities({
     if (!res.ok) throw new Error(`Error ${res.status} cargando actividades`)
 
     const { results } = await res.json()
+    const currentUser = await userStore.getUser()
 
     activities.value = results.map(p => {
       const get = obj =>
@@ -62,12 +65,12 @@ async function loadActivities({
       const validDate = rawDate && !isNaN(new Date(rawDate)) ? new Date(rawDate) : null
 
       const rawAmount = g('amount')
-      const isPayerRole = role === 'PAYER'
-      const signedAmount = isPayerRole ? -rawAmount : rawAmount
+      const isPayer = g('payer')?.id === currentUser.id
+      const signedAmount = isPayer ? -rawAmount : rawAmount
 
       return {
         id: g('id'),
-        title: g('description') || (signedAmount < 0 ? 'Pago' : 'Cobro'),
+        title: g('description') || (isPayer ? 'Pago' : 'Cobro'),
         subtitle: validDate
           ? validDate.toLocaleDateString('es-AR', {
               day: '2-digit',
@@ -98,7 +101,6 @@ async function loadActivities({
     isLoading.value = false
   }
 }
-
 
   const getFilteredActivities = computed(() => (m, y) =>
     activities.value.filter(a => {
