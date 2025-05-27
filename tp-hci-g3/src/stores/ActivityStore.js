@@ -40,24 +40,44 @@ export const useActivityStore = defineStore('activity', () => {
       }
 
       const { results } = await res.json()
-      activities.value = results.map(p => ({
-        id: p.id,
-        title: p.description || (p.amount < 0 ? 'Pago' : 'Cobro'),
-        subtitle: new Date(p.date).toLocaleDateString('es-AR', {
-          day:   '2-digit',
-          month: '2-digit',
-          year:  'numeric'
-        }),
-        date:            p.date,
-        amount:          p.amount,
-        formattedAmount: p.amount.toLocaleString('es-AR', {
-          style:                'currency',
-          currency:             'ARS',
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        }),
-        icon: p.method === 'CARD' ? 'credit_card' : 'account_balance'
-      }))
+
+      // Aquí transformamos results para asegurarnos que metadata sea array con un objeto date
+      const resultsWithDate = results.map(p => {
+        if (!p.metadata || !Array.isArray(p.metadata)) p.metadata = []
+
+        if (!p.metadata.find(item => item.date)) {
+          p.metadata.push({ date: p.createdAt || new Date().toISOString() })
+        }
+
+        return p
+      })
+
+      activities.value = resultsWithDate.map(p => {
+        const dateEntry = p.metadata.find(item => item.date)
+        const rawDate = dateEntry ? dateEntry.date : null
+        const validDate = rawDate && !isNaN(new Date(rawDate)) ? new Date(rawDate) : null
+
+        return {
+          id: p.id,
+          title: p.description || (p.amount < 0 ? 'Pago' : 'Cobro'),
+          subtitle: validDate
+            ? validDate.toLocaleDateString('es-AR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+              })
+            : 'Fecha no disponible',
+          date: rawDate,
+          amount: p.amount,
+          formattedAmount: p.amount.toLocaleString('es-AR', {
+            style: 'currency',
+            currency: 'ARS',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }),
+          icon: p.method === 'CARD' ? 'credit_card' : 'account_balance'
+        }
+      })
     }
     catch (err) {
       console.error('Error cargando actividades:', err)
