@@ -65,8 +65,11 @@ export default {
     console.error('Error al iniciar sesión:', error);
     this.errorMessage = 'Email o contraseña incorrectos.';
   }
-}
+},
+async forgotPassword() {
+  this.$router.push({ name: 'PasswordRecovery' });
   }
+}
 };
 </script>
 
