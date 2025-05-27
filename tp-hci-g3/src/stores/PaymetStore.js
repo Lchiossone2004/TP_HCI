@@ -120,7 +120,8 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   }
 
-  async function transferViaEmail(email, cardId, motivo, monto) {
+  async function transferViaEmail(email, cardId, motivo, monto,detalle) {
+    console.log(detalle)
     try {
       const token = localStorage.getItem('auth-token');
       const accountStore = useAccountStore();
@@ -147,7 +148,7 @@ export const usePaymentStore = defineStore('payment', () => {
         body: JSON.stringify({
           description: motivo || "Transferencia",
           amount: monto,
-          metadata: {},
+          metadata: {detalle},
         })
       });
   
@@ -156,6 +157,7 @@ export const usePaymentStore = defineStore('payment', () => {
       }
   
       const data = await response.json();
+      console.log(data)
 
       // activityStore.addActivity({
       //   icon: 'sync_alt',
@@ -182,7 +184,7 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   }
 
-  async function transferViaCVU(cvu, cardId, motivo, monto){
+  async function transferViaCVU(cvu, cardId, motivo, monto,detalle){
     try{
       const token = localStorage.getItem('auth-token');
       const accountStore = useAccountStore();
@@ -209,7 +211,7 @@ export const usePaymentStore = defineStore('payment', () => {
           body: JSON.stringify({
             description: motivo || "Transferencia",
             amount: monto,
-            metadata: {}
+            metadata: {detalle}
           })
       });
 
@@ -244,7 +246,7 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   }
 
-  async function transferViaAlias(alias, cardId, motivo, monto){
+  async function transferViaAlias(alias, cardId, motivo, monto,detalle){
     try{
       const token = localStorage.getItem('auth-token');
       const accountStore = useAccountStore();
@@ -271,7 +273,7 @@ export const usePaymentStore = defineStore('payment', () => {
           body: JSON.stringify({
             description: motivo || "Transferencia",
             amount: monto,
-            metadata: {}
+            metadata: {detalle}
           })
       });
 

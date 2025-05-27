@@ -3,7 +3,6 @@
     <h2>Transferir a</h2>
   </div>
 
-
   <div class="search-row">
     <input
       v-model="query"
@@ -18,35 +17,43 @@
     </span>
   </div>
 
-
   <div class="search-row">
     <input
-      v-model="title"
+      v-model="detalle"
       class="search-input"
       type="text"
-      placeholder="Título (opcional)"        
+      placeholder="Detalle (opcional)"        
     />
   </div>
 
+  <div class="search-row">
+    <select v-model="motivo" class="search-input">
+      <option disabled value="">Seleccionar motivo</option>
+      <option value="comida">Comida</option>
+      <option value="compras">Compras</option>
+      <option value="supermercado">Supermercado</option>
+      <option value="servicios">Servicios</option>
+      <option value="varios">Varios</option>
+    </select>
+  </div>
 
   <div class="search-row">
     <div class="input-wrapper">
-    <span class="input-prefix">$</span>
-    <input
-      v-model.number="monto"
-      class="input-monto"
-      type="number"
-      placeholder="Monto"
-      min="1"
-      @input="errors.monto = ''"
-      :class="{ error: errors.monto }"
-    />
+      <span class="input-prefix">$</span>
+      <input
+        v-model.number="monto"
+        class="input-monto"
+        type="number"
+        placeholder="Monto"
+        min="1"
+        @input="errors.monto = ''"
+        :class="{ error: errors.monto }"
+      />
     </div>
     <span class="error-message" v-if="errors.monto">
       {{ errors.monto }}
     </span>
   </div>
-
 
   <div class="search-row">
     <select
@@ -74,11 +81,10 @@
   <p v-if="mensajeError" class="error-message">
     {{ mensajeError }}
   </p>
-  
+
   <button class="search-btn" @click="emitSearch">
     Transferir
   </button>
-
 </template>
 
 <script setup>
@@ -88,10 +94,10 @@ import { useCardStore } from '@/stores/CardStore'
 import { useAccountStore } from '@/stores/AccountStore'
 
 const query = ref('')
-const title = ref('')       
+const detalle = ref('')
+const motivo = ref('')
 const monto = ref('')
 const cardId = ref('')
-const detalle = ref('')      
 const mensajeExito = ref('')
 const mensajeError = ref('')
 
@@ -105,7 +111,6 @@ onMounted(async () => {
   await cardStore.getCards()
   tarjetas.value = cardStore.tarjetas
 })
-
 
 const errors = ref({
   query: '',
@@ -147,47 +152,44 @@ function detectTipoEntrada(entrada) {
   return 'alias'
 }
 
-async function transferirPorEmail(email, cardId, motivo, monto) {
+async function transferirPorEmail(email, cardId, detalle, monto, motivo) {
   mensajeError.value = ''
   mensajeExito.value = ''
   try {
-    await paymetStore.transferViaEmail(email, cardId, motivo, monto)
+    await paymetStore.transferViaEmail(email, cardId, detalle, monto, motivo)
     mensajeExito.value = 'Transferencia realizada con éxito!'
-    mensajeError.value = ''
     resetFormulario()
     setTimeout(() => (mensajeExito.value = ''), 3000)
   } catch (err) {
     mensajeError.value = "Error al realizar la transferencia."
-    mensajeExito.value = ''
     console.error('Error al transferir por email:', err)
   }
 }
 
-
-async function transferirPorCVU(cvu, cardId, motivo, monto) {
+async function transferirPorCVU(cvu, cardId, detalle, monto, motivo) {
   mensajeError.value = ''
   mensajeExito.value = ''
   try {
-    await paymetStore.transferViaCVU(cvu, cardId, motivo, monto)
+    await paymetStore.transferViaCVU(cvu, cardId, detalle, monto, motivo)
     mensajeExito.value = 'Transferencia realizada con éxito!'
     resetFormulario()
     setTimeout(() => (mensajeExito.value = ''), 3000)
   } catch (err) {
-    mensajeError.value = "Error al realizar la transferecia."
+    mensajeError.value = "Error al realizar la transferencia."
     console.error('Error al transferir por CVU:', err)
   }
 }
 
-async function transferirPorAlias(alias, cardId, motivo, monto) {
+async function transferirPorAlias(alias, cardId, detalle, monto, motivo) {
   mensajeError.value = ''
   mensajeExito.value = ''
   try {
-    await paymetStore.transferViaAlias(alias, cardId, motivo, monto)
+    await paymetStore.transferViaAlias(alias, cardId, detalle, monto, motivo)
     mensajeExito.value = 'Transferencia realizada con éxito!'
     resetFormulario()
     setTimeout(() => (mensajeExito.value = ''), 3000)
   } catch (err) {
-    mensajeError.value = "Error al realizar la transferecia."
+    mensajeError.value = "Error al realizar la transferencia."
     console.error('Error al transferir por alias:', err)
   }
 }
@@ -196,104 +198,92 @@ function emitSearch() {
   if (!validate()) return
 
   const term = query.value.trim()
-
- 
-  const textoDetalle = detalle.value.trim()
-  const textoTitulo = title.value.trim()
-  const motivo = textoTitulo
-    ? `${textoTitulo}${textoDetalle ? ' - ' + textoDetalle : ''}`
-    : textoDetalle
-
+  const detalleTexto = detalle.value.trim()
   const idTarjeta = cardId.value === 'balance' ? null : cardId.value
   const tipo = detectTipoEntrada(term)
 
   switch (tipo) {
     case 'email':
-      transferirPorEmail(term, idTarjeta, motivo, monto.value)
+      transferirPorEmail(term, idTarjeta, detalleTexto, monto.value, motivo.value)
       break
     case 'cvu':
-      transferirPorCVU(term, idTarjeta, motivo, monto.value)
+      transferirPorCVU(term, idTarjeta, detalleTexto, monto.value, motivo.value)
       break
     case 'alias':
-      transferirPorAlias(term, idTarjeta, motivo, monto.value)
+      transferirPorAlias(term, idTarjeta, detalleTexto, monto.value, motivo.value)
       break
   }
 }
 
 function resetFormulario() {
   query.value = ''
-  title.value = ''         
+  detalle.value = ''
+  motivo.value = ''
   monto.value = ''
   cardId.value = ''
-  detalle.value = ''
 }
 </script>
-  
-  <style scoped>
-  .search-panel {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 1.5rem;
-  }
-  .search-title {
-    color: #1f2937;
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
-  }
-  .search-row {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
-  }
-  .search-input, .input-monto {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    background: #dbdbdb;
-    color: #1f2937;
-    border: 2px solid #ffffff;
-    transition: border-color 0.2s;
-  }
-  .search-input::placeholder {
-    color: #aaa;
-  }
-  .search-input:focus {
-    border-color: var(--blue-link);
-  }
-  .search-btn {
-    background: var(--blue-button);
-    color: var(--white-text);
-    padding: 1rem;
-    border-radius: var(--button-radius);
-    font-size: var(--font-text);
-    margin-top: 0.75rem;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .search-btn:disabled {
-    background: #134297;
-    cursor: not-allowed;
-  }
-  .search-btn:hover:enabled {
-    background: var(--blue-button-hover);
-  }
-  .success-message {
+
+<style scoped>
+.search-panel {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+.search-title {
+  color: #1f2937;
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+.search-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+.search-input, .input-monto {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #dbdbdb;
+  color: #1f2937;
+  border: 2px solid #ffffff;
+  transition: border-color 0.2s;
+}
+.search-input::placeholder {
+  color: #aaa;
+}
+.search-input:focus {
+  border-color: var(--blue-link);
+}
+.search-btn {
+  background: var(--blue-button);
+  color: var(--white-text);
+  padding: 1rem;
+  border-radius: var(--button-radius);
+  font-size: var(--font-text);
+  margin-top: 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.search-btn:disabled {
+  background: #134297;
+  cursor: not-allowed;
+}
+.search-btn:hover:enabled {
+  background: var(--blue-button-hover);
+}
+.success-message {
   color: var(--green);
   margin-top: 0.5rem;
-}
-  .error-message{
-    color: var(--red);
-  margin-top: 0.5rem;
-  }
-
-.error {
-  border: 2px solid var(--red-error-message);
 }
 .error-message {
   color: var(--red-error-message);
   font-size: var(--font-mini);
   margin-top: 0.25rem;
+}
+.error {
+  border: 2px solid var(--red-error-message);
 }
 .input-wrapper {
   position: relative;
@@ -301,7 +291,6 @@ function resetFormulario() {
   display: block;
   margin-top: 1rem;
 }
-
 .input-prefix {
   position: absolute;
   top: 50%;
@@ -315,8 +304,6 @@ function resetFormulario() {
 }
 .input-monto {
   width: 100%;
-  padding-left: 3rem; 
-  
+  padding-left: 3rem;
 }
-  </style>
-  
+</style>
