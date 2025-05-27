@@ -41,7 +41,7 @@ export const useActivityStore = defineStore('activity', () => {
 
       const { results } = await res.json()
 
-      // Aquí transformamos results para asegurarnos que metadata sea array con un objeto date
+
       const resultsWithDate = results.map(p => {
         if (!p.metadata || !Array.isArray(p.metadata)) p.metadata = []
 
