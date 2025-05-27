@@ -40,21 +40,20 @@ import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import EnterMoneyModal from '@/components/EnterMoneyModal.vue';
 import { usePaymentStore } from '@/stores/PaymetStore';
+import { useAccountStore } from '@/stores/AccountStore';
+const accountStore = useAccountStore();
 
 const router = useRouter();
-const store = usePaymentStore();
 
-const showMyInfoModal = ref(false);
+
+
 const mostrarModal = ref(false);
 const monto = ref(0);
 const montoTotal = ref(0); 
 
 
 onMounted(() => {
-  const guardado = localStorage.getItem('montoTotal');
-  if (guardado) {
-    montoTotal.value = Number(guardado);
-  }
+  accountStore.getAccountInfo();
 });
 
 function abrirModalIngreso() {

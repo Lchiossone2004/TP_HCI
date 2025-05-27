@@ -1,42 +1,23 @@
 <template>
   <Modal v-model="show" title="Datos de mi cuenta">
     <div class="edit-form">
-      <div
-        v-for="key in editableKeys"
-        :key="key"
-        class="form-field"
-      >
-        <div class="field-header">
-          <label>{{ labels[key] }}</label>
-          <button 
-            v-if="!editingField[key]" 
-            class="edit-button"
-            @click="startEditing(key)"
-          >
-            <span class="material-symbols-rounded">edit</span>
-          </button>
-          <button 
-            v-else 
-            class="save-button"
-            @click="saveField(key)"
-          >
-            <span class="material-symbols-rounded">check</span>
-          </button>
-        </div>
-        <input
-  v-if="editingField[key]"
-  v-model="editableFields[key]"
-  :type="inputTypes[key]"
-  class="edit-input"
-  @keyup.enter="saveField(key)"
-  :readonly="key === 'cvu'"
-/>
-        <div v-else class="field-value">
-          {{ editableFields[key] }}
-        </div>
+      
+    
+      <div class="form-field">
+        <label>Nombre</label>
+        <div class="field-value">{{ editableFields.nombre }}</div>
       </div>
 
-    
+      <div class="form-field">
+        <label>Apellido</label>
+        <div class="field-value">{{ editableFields.apellido }}</div>
+      </div>
+
+      <div class="form-field">
+        <label>Email</label>
+        <div class="field-value">{{ editableFields.email }}</div>
+      </div>
+
       <div class="form-field">
         <label>CVU</label>
         <div class="field-value">
@@ -46,52 +27,57 @@
           </span>
         </div>
       </div>
-    </div>
-    <div class="form-field">
-  <label>Avatar</label>
-  <div class="avatar-options">
-  <div
-    v-for="avatar in avatarList"
-    :key="avatar"
-    :class="['avatar-box', { selected: selectedAvatar === avatar }]"
-    @click="selectAvatar(avatar)"
-  >
-    <img :src="avatar" />
-  </div>
-</div>
 
-</div>
 
+      <div class="form-field">
+        <div class="field-header">
+          <label>Alias</label>
+          <button 
+            v-if="!editingField.alias" 
+            class="edit-button"
+            @click="startEditing('alias')"
+          >
+            <span class="material-symbols-rounded">edit</span>
+          </button>
+          <button 
+            v-else 
+            class="save-button"
+            @click="saveField('alias')"
+          >
+            <span class="material-symbols-rounded">check</span>
+          </button>
+        </div>
+        <input
+          v-if="editingField.alias"
+          v-model="editableFields.alias"
+          type="text"
+          class="edit-input"
+          @keyup.enter="saveField('alias')"
+        />
+        <div v-else class="field-value">
+          {{ editableFields.alias }}
+          <span class="material-symbols-rounded copy-icon" @click="copyToClipboard(editableFields.alias)">
+            content_copy
+          </span>
+        </div>
+      </div>
     <div class="buttons-container">
       <button class="submit-button" @click="saveChanges">Guardar cambios</button>
       <button class="cancel-button" @click="closeModal">Cancelar</button>
     </div>
+  </div>
   </Modal>
 </template>
 
 
+
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import Modal from './Modal.vue'
-import { useUserStore } from '@/stores/UserStore'
 import { useAccountStore } from '@/stores/AccountStore'
 
-const userStore = useUserStore()
+
 const accountStore = useAccountStore()
-const avatarList = [
-'src/assets/images/avatars/default-profile-picture.png',
-  'src/assets/images/avatars/Avatar1.jpg',
-  'src/assets/images/avatars/Avatar2.jpg',
-  'src/assets/images/avatars/Avatar4.jpg',
-  'src/assets/images/avatars/Avatar5.jpg'
-
-]
-
-const selectedAvatar = ref('')
-
-function selectAvatar(avatar) {
-  selectedAvatar.value = avatar
-}
 
 const props = defineProps({
   modelValue: Boolean,
@@ -108,35 +94,15 @@ const show = computed({
   set: (value) => emit('update:modelValue', value)
 })
 
-const labels = {
-  nombre: 'Nombre',
-  apellido: 'Apellido',
-  email: 'Email',
-  cvu: 'CVU',
-  alias: 'Alias'
-}
-
-const inputTypes = {
-  nombre: 'text',
-  apellido: 'text',
-  email: 'email',
-  cvu: 'text',
-  alias: 'text'
-}
-
 const editableFields = ref({
-  nombre: props.perfil.firstname || props.perfil.nombre || '',
-  apellido: props.perfil.lastname || props.perfil.apellido || '',
+  nombre:  props.perfil.nombre || '',
+  apellido: props.perfil.apellido || '',
   email: props.perfil.email || '',
   cvu: '',
   alias: ''
 })
 
 const editingField = ref({})
-
-const editableKeys = computed(() =>
-  Object.keys(editableFields.value).filter(k => k !== 'cvu')
-)
 
 const startEditing = (field) => {
   editingField.value[field] = true
@@ -148,32 +114,14 @@ const saveField = (field) => {
 
 const saveChanges = async () => {
   try {
-    const { nombre, apellido, email, alias } = editableFields.value
-    await userStore.updateUser({
-      firstname: nombre,
-      lastname: apellido,
-      email
-    })
+    const { alias } = editableFields.value
     await accountStore.updateAlias(alias)
 
-    await userStore.updateUser({
-  firstName: nombre,
-  lastName: apellido,
-  email,
-  avatar: selectedAvatar.value
+    emit('update:perfil', {
+      ...props.perfil,
+      alias
+    })
 
-})
-
-
-emit('update:perfil', {
-  ...props.perfil,
-  nombre,
-  apellido,
-  email,
-  alias,
-  firstName: nombre,
-  lastName: apellido
-})
     show.value = false
     alert('Perfil actualizado correctamente')
   } catch (error) {
@@ -181,6 +129,7 @@ emit('update:perfil', {
     alert('Hubo un error al guardar los cambios')
   }
 }
+
 
 const resetFields = () => {
   editableFields.value = {
@@ -211,17 +160,10 @@ onMounted(async () => {
     await accountStore.getAccountInfo()
     editableFields.value.alias = accountStore.alias
     editableFields.value.cvu = accountStore.cvu
-    selectedAvatar.value = props.perfil.avatar || avatarList[0]
   } catch (err) {
     console.error('No se pudo cargar alias/cvu:', err)
   }
 })
-
-watch(() => props.perfil, () => {
-  resetFields()
-  selectedAvatar.value = props.perfil.avatar || avatarList[0]
-}, { immediate: true, deep: true })
-
 </script>
 
 
@@ -337,38 +279,6 @@ watch(() => props.perfil, () => {
 .copy-icon:hover {
   color: var(--blue-button-hover);
 }
-.avatar-options {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
 
-.avatar-box {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid transparent;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color 0.2s;
-  background-color: #f2f2f2;
-}
-
-.avatar-box.selected {
-  border-color: #4caf50;
-}
-
-.avatar-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.avatar-options img.selected {
-  border-color: #4caf50;
-}
 
 </style>
