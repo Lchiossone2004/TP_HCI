@@ -12,13 +12,11 @@ body, html, #app {
   --font-subtitle: 20px;
   --font-text: 17px;
   --font-mini: 14px;
-
   
   --icon-big: 35px;
   --icon-mid: 25px;
   --icon-little: 20px;
 
- 
   --icon-wrapper:35px;
 
   --white-inputs: #ffffff;
@@ -37,6 +35,7 @@ body, html, #app {
 
   --red-danger: #ff4d4d;
   --red-button: #9e0000;
+  --red-error-message: #dc3545;
   --green: #00a862;
 
 
