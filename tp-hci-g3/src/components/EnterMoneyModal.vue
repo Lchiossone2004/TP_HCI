@@ -72,8 +72,8 @@
   async function confirmarIngreso() {
     if (monto.value > 0) {
       await store.agregarTransaccion(monto.value, 'ingreso');
-      activityStore.loadActivities();
-      cerrarModalIngreso();
+      await activityStore.loadActivities();
+      emit('update:modelValue', false);
     }
   }
   </script>

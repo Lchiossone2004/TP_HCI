@@ -65,15 +65,17 @@
     </span>
   </div>
 
-  <!-- Botón de envío -->
+  <p v-if="mensajeExito" class="success-message">
+    {{ mensajeExito }}
+  </p>
+  <p v-if="mensajeError" class="error-message">
+    {{ mensajeError }}
+  </p>
+  
   <button class="search-btn" @click="emitSearch">
     Transferir
   </button>
 
-  <!-- Mensaje de éxito -->
-  <p v-if="mensajeExito" class="success-message">
-    {{ mensajeExito }}
-  </p>
 </template>
 
 <script setup>
@@ -88,6 +90,7 @@ const monto = ref('')
 const cardId = ref('')
 const detalle = ref('')      // Ya existía para descripción libre
 const mensajeExito = ref('')
+const mensajeError = ref('')
 
 const emit = defineEmits(['search'])
 const paymetStore = usePaymentStore()
@@ -148,6 +151,7 @@ async function transferirPorEmail(email, cardId, motivo, monto) {
     resetFormulario()
     setTimeout(() => (mensajeExito.value = ''), 3000)
   } catch (err) {
+    mensajeError.value = "Error al hacer la transferecia"
     console.error('Error al transferir por email:', err)
   }
 }
@@ -159,6 +163,7 @@ async function transferirPorCVU(cvu, cardId, motivo, monto) {
     resetFormulario()
     setTimeout(() => (mensajeExito.value = ''), 3000)
   } catch (err) {
+    mensajeError.value = "Error al hacer la transferecia"
     console.error('Error al transferir por CVU:', err)
   }
 }
@@ -170,6 +175,7 @@ async function transferirPorAlias(alias, cardId, motivo, monto) {
     resetFormulario()
     setTimeout(() => (mensajeExito.value = ''), 3000)
   } catch (err) {
+    mensajeError.value = "Error al hacer la transferecia"
     console.error('Error al transferir por alias:', err)
   }
 }
@@ -264,6 +270,10 @@ function resetFormulario() {
   color: var(--green);
   margin-top: 0.5rem;
 }
+  .error-message{
+    color: var(--red);
+  margin-top: 0.5rem;
+  }
 
 .error {
   border: 2px solid var(--red-error-message);

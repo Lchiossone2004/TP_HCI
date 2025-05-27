@@ -103,19 +103,19 @@ export const usePaymentStore = defineStore('payment', () => {
       await accountStore.chargeBalance(monto);
     
       
-      activityStore.addActivity({
-        icon: 'add',
-        title: 'Ingreso de dinero',
-        subtitle: 'Ingreso a tu cuenta',
-        amount: monto,
-        formattedAmount: formatAmount(monto),
-        type: 'income',
-        method: 'balance',
-        date: new Date().toISOString(),
-        details: {
-          description: 'Ingreso a tu cuenta'
-        }
-      });
+      // activityStore.addActivity({
+      //   icon: 'add',
+      //   title: 'Ingreso de dinero',
+      //   subtitle: 'Ingreso a tu cuenta',
+      //   amount: monto,
+      //   formattedAmount: formatAmount(monto),
+      //   type: 'income',
+      //   method: 'balance',
+      //   date: new Date().toISOString(),
+      //   details: {
+      //     description: 'Ingreso a tu cuenta'
+      //   }
+      // });
       await accountStore.getAccountInfo();
     }
   }
@@ -157,20 +157,20 @@ export const usePaymentStore = defineStore('payment', () => {
   
       const data = await response.json();
 
-      activityStore.addActivity({
-        icon: 'sync_alt',
-        title: `Transferencia a ${email}`,
-        subtitle: motivo || "Transferencia",
-        amount: -monto,
-        formattedAmount: formatAmount(-monto),
-        type: 'transfer',
-        method: cardId ? 'card' : 'balance',
-        date: new Date().toISOString(),
-        details: {
-          recipient: email,
-          description: motivo || "Transferencia"
-        }
-      });
+      // activityStore.addActivity({
+      //   icon: 'sync_alt',
+      //   title: `Transferencia a ${email}`,
+      //   subtitle: motivo || "Transferencia",
+      //   amount: -monto,
+      //   formattedAmount: formatAmount(-monto),
+      //   type: 'transfer',
+      //   method: cardId ? 'card' : 'balance',
+      //   date: new Date().toISOString(),
+      //   details: {
+      //     recipient: email,
+      //     description: motivo || "Transferencia"
+      //   }
+      // });
   
       if(cardId == null){
         accountStore.balance -= monto;
@@ -218,20 +218,20 @@ export const usePaymentStore = defineStore('payment', () => {
       }
       const data = await response.json()
     
-      activityStore.addActivity({
-        icon: 'sync_alt',
-        title: `Transferencia a CVU ${cvu.slice(-4)}`,
-        subtitle: motivo || "Transferencia",
-        amount: -monto,
-        formattedAmount: formatAmount(-monto),
-        type: 'transfer',
-        method: cardId ? 'card' : 'balance',
-        date: new Date().toISOString(),
-        details: {
-          recipient: cvu,
-          description: motivo || "Transferencia"
-        }
-      });
+      // activityStore.addActivity({
+      //   icon: 'sync_alt',
+      //   title: `Transferencia a CVU ${cvu.slice(-4)}`,
+      //   subtitle: motivo || "Transferencia",
+      //   amount: -monto,
+      //   formattedAmount: formatAmount(-monto),
+      //   type: 'transfer',
+      //   method: cardId ? 'card' : 'balance',
+      //   date: new Date().toISOString(),
+      //   details: {
+      //     recipient: cvu,
+      //     description: motivo || "Transferencia"
+      //   }
+      // });
 
       if(cardId == null){
         accountStore.balance -= monto;
@@ -280,20 +280,20 @@ export const usePaymentStore = defineStore('payment', () => {
       }
       const data = await response.json()
     
-      activityStore.addActivity({
-        icon: 'sync_alt',
-        title: `Transferencia a ${alias}`,
-        subtitle: motivo || "Transferencia",
-        amount: -monto,
-        formattedAmount: formatAmount(-monto),
-        type: 'transfer',
-        method: cardId ? 'card' : 'balance',
-        date: new Date().toISOString(),
-        details: {
-          recipient: alias,
-          description: motivo || "Transferencia"
-        }
-      });
+      // activityStore.addActivity({
+      //   icon: 'sync_alt',
+      //   title: `Transferencia a ${alias}`,
+      //   subtitle: motivo || "Transferencia",
+      //   amount: -monto,
+      //   formattedAmount: formatAmount(-monto),
+      //   type: 'transfer',
+      //   method: cardId ? 'card' : 'balance',
+      //   date: new Date().toISOString(),
+      //   details: {
+      //     recipient: alias,
+      //     description: motivo || "Transferencia"
+      //   }
+      // });
 
       if(cardId == null){
         accountStore.balance -= monto;
