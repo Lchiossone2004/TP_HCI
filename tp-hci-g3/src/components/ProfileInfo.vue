@@ -10,7 +10,7 @@
       <div class="profile-image">
         <img :src="perfil.avatar"  :alt="perfil.nombre" />
         <h2>{{ perfil.nombre }}</h2>
-        <a :href="`mailto:${perfil.email}`">{{ perfil.email }}</a>
+        <h3>{{ perfil.email }}</h3>
       </div>
       
       <div class="profile-details">
@@ -127,8 +127,8 @@ const copyToClipboard = async (text) => {
     margin: 1rem 0;
   }
 
-  .profile-image a {
-    color: var(--blue-link);
+  .profile-image h3 {
+    color: var(--light-grey);
     text-decoration: none;
     font-size: var(--font-text);
   }
