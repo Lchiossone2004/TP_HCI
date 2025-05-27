@@ -7,10 +7,10 @@
       />
       <ProfileActions @edit="handleEditProfile" />
       <EditProfileModal
-  v-model="showEditModal"
-  :perfil="perfil"
-  @update:perfil="actualizarPerfil"
-/>
+      v-model="showEditModal"
+      :perfil="perfil"
+      @update:perfil="actualizarPerfil"
+    />
 
     </main>
   </div>
