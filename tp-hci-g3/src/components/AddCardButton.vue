@@ -13,10 +13,10 @@
             type="text"
             placeholder="XXXX XXXX XXXX XXXX"
             maxlength="19"
-            @input="errors.number = ''; formatCardNumber()"   
-            :class="{ error: errors.number }"                  
+            @input="errors.number = ''; formatCardNumber($event)"
+            :class="{ error: errors.number }"
           />
-          <span class="error-message" v-if="errors.number">   
+          <span class="error-message" v-if="errors.number">
             {{ errors.number }}
           </span>
         </div>
@@ -29,8 +29,8 @@
               type="text"
               placeholder="MM/YY"
               maxlength="5"
-              @input="errors.expirationDate = ''; formatExpiry()" 
-              :class="{ error: errors.expirationDate }" 
+              @input="errors.expirationDate = ''; formatExpiry($event)"
+              :class="{ error: errors.expirationDate }"
             />
             <span class="error-message" v-if="errors.expirationDate">
               {{ errors.expirationDate }}
@@ -43,8 +43,8 @@
               type="text"
               :placeholder="isAmex ? '1234' : '123'"
               :maxlength="isAmex ? 4 : 3"
-              @input="errors.cvv = ''; formatCVV()"
-              :class="{ error: errors.cvv }"                      
+              @input="errors.cvv = ''; formatCVV($event)"
+              :class="{ error: errors.cvv }"
             />
             <span class="error-message" v-if="errors.cvv">
               {{ errors.cvv }}
@@ -58,8 +58,8 @@
             v-model="newCard.fullName"
             type="text"
             placeholder="NOMBRE APELLIDO"
-            @input="errors.fullName = ''; formatName()"        
-            :class="{ error: errors.fullName }"                
+            @input="errors.fullName = ''; formatName($event)"
+            :class="{ error: errors.fullName }"
           />
           <span class="error-message" v-if="errors.fullName">
             {{ errors.fullName }}
@@ -74,7 +74,7 @@
                 type="radio"
                 value="CREDIT"
                 v-model="newCard.type"
-                @change="errors.type = ''"                   
+                @change="errors.type = ''"
               />
               Crédito
             </label>
@@ -83,12 +83,12 @@
                 type="radio"
                 value="DEBIT"
                 v-model="newCard.type"
-                @change="errors.type = ''"                   
+                @change="errors.type = ''"
               />
               Débito
             </label>
           </div>
-          <span class="error-message" v-if="errors.type"> 
+          <span class="error-message" v-if="errors.type">
             {{ errors.type }}
           </span>
         </div>
@@ -122,6 +122,7 @@ const isAmex = computed(() =>
   newCard.value.number.replace(/\s/g, '').startsWith('3')
 )
 
+// estado de errores
 const errors = ref({
   number: '',
   expirationDate: '',
@@ -180,50 +181,53 @@ const handleAddCard = () => {
   showModal.value = false
 }
 
+// ---------- Funciones de formato y validación ----------
 
 const formatCardNumber = (event) => {
-  let value = event.target.value.replace(/\D/g, '')
-  value = value.replace(/(.{4})/g, '$1 ').trim()
-  newCard.value.number = value
+  // Nuevo: extraer solo dígitos
+  let digits = event.target.value.replace(/\D/g, '')
+  // Nuevo: primer dígito debe ser 3, 4 o 5
+  if (digits.length > 0 && !['3','4','5'].includes(digits[0])) {
+    errors.value.number = 'El número debe empezar con 3, 4 o 5'
+    newCard.value.number = ''
+    return
+  } else {
+    errors.value.number = ''
+  }
+  // Nuevo: agrupar de a 4 dígitos
+  const grouped = digits.match(/.{1,4}/g)?.join(' ') || ''
+  newCard.value.number = grouped
 }
 
 const formatExpiry = (event) => {
-  let value = event.target.value.replace(/\D/g, '')
-  if (value.length === 0) {
-    newCard.value.expirationDate = ''
-    errors.value.expirationDate = '' 
-    return
-  }
-  if (value.length >= 2) {
-    let month = value.slice(0, 2)
-    let year = value.slice(2, 4)
-    const monthNum = parseInt(month)
-    if (monthNum > 12 || monthNum === 0) {
+  // Nuevo: extraer solo dígitos y límite de 4 caracteres (MMYY)
+  let digits = event.target.value.replace(/\D/g, '').slice(0, 4)
+  // Nuevo: si ya hay dos dígitos, validar mes y agregar "/"
+  if (digits.length >= 2) {
+    const month = digits.slice(0, 2)
+    const mNum = parseInt(month, 10)
+    if (mNum < 1 || mNum > 12) {
       errors.value.expirationDate = 'Mes inválido'
-      return
     } else {
       errors.value.expirationDate = ''
     }
-    month = month.padStart(2, '0')
-    newCard.value.expirationDate = year
-      ? `${month}/${year}`
-      : month
-  } else {
-    newCard.value.expirationDate = value
+    digits = month + (digits.length > 2 ? '/' + digits.slice(2) : '/')
   }
+  newCard.value.expirationDate = digits
 }
 
 const formatCVV = (event) => {
-  let value = event.target.value.replace(/\D/g, '')
-  const maxLength = isAmex.value ? 4 : 3
-  newCard.value.cvv = value.slice(0, maxLength)
+  // Nuevo: solo dígitos, hasta 4 o 3 según Amex
+  const digits = event.target.value.replace(/\D/g, '')
+  const max = isAmex.value ? 4 : 3
+  newCard.value.cvv = digits.slice(0, max)
 }
 
 const formatName = (event) => {
-  newCard.value.fullName = event.target.value.replace(/[^a-zA-Z\s]/g, '')
+  // Nuevo: solo letras y espacios
+  newCard.value.fullName = event.target.value.replace(/[^A-Za-z\s]/g, '')
 }
 </script>
-
 
 <style scoped>
 .add-card-form {
@@ -251,7 +255,6 @@ const formatName = (event) => {
   font-weight: normal;
   gap: 0.25rem;
 }
-
 
 .form-row {
   display: flex;
@@ -321,7 +324,7 @@ input:focus {
 }
 
 .error {
-  border-color: var(--red-error-message) !important;
+  border-color: var(--red-error-message);
 }
 .error-message {
   color: var(--red-error-message);

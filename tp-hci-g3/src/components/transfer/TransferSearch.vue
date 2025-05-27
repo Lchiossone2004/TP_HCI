@@ -241,7 +241,6 @@ function resetFormulario() {
     color: #aaa;
   }
   .search-input:focus {
-    outline: none;
     border-color: var(--blue-link);
   }
   .search-btn {
