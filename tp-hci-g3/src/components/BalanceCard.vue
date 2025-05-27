@@ -8,7 +8,7 @@
     </div>
     <div class="balance-amount">
       <span class="balance-value">
-        {{ visible ? formattedBalance : '***' }}
+        {{ visible ? formattedBalance : '****' }}
       </span>
       <span class="coin">ARS</span>
     </div>

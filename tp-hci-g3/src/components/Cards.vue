@@ -1,22 +1,26 @@
 <template>
   <div class="credit-card" :class="cardTypeClass">
     <div class="card-header">
-      <template v-if="cardBrand">
-  <img 
-    :src="getCardLogo(props.card.number)" 
-    :alt="cardBrand" 
-    :class="['card-logo', `card-logo-${cardBrand}`]"
-  />
-</template>
-<template v-else>
-  <span class="material-symbols-rounded generic-icon">credit_card</span>
-</template>
+  <div class="left-section">
+    <template v-if="cardBrand">
+      <img 
+        :src="getCardLogo(props.card.number)" 
+        :alt="cardBrand" 
+        :class="['card-logo', `card-logo-${cardBrand}`]"
+      />
+    </template>
+    <template v-else>
+      <span class="material-symbols-rounded generic-icon">credit_card</span>
+    </template>
 
-  <span class="card-type">{{ props.card.type }}</span>
+    <span class="card-type">{{ props.card.type }}</span>
+  </div>
+
   <button class="delete-btn" @click="showConfirmDelete = true">
     <span class="material-symbols-rounded">delete</span>
   </button>
 </div>
+
 
 
     <div class="card-number">
@@ -145,12 +149,6 @@ const handleConfirmDelete = () => {
   height: 30px;
   object-fit: contain;
 }
-.card-type{
-  display: flex;
-  margin-right: 7rem;
-  margin-top: 1.5rem;
-}
-
 .card-logo-mastercard {
   height: 40px;
   margin-top: -5px;
@@ -172,6 +170,26 @@ const handleConfirmDelete = () => {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.card-type {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.7);
+  position: relative;
+  top: -2px;
 }
 
 .delete-btn:hover {
