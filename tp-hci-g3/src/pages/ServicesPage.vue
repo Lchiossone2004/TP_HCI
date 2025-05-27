@@ -29,14 +29,13 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import ChargeServices from '@/components/ChargeServices.vue'
+import { useRoute, useRouter } from 'vue-router'
 import PayServices from '@/components/PayServices.vue'
-
+import ChargeServices from '@/components/ChargeServices.vue'
 
 const route = useRoute()
-const activeTab = ref('collect')
-
+const router = useRouter()
+const activeTab = ref('collect') // valor por defecto
 
 onMounted(() => {
   if (route.query.tab) {
@@ -44,10 +43,8 @@ onMounted(() => {
   }
 })
 
-watch(() => route.query.tab, (newTab) => {
-  if (newTab) {
-    activeTab.value = newTab
-  }
+watch(activeTab, (newTab) => {
+  router.push({ query: { ...route.query, tab: newTab } })
 })
 
 </script>

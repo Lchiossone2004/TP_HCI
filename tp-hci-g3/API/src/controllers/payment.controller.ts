@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { NewPaymentData, PaymentDateRange, PaymentUserRole, validateNewPaymentData, validatePaymentData, validatePaymentDateRange, validatePaymentMethod, validatePaymentUserRole, validatePaymentUuid } from "../types/payment";
+import { NewPaymentData, PaymentDateRange, PaymentUserRole, validateNewPaymentData, validatePaymentData, validatePaymentDateRange, validatePaymentMethod, validatePaymentUserRole, validatePaymentUuid, validateServiceMetadata } from "../types/payment";
 import { BadRequestError } from "../types/error";
 import { replyCreated, replySuccess, replyWithError } from "../http";
 import { User } from "../entities/user";
@@ -15,8 +15,19 @@ export async function pullPayment(
     res: Response
 ): Promise<void> {
     try {
+        // Validar datos básicos del pago
         const validationResult = validatePaymentData(req.body);
-        if (!validationResult.isValid) throw new BadRequestError(validationResult.message);
+        if (!validationResult.isValid) {
+            throw new BadRequestError(validationResult.message);
+        }
+
+        // Validar metadatos de servicio si están presentes
+        if (req.body.metadata?.type === 'service') {
+            const metadataValidation = validateServiceMetadata(req.body.metadata);
+            if (!metadataValidation.isValid) {
+                throw new BadRequestError(metadataValidation.message);
+            }
+        }
 
         const user: User = req.user as User;
         const newPaymentData: NewPaymentData = req.body as NewPaymentData;
@@ -158,6 +169,42 @@ export async function getPayment(
         const paymentId = parseInt(req.params.id);
         const payment = await PaymentService.getPayment(user, paymentId);
         replySuccess(res, mapEntityToPaymentData(payment));
+    } catch (err) {
+        replyWithError(res, err);
+    }
+}
+
+export async function searchPayment(
+    req: Request,
+    res: Response
+): Promise<void> {
+    try {
+        const code = req.query.code as string;
+        if (!code) {
+            throw new BadRequestError("Missing payment code");
+        }
+
+        const payment = await PaymentService.findPaymentByCode(code);
+        replySuccess(res, mapEntityToPaymentData(payment));
+    } catch (err) {
+        replyWithError(res, err);
+    }
+}
+
+export async function deletePayment(
+    req: Request,
+    res: Response
+): Promise<void> {
+    try {
+        const paymentId = parseInt(req.params.id);
+        if (isNaN(paymentId)) {
+            throw new BadRequestError('ID de pago inválido');
+        }
+
+        const user: User = req.user as User;
+        await PaymentService.deletePayment(user, paymentId);
+        
+        replySuccess(res, { message: 'Pago eliminado exitosamente' });
     } catch (err) {
         replyWithError(res, err);
     }

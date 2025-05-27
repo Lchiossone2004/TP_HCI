@@ -46,3 +46,10 @@ export class ServerError extends HttpError {
         super(500, message);
     }
 }
+
+export class ForbiddenError extends Error {
+    constructor(message: string = 'Forbidden') {
+        super(message);
+        this.name = 'ForbiddenError';
+    }
+}

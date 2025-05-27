@@ -1,10 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
+import { ServicePaymentMetadata, validateServiceMetadata } from '../types/payment';
 import { User } from "../entities/user";
 import { Payment } from '../entities/payment';
 import * as AccountService from "../services/account.service";
 import * as CardService from "../services/card.service";
 import * as UserService from "../services/user.service";
-import { BadRequestError, NotFoundError, UnprocessableError } from '../types/error';
+import { BadRequestError, NotFoundError, UnprocessableError, ForbiddenError } from '../types/error';
 import { Account } from '../entities/account';
 import { PaymentMethod } from '../entities/paymentMethod';
 import { Between } from 'typeorm';
@@ -45,6 +46,14 @@ export async function pullPayment(
     newPayment: Payment
 ): Promise<Payment> {
     try {
+        // Validar metadatos si es un pago de servicio
+        if (newPayment.metadata && (newPayment.metadata as ServicePaymentMetadata).type === 'service') {
+            const validationResult = validateServiceMetadata(newPayment.metadata);
+            if (!validationResult.isValid) {
+                throw new BadRequestError(validationResult.message);
+            }
+        }
+
         newPayment.receiver = user;
         newPayment.uuid = uuidv4();
         newPayment.pending = true;
@@ -229,4 +238,47 @@ export function generatePaymentsFilteringOptions(
         ];
     }
     return whereOptions;
+}
+
+export async function findPaymentByCode(code: string): Promise<Payment> {
+    const payment = await Payment.findOne({
+        where: {
+            metadata: {
+                type: 'service',
+                code: code
+            }
+        },
+        relations: ["receiver", "card", "payer"]
+    });
+    
+    if (!payment) throw new NotFoundError("Payment not found");
+    return payment;
+}
+
+export async function deletePayment(
+    user: User,
+    paymentId: number
+): Promise<void> {
+    try {
+        const payment = await Payment.findOne({
+            where: { id: paymentId },
+            relations: ['receiver']
+        });
+
+        if (!payment) {
+            throw new NotFoundError('Pago no encontrado');
+        }
+
+        if (payment.receiver.id !== user.id) {
+            throw new ForbiddenError('No tienes permiso para eliminar este pago');
+        }
+
+        if (!payment.pending) {
+            throw new BadRequestError('No se puede eliminar un pago que ya fue procesado');
+        }
+
+        await payment.remove();
+    } catch (err) {
+        throw err;
+    }
 }

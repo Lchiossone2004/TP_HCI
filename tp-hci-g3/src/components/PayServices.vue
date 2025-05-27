@@ -69,62 +69,87 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue' 
+import { ref, computed } from 'vue'
 import Modal from './Modal.vue'
+import BalanceCard from './BalanceCard.vue'
 import { useAccountStore } from '@/stores/AccountStore'
+import { usePaymentStore } from '@/stores/PaymetStore'
 
-const isSuccess = computed(() => error.value === 'Pago procesado exitosamente')
+const accountStore = useAccountStore()
+const paymentStore = usePaymentStore()
+
 const searchQuery = ref('')
 const paymentFound = ref(null)
 const error = ref('')
 const errors = ref({
   search: ''
 })
-
 const showConfirmPayment = ref(false)
 
-const confirmPayment = () => {
-  processPayment()
-  showConfirmPayment.value = false
-}
+const isSuccess = computed(() => error.value === 'Pago procesado exitosamente')
 
-const searchPayment = () => {
-  const pendingPayments = JSON.parse(localStorage.getItem('pendingPayments') || '[]')
-  const payment = pendingPayments.find(p => 
-    p.id === searchQuery.value || p.link === searchQuery.value
-  )
-
-  if (payment) {
-    paymentFound.value = payment
-    error.value = ''
-  } else {
-    paymentFound.value = null
-    error.value = 'No se encontró el pago especificado'
-  }
-}
-
-const processPayment = () => {
-  const accountStore = useAccountStore()
-  const pendingPayments = JSON.parse(localStorage.getItem('pendingPayments') || '[]')
-  const updatedPayments = pendingPayments.filter(p => p.id !== paymentFound.value.id)
-  localStorage.setItem('pendingPayments', JSON.stringify(updatedPayments))
-
-  accountStore.balance = accountStore.balance - paymentFound.value.amount
-  
-  paymentFound.value = null
-  searchQuery.value = ''
-  error.value = 'Pago procesado exitosamente'
-}
-
-const handleSubmit = () => {
+const handleSubmit = async () => {
   errors.value.search = ''
+  error.value = ''
   
   if (!searchQuery.value.trim()) {
     errors.value.search = 'Campo vacío, debe ingresar un valor'
     return
   }
-  
-  searchPayment()
+
+  try {
+    let code = searchQuery.value
+    
+    // Si es un link, extraer el código
+    if (searchQuery.value.includes('?')) {
+      const urlParams = new URLSearchParams(searchQuery.value.split('?')[1])
+      code = urlParams.get('code')
+    }
+
+    if (!code) {
+      error.value = 'Código de pago inválido'
+      return
+    }
+
+    const payment = await paymentStore.getPaymentByCode(code)
+    if (payment) {
+      paymentFound.value = payment
+      error.value = ''
+    }
+  } catch (err) {
+    error.value = 'No se encontró el pago especificado'
+    paymentFound.value = null
+    console.error('Error:', err)
+  }
+}
+
+const processPayment = async () => {
+  try {
+    if (!paymentFound.value) {
+      error.value = 'No hay pago seleccionado'
+      return
+    }
+
+    if (accountStore.balance < paymentFound.value.amount) {
+      error.value = 'Saldo insuficiente, por favor ingrese dinero'
+      return
+    }
+
+    const code = paymentFound.value.metadata?.code
+    await paymentStore.payService(code)
+    
+    paymentFound.value = null
+    searchQuery.value = ''
+    error.value = 'Pago procesado exitosamente'
+  } catch (err) {
+    error.value = err.message || 'Error al procesar el pago'
+    console.error('Error:', err)
+  }
+}
+
+const confirmPayment = () => {
+  processPayment()
+  showConfirmPayment.value = false
 }
 </script>
 

@@ -1,11 +1,5 @@
 import { Router } from "express";
-import {
-    getPayment,
-    getPayments,
-    pullPayment,
-    pushPendingPayment,
-    transfer
-} from "../controllers/payment.controller";
+import { deletePayment, searchPayment, getPayment, getPayments, pullPayment, pushPendingPayment, transfer } from '../controllers/payment.controller';
 import { authenticate } from "../middleware/auth";
 
 const router = Router();
@@ -87,6 +81,8 @@ router.post('/pull', authenticate, pullPayment);
  *              $ref: '#/responses/ServerError'
  */
 router.put('/push', authenticate, pushPendingPayment);
+
+router.delete('/:id', authenticate, deletePayment);
 
 /**
  * @swagger
@@ -314,6 +310,8 @@ router.post('/transfer-alias', authenticate, transfer);
  */
 router.get('/', authenticate, getPayments);
 
+router.get('/search', authenticate, searchPayment);
+
 /**
  * @swagger
  * /api/payment/{id}:
@@ -346,5 +344,6 @@ router.get('/', authenticate, getPayments);
  *              $ref: '#/responses/ServerError'
  */
 router.get('/:id', authenticate, getPayment);
+
 
 export default router;

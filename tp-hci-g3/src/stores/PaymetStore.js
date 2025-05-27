@@ -328,5 +328,115 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   }
 
-  return { pullPayment, pushPayment, transferViaEmail, transferViaCVU, transferViaAlias, getAllPayments, transferencias, pendingPayments, agregarTransaccion }
+  async function generateServicePayment(amount, description) {
+    try {
+      // Generar código único
+      const uniqueCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+      
+      // Crear link de pago
+      const baseUrl = window.location.origin;
+      const paymentLink = `${baseUrl}/servicios?tab=pay&code=${uniqueCode}`;
+
+      // Crear objeto de pago
+      const payment = {
+        amount: parseFloat(amount),
+        description,
+        metadata: {
+          type: 'service',
+          code: uniqueCode,
+          link: paymentLink,
+          createdAt: new Date().toISOString()
+        }
+      };
+
+      // Enviar a la API
+      const response = await pullPayment(payment);
+
+      if (!response) {
+        throw new Error('Error al crear el pago');
+      }
+
+      // Crear objeto completo con todos los datos
+      const fullPayment = {
+        ...response,
+        code: uniqueCode,
+        link: paymentLink,
+        amount: parseFloat(amount),
+        description,
+        status: 'pending',
+        type: 'service'
+      };
+
+      // Actualizar estado local
+      pendingPayments.value = [fullPayment, ...pendingPayments.value];
+
+      return fullPayment;
+    } catch (error) {
+      console.error('Error al generar cobro:', error);
+      throw error;
+    }
+  }
+
+  async function getPendingServicePayments() {
+    try {
+      const response = await fetch(
+        'http://localhost:8080/api/payment?pending=true&method=PULL',
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth-token')}`
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Error al obtener pagos pendientes');
+      }
+
+      const data = await response.json();
+      const payments = data.results.filter(
+        payment => payment.metadata?.type === 'service'
+      ).map(payment => ({
+        ...payment,
+        code: payment.metadata?.code,
+        link: payment.metadata?.link,
+        type: 'service'
+      }));
+
+      pendingPayments.value = payments;
+      return payments;
+    } catch (error) {
+      console.error('Error al obtener pagos pendientes:', error);
+      throw error;
+    }
+  }
+
+  async function deleteServicePayment(paymentId) {
+  try {
+    const token = localStorage.getItem('auth-token');
+    if (!token) {
+      throw new Error('No hay token de autenticación guardado');
+    }
+
+    const response = await fetch(`http://localhost:8080/api/payment/${paymentId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error al eliminar el pago: ${response.status}`);
+    }
+
+    // Actualizar el estado local removiendo el pago eliminado
+    pendingPayments.value = pendingPayments.value.filter(p => p.id !== paymentId);
+    return true;
+  } catch (error) {
+    console.error('Error al eliminar el pago:', error);
+    throw error;
+  }
+}
+
+  return { pullPayment, pushPayment, transferViaEmail, transferViaCVU, transferViaAlias, getAllPayments, transferencias, pendingPayments, agregarTransaccion, generateServicePayment,
+    getPendingServicePayments, deleteServicePayment }
 })

@@ -10,6 +10,8 @@ import {
 import { User } from "./user";
 import { IsEnum } from "class-validator";
 import { Card } from "./card";
+import { PaymentMetadata, ServicePaymentMetadata } from '../types/payment';
+
 
 @Entity()
 export class Payment extends BaseEntity {
@@ -45,8 +47,19 @@ export class Payment extends BaseEntity {
     uuid: string;
 
     @Column({ type: "simple-json", nullable: true })
-    metadata?: object;
+    metadata?: PaymentMetadata;
 
+    // Helper method to validate service metadata
+    hasValidServiceMetadata(): boolean {
+        if (!this.metadata) return false;
+        const metadata = this.metadata as ServicePaymentMetadata;
+        return (
+            metadata.type === 'service' &&
+            typeof metadata.code === 'string' &&
+            typeof metadata.link === 'string' &&
+            typeof metadata.createdAt === 'string'
+        );
+    }
     @CreateDateColumn()
     createdAt: Date;
 

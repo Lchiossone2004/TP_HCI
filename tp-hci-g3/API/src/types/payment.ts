@@ -1,11 +1,28 @@
 import { isEnum, isUUID } from "class-validator";
 import { validateAmount, validateDescription, validateEmail, validateId, ValidationResult } from "./common";
 import { PaymentMethod } from "../entities/paymentMethod";
+import { Payment } from "../entities/payment";
+
+export type ServicePaymentMetadata = {
+    type: 'service';
+    code: string;
+    link: string;
+    createdAt: string;
+}
+
+/*export type TransferPaymentMetadata = {
+    type: 'transfer';
+    // ... otros campos específicos para transferencias
+}
+TERMINAR    
+*/
+
+export type PaymentMetadata = ServicePaymentMetadata | object; //aca iria tmb TransferPaymentMetadata
 
 export type NewPaymentData = {
     description: string;
     amount: number;
-    metadata?: object;
+    metadata?: PaymentMetadata;
 }
 
 export type PendingPaymentData = {
@@ -18,7 +35,7 @@ export type PendingPaymentData = {
     payer: PaymentUserData;
     receiver: PaymentUserData;
     card: PaymentCardData;
-    metadata?: object;
+    metadata?: PaymentMetadata;
 }
 
 export type PaymentUserData = {
@@ -42,7 +59,7 @@ export type PaymentData = {
     payer: PaymentUserData;
     receiver: PaymentUserData;
     card: PaymentCardData;
-    metadata?: object;
+    metadata?: PaymentMetadata;
 }
 
 export enum PaymentDateRange {
@@ -124,6 +141,26 @@ export function validatePaymentUserRole(
 
     if (!isEnum(data.role.toUpperCase(), PaymentUserRole))
         return { isValid: false, message: "Invalid spayment user role. Valid values are 'PAYER' or 'RECEIVER'." };
+
+    return { isValid: true };
+}
+
+export function validateServiceMetadata(metadata: any): ValidationResult {
+    if (!metadata || typeof metadata !== 'object') {
+        return { isValid: false, message: "Invalid metadata format" };
+    }
+    
+    if (metadata.type !== 'service') {
+        return { isValid: false, message: "Invalid service metadata type" };
+    }
+
+    if (!metadata.code || typeof metadata.code !== 'string') {
+        return { isValid: false, message: "Invalid or missing service code" };
+    }
+
+    if (!metadata.link || typeof metadata.link !== 'string') {
+        return { isValid: false, message: "Invalid or missing service link" };
+    }
 
     return { isValid: true };
 }

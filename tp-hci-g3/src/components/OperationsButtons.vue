@@ -68,14 +68,19 @@ function cerrarModalIngreso() {
 
 
 function irATransferencias() {
-  router.push({ name: 'Transfer' });
+  router.push('/transfer').catch(err => {
+    console.error('Error de navegación:', err)
+  })
 }
 
 function irAServicios(tab) {
+  console.log('Navigating to services with tab:', tab)
   router.push({
     name: 'Servicios',
     query: { tab }
-  });
+  }).catch(err => {
+    console.error('Navigation error:', err)
+  })
 }
 </script>
 

@@ -77,21 +77,30 @@ const handleEnterMoney = () => {
 }
 
 const handleTransfer = () => {
-  router.push({ name: 'Transfer' })
+  showMoneyModal.value = false // Cerramos el modal primero
+  router.push('/transfer').catch(err => {
+    console.error('Error de navegación:', err)
+  })
 }
 
 const handleCollect = () => {
+  console.log('Navigating to collect services')
   router.push({ 
     name: 'Servicios',
     query: { tab: 'collect' }
+  }).catch(err => {
+    console.error('Navigation error:', err)
   })
   showMoneyModal.value = false
 }
 
 const handlePay = () => {
+  console.log('Navigating to pay services')
   router.push({ 
     name: 'Servicios',
     query: { tab: 'pay' }
+  }).catch(err => {
+    console.error('Navigation error:', err)
   })
   showMoneyModal.value = false
 }

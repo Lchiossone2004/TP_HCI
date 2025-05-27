@@ -4,18 +4,29 @@
       <h2>Generar cobro</h2>
       <form @submit.prevent="generatePayment" class="generate-form">
         <div class="form-group">
-            <label>Monto a cobrar</label>
-            <div class="amount-input" :class="{ 'error': errors.amount }">
+          <label>Concepto</label>
+          <div class="input-container" :class="{ 'error': errors.description }">
+            <input 
+              v-model="description"
+              type="text"
+              placeholder="Ingrese el concepto del cobro"
+            >
+          </div>
+          <span class="error-message" v-if="errors.description">{{ errors.description }}</span>
+        </div>
+        <div class="form-group">
+          <label>Monto a cobrar</label>
+          <div class="amount-input" :class="{ 'error': errors.amount }">
             <span class="currency">$</span>
             <input 
-                v-model="amount"
-                type="number"
-                min="1"
-                step="0.01"
-                placeholder="0.00"
+              v-model="amount"
+              type="number"
+              min="1"
+              step="0.01"
+              placeholder="0.00"
             >
-            </div>
-            <span class="error-message" v-if="errors.amount">{{ errors.amount }}</span>
+          </div>
+          <span class="error-message" v-if="errors.amount">{{ errors.amount }}</span>
         </div>
         <button type="submit" class="submit-btn">Generar cobro</button>
       </form>
@@ -23,10 +34,10 @@
       <div v-if="currentPayment" class="payment-info">
         <h3>Información del cobro</h3>
         <div class="info-row">
-          <label>ID del pago:</label>
+          <label>Código único:</label>
           <div class="copy-container">
-            <span>{{ currentPayment.id }}</span>
-            <button @click="copyToClipboard(currentPayment.id)" class="copy-btn">
+            <span>{{ currentPayment.code }}</span>
+            <button @click="copyToClipboard(currentPayment.code)" class="copy-btn">
               <span class="material-symbols-rounded">content_copy</span>
             </button>
           </div>
@@ -39,6 +50,14 @@
               <span class="material-symbols-rounded">content_copy</span>
             </button>
           </div>
+        </div>
+        <div class="info-row">
+          <label>Monto:</label>
+          <span>${{ currentPayment.amount }}</span>
+        </div>
+        <div class="info-row">
+          <label>Concepto:</label>
+          <span>{{ currentPayment.description }}</span>
         </div>
       </div>
     </div>
@@ -61,71 +80,169 @@
                 <span class="material-symbols-rounded">content_copy</span>
               </button>
             </div>
+            <div class="detail-row">
+              <span>{{ payment.description }}</span>
+            </div>
+            <div class="actions">
+              <button 
+                @click="deletePendingPayment(payment)"
+                class="delete-btn"
+                :disabled="isDeleting"
+              >
+                <span class="material-symbols-rounded">delete</span>
+                {{ isDeleting && paymentToDelete?.id === payment.id ? 'Eliminando...' : 'Eliminar' }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <v-snackbar
+      v-model="showSnackbar"
+      :color="snackbarColor"
+      :timeout="3000"
+      location="top"
+    >
+      {{ snackbarText }}
+    </v-snackbar>
   </div>
+  <Modal v-model="showDeleteDialog" title="Confirmar eliminación">
+  <div class="confirm-delete">
+    <p>¿Está seguro que desea eliminar este cobro?</p>
+    <p class="payment-info">Monto: ${{ paymentToDelete?.amount }} - {{ paymentToDelete?.description }}</p>
+    <div class="button-group">
+      <button class="delete-confirm-btn" @click="confirmDelete" :disabled="isDeleting">
+        {{ isDeleting ? 'Eliminando...' : 'Eliminar' }}
+      </button>
+      <button class="cancel-btn" @click="showDeleteDialog = false">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</Modal>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { usePaymentStore  } from '@/stores/PaymetStore'
+import { usePaymentStore } from '@/stores/PaymetStore'
+import Modal from './Modal.vue'
 
-const amount = ref('')
-const errors = ref({
-  amount: ''
-})
+const paymentStore = usePaymentStore()
+const loading = ref(false)
 const currentPayment = ref(null)
 const pendingPayments = ref([])
+const amount = ref('')
+const description = ref('')
+const showSnackbar = ref(false)
+const snackbarText = ref('')
+const snackbarColor = ref('success')
+const showDeleteDialog = ref(false)
+const isDeleting = ref(false)
+const paymentToDelete = ref(null)
+
+const errors = ref({
+  amount: '',
+  description: ''
+})
+
+const showNotification = (text, color = 'success') => {
+  snackbarText.value = text
+  snackbarColor.value = color
+  showSnackbar.value = true
+}
+
+const deletePendingPayment = (payment) => {
+  paymentToDelete.value = payment
+  showDeleteDialog.value = true
+}
+
+const confirmDelete = async () => {
+  if (!paymentToDelete.value) return
+  
+  isDeleting.value = true
+  try {
+    await paymentStore.deleteServicePayment(paymentToDelete.value.id)
+    showNotification('Cobro eliminado exitosamente')
+    // Recargar la lista de pagos pendientes
+    await loadPendingPayments()
+  } catch (error) {
+    console.error('Error al eliminar el cobro:', error)
+    showNotification(
+      'Error al eliminar el cobro. Por favor intente nuevamente.',
+      'error'
+    )
+  } finally {
+    isDeleting.value = false
+    showDeleteDialog.value = false
+    paymentToDelete.value = null
+  }
+}
 
 const generatePayment = async () => {
-  const paymentStore = usePaymentStore()
-  errors.value.amount = ''
+  // Reset errors
+  errors.value = { amount: '', description: '' }
   
+  // Validations
   if (!amount.value) {
-    errors.value.amount = 'Campo vacío, debe ingresar un valor'
+    errors.value.amount = 'Campo requerido'
+    return
+  }
+  if (!description.value) {
+    errors.value.description = 'Campo requerido'
     return
   }
 
-  const newPayment = {
-    description: "test",
-    amount: parseFloat(amount.value),
-    metadata: {}
+  loading.value = true
+  try {
+    const payment = await paymentStore.generateServicePayment(
+      amount.value,
+      description.value
+    )
+    
+    currentPayment.value = payment
+    // Limpiar formulario
+    amount.value = ''
+    description.value = ''
+    
+    // Actualizar lista de pagos pendientes
+    await loadPendingPayments()
+    
+    showNotification('Cobro generado exitosamente')
+  } catch (error) {
+    console.error('Error:', error)
+    showNotification(
+      'Error al generar el cobro. Por favor intente nuevamente.',
+      'error'
+    )
+  } finally {
+    loading.value = false
   }
-
-  const payment = await paymentStore.pullPayment(newPayment)
-  console.log(payment.uuid)
-  await paymentStore.pushPayment(payment.uuid,10)
-
-  amount.value = ''
-  
-  localStorage.setItem('pendingPayments', JSON.stringify(pendingPayments.value))
-}
-
-const generateId = () => {
-  return 'PAY-' + Math.random().toString(36).substr(2, 9).toUpperCase()
-}
-
-const generateLink = () => {
-  const baseUrl = window.location.origin
-  return `${baseUrl}/pay/${generateId()}`
 }
 
 const copyToClipboard = async (text) => {
   try {
     await navigator.clipboard.writeText(text)
+    showNotification('Copiado al portapapeles')
   } catch (err) {
     console.error('Error al copiar:', err)
+    showNotification('Error al copiar al portapapeles', 'error')
   }
 }
 
-onMounted(() => {
-  const saved = localStorage.getItem('pendingPayments')
-  if (saved) {
-    pendingPayments.value = JSON.parse(saved)
+const loadPendingPayments = async () => {
+  try {
+    const payments = await paymentStore.getPendingServicePayments()
+    pendingPayments.value = payments
+  } catch (error) {
+    console.error('Error loading payments:', error)
+    showNotification(
+      'Error al cargar los pagos pendientes',
+      'error'
+    )
   }
-})
+}
+
+onMounted(loadPendingPayments)
 </script>
 
 <style scoped>
@@ -253,6 +370,93 @@ input {
 .link {
   color: var(--text-grey);
   font-size: 0.9rem;
+}
+
+.success-message {
+  background-color: var(--green);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: var(--icon-radius);
+  margin-top: 1rem;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--red-danger);
+  color: white;
+  border: none;
+  border-radius: var(--button-radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.delete-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.delete-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.confirm-delete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.payment-info {
+  color: var(--dark-grey-text);
+  font-size: var(--font-text);
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.delete-confirm-btn, .cancel-btn {
+  padding: 0.75rem 2rem;
+  border-radius: var(--button-radius);
+  border: none;
+  font-size: var(--font-text);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-confirm-btn {
+  background: var(--red-danger);
+  color: var(--white-text);
+}
+
+.delete-confirm-btn:hover:not(:disabled) {
+  background: var(--red-button);
+}
+
+.delete-confirm-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background: var(--background-grey);
+  color: var(--dark-blue);
+}
+
+.cancel-btn:hover {
+  background: var(--light-grey);
 }
 
 @media (max-width: 1300px) {
