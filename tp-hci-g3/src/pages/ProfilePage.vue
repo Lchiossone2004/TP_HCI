@@ -40,7 +40,7 @@ const actualizarPerfil = (nuevoPerfil) => {
   perfil.value = {
     ...perfil.value,
     ...nuevoPerfil,
-    avatar: nuevoPerfil.metadata?.avatar || perfil.value.avatar
+    
   }
 }
 
@@ -57,7 +57,7 @@ onMounted(async () => {
   email: userData.email || '',
   alias: accountData.alias || '',
   cvu: accountData.cvu || '',
-  avatar: userData.metadata?.avatar || '/src/assets/images/avatars/default-profile-picture.png'
+  avatar: '/src/assets/images/avatars/default-profile-picture.png'
 
 }
 
