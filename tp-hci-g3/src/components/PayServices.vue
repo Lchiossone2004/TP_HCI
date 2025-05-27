@@ -21,11 +21,9 @@
         {{ error }}
       </div>
     </div>
-
-    <div class="balance-container">
-      <h2 class="title">Saldo disponible</h2>
-      <BalanceCard />
-    </div>
+    <div class="balance-and-cards">
+    <Swiper :cards="cards" @slide-change="handleSlideChange" />
+  </div>
   </div>
 </template>
 
@@ -34,15 +32,20 @@ import { ref, computed } from 'vue'
 import BalanceCard from './BalanceCard.vue'
 import { useAccountStore } from '@/stores/AccountStore'
 import { usePaymentStore } from '@/stores/PaymetStore'
+import Swiper from '@/components/Swiper.vue';
 
 const accountStore = useAccountStore()
 const paymentStore = usePaymentStore()
-
+const cardNum = ref('')
 const searchQuery = ref('')
 const error = ref('')
 const errors = ref({
   search: ''
 })
+
+const handleSlideChange = (cardId) => {
+  cardNum.value = cardId
+}
 
 const isSuccess = computed(() => error.value === 'Pago procesado exitosamente')
 
@@ -68,7 +71,7 @@ const handleSubmit = async () => {
       return
     }
 
-    const payment = await paymentStore.makePayment(code)
+    const payment = await paymentStore.makePayment(code,cardNum.value)
 
     if (!payment) {
       error.value = 'No se encontró el pago'
@@ -267,4 +270,15 @@ input:focus {
   background: var(--red-danger);
 }
 
+.balance-and-cards {
+  flex: 1;
+  height: 300px;
+  background-color: #03192C;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3rem;
+  min-width: 500px;
+}
 </style>
