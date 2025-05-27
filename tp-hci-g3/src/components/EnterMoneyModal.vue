@@ -39,8 +39,6 @@
   import { useActivityStore } from '@/stores/ActivityStore'
  
 
-  const accountStore = useAccountStore();
-
   const props = defineProps(['modelValue']);
   const emit = defineEmits(['update:modelValue']);
   
