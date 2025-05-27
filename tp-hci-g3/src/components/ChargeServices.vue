@@ -85,7 +85,7 @@
               <span>Detalle: {{ payment.description }}</span>
             </div>
             <div class="detail-row">
-              <span>Motivo: {{ payment.reason }}</span>
+              <span>Motivo: {{ payment.detalle }}</span>
             </div>
             <div class="actions">
               <button 

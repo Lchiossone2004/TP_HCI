@@ -335,21 +335,21 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   }
 
-  async function generateServicePayment(amount, description) {
+  async function generateServicePayment(amount, description,motivo) {
     try {
-      // Generar código único
+
       const uniqueCode = Math.random().toString(36).substring(2, 10).toUpperCase();
       
-      // Crear link de pago
+
       const baseUrl = window.location.origin;
       const paymentLink = `${baseUrl}/servicios?tab=pay&code=${uniqueCode}`;
 
-      // Crear objeto de pago
+
       const payment = {
         amount: parseFloat(amount),
         description,
         metadata: {
-          type: 'service',
+          detalle: motivo,
           code: uniqueCode,
           link: paymentLink,
           createdAt: new Date().toISOString()
@@ -400,13 +400,9 @@ export const usePaymentStore = defineStore('payment', () => {
       }
 
       const data = await response.json();
-      const payments = data.results.filter(
-        payment => payment.metadata?.type === 'service'
-      ).map(payment => ({
+      const payments = data.results.map(payment => ({
         ...payment,
-        code: payment.metadata?.code,
-        link: payment.metadata?.link,
-        type: 'service'
+        detalle: payment.metadata?.detalle
       }));
 
       pendingPayments.value = payments;
