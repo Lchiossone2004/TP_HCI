@@ -4,7 +4,7 @@
       <div class="top-section">
           <OperationsButtons/>
         <div class="balance-and-cards">
-          <Swiper :cards="cards"/>
+          <Swiper />
         </div>
       </div>
       <div class="bottom-section">

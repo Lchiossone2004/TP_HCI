@@ -38,6 +38,7 @@ import { useCardStore } from '@/stores/CardStore'
 
 const cardStore = useCardStore()
 const activeSlide = ref(0)
+const emit = defineEmits(['slide-change'])
 
 const slides = computed(() => {
   const cardComponents = cardStore.tarjetas.map((card, index) => ({
@@ -109,6 +110,20 @@ const nextSlide = () => {
 const previousSlide = () => {
   if (activeSlide.value > 0) activeSlide.value--
 }
+
+const cardIdActual = computed(() => {
+  // El slide 0 es el BalanceCard, y el último es AddCard
+  // Por lo tanto, las tarjetas están entre el índice 1 y slides.length - 2
+  const index = activeSlide.value - 1
+  if (index >= 0 && index < cardStore.tarjetas.length) {
+    return cardStore.tarjetas[index]?.id
+  }
+  return null
+})
+
+watch(activeSlide, () => {
+  emit('slide-change', cardIdActual.value)
+})
 </script>
 
 
