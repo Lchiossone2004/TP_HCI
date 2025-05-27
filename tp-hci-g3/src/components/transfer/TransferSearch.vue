@@ -5,7 +5,7 @@
     <input
       v-model="query"
       class="search-input"
-      placeholder="Buscar por CBU, CVU o alias"
+      placeholder="Introducir email, CVU o alias..."
       @keyup.enter="emitSearch"
     />
     <input
@@ -18,7 +18,7 @@
   </div>
   <div class="search-row">
     <select v-model="cardId" class="search-input">
-    <option disabled value="">Seleccioná un metodo</option>
+    <option disabled value="">Seleccionar un método</option>
     <option value="balance">Balance {{ accountStore.balance.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) }}</option> 
     <option v-for="card in tarjetas" :key="card.id" :value="card.id">
       {{ card.type }} - ****{{ card.number.slice(-4) }}
@@ -28,7 +28,7 @@
       v-model="detalle"
       class="search-input"
       type="search-input"
-      placeholder="detalle"
+      placeholder="Detalle"
     />
   </div>
   <button class="search-btn" @click="emitSearch" :disabled="!query.trim() || !monto || !detalle " >Transferir</button>
@@ -39,9 +39,7 @@
   import { onMounted, ref } from 'vue'
   import { usePaymentStore  } from '@/stores/PaymetStore'
   import { useCardStore } from '@/stores/CardStore'
-  import { useAccountStore
-
-   } from '@/stores/AccountStore'
+  import { useAccountStore } from '@/stores/AccountStore'
   const query = ref('')
   const monto = ref('')
   const cardId = ref('')

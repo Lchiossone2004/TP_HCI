@@ -77,7 +77,7 @@ const handleEnterMoney = () => {
 }
 
 const handleTransfer = () => {
-  showMoneyModal.value = false // Cerramos el modal primero
+  showMoneyModal.value = false 
   router.push('/transfer').catch(err => {
     console.error('Error de navegación:', err)
   })

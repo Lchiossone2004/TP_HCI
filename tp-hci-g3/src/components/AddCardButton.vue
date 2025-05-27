@@ -150,7 +150,7 @@ const validateForm = () => {
   }
 
   if (!newCard.value.type) {
-    errors.value.type = 'Seleccioná el tipo de tarjeta'
+    errors.value.type = 'Seleccionar el tipo de tarjeta'
     isValid = false
   }
 
