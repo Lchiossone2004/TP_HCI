@@ -148,13 +148,15 @@ export default {
 }
 
 .reset-container {
-  max-width: 400px;
+  max-width: 500px;
+  min-height: 300px;
   width: 100%;
   padding: 30px;
   border-radius: 12px;
   background-color: #fff; 
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   text-align: center;
+  font-size: 20px;
 }
 
 input {
@@ -164,6 +166,8 @@ input {
   margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 8px;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
 }
 
 button {
@@ -189,6 +193,7 @@ button:hover {
 .success {
   color: green;
   font-weight: bold;
-  margin-top: 20px;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
 }
 </style>

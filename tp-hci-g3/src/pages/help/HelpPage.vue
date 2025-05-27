@@ -9,6 +9,7 @@ import HelpInfoHomePage from '@/pages/help/HelpInfoHomePage.vue'
 import HelpInfoForgotPassword from '@/pages/help/HelpInfoForgotPassword.vue'
 import HelpInfoLoginAndRegister from '@/pages/help/HelpInfoLoginAndRegister.vue'
 import HelpInfoVerificationCode from '@/pages/help/HelpInfoVerificationCode.vue'
+import HelpInfoServices from '@/pages/help/HelpInfoServices.vue'
 const route = useRoute()
 import { computed } from 'vue'
 
@@ -52,6 +53,10 @@ const from = computed(() => route.query.from || '')
       <h1>Ayuda - Verificación de tus datos</h1>
       <HelpInfoVerificationCode/>
       </div>
+      <div v-else-if="from === 'Servicios'">
+      <h1>Ayuda - Cobrar y pagar servicios</h1>
+      <HelpInfoServices/>
+      </div>
     <div v-else>
       <h1>Centro de Ayuda</h1>
       <h2 class="subtitle"> Página principal </h2>
@@ -68,6 +73,8 @@ const from = computed(() => route.query.from || '')
       <HelpInfoForgotPassword/>
       <h2 class="subtitle"> Verificación de tus datos </h2>
       <HelpInfoVerificationCode/>
+      <h2 class="subtitle"> Cobrar y pagar servicios </h2>
+      <HelpInfoServices/>
     </div>
 
     <p class="more-help" v-if="from !== ''">
