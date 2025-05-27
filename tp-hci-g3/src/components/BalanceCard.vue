@@ -12,10 +12,6 @@
       </span>
       <span class="coin">ARS</span>
     </div>
-    <div class="balance-yield">
-      <span>Rendimiento de</span>
-      <span>+24,6%</span>
-    </div>
   </div>
 </template>
 
@@ -25,9 +21,11 @@ import { usePaymentStore } from '@/stores/PaymetStore'
 import { useAccountStore } from '@/stores/AccountStore'
 const accountStore = useAccountStore()
 
-const visible = ref(true)
+const visible = ref(localStorage.getItem('visible') !== null ? JSON.parse(localStorage.getItem('visible')) : true)
+
 function toggle() {
   visible.value = !visible.value
+  localStorage.setItem('visible', JSON.stringify(visible.value))
 }
 
 const formattedBalance = computed(() => {
@@ -69,6 +67,8 @@ onMounted(() => {
 .balance-amount {
   display: flex; 
   align-items: center; 
+  align-self: center;
+  margin-bottom: 3rem;
   gap: 2rem;
   font-size: var(--font-big);
 }

@@ -48,21 +48,24 @@ export default {
   },
   methods: {
     async login() {
-      const userStore = useUserStore();
+  const userStore = useUserStore();
 
-      try {
-        await userStore.logIn(this.email, this.password);
-        this.errorMessage = ''; 
+  try {
+    await userStore.logIn(this.email, this.password);
+    this.errorMessage = '';
 
-        this.$router.push({ name: 'Home' });
-      } catch (error) {
-        console.error('Error al iniciar sesión:', error);
-        this.errorMessage = 'Email o contraseña incorrectos.';
-      }
-    },
-    forgotPassword(){
-      this.$router.push({ name: 'PasswordRecovery' });
+    if (this.remember) {
+      localStorage.setItem('wingpay-remembered', 'true');
+    } else {
+      localStorage.removeItem('wingpay-remembered');
     }
+
+    this.$router.push({ name: 'Home' }); 
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+    this.errorMessage = 'Email o contraseña incorrectos.';
+  }
+}
   }
 };
 </script>

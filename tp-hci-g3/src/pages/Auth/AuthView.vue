@@ -24,36 +24,29 @@
     </div>
   </div>
 </template>
-<script>
+
+<script setup>
+import { onMounted, ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import LoginForm from '@/components/Auth/LoginForm.vue'
 import RegisterForm from '@/components/Auth/RegisterForm.vue'
-import { useRouter, useRoute } from 'vue-router'
 
-export default {
-  components: { LoginForm, RegisterForm },
+const showLogin = ref(true)
+const router = useRouter()
+const route = useRoute()
 
-  data() {
-    return {
-      showLogin: true
-    }
-  },
-
-  setup() {
-    const router = useRouter()
-    const route = useRoute()
-
-    const goToHelp = () => {
-      router.push({
-        name: 'HelpPage',
-        query: { from: route.name || 'unknown' }
-      })
-    }
-
-    return {
-      goToHelp
-    }
-  }
+function goToHelp() {
+  router.push({
+    name: 'HelpPage',
+    query: { from: route.name || 'unknown' }
+  })
 }
+
+onMounted(() => {
+  if (localStorage.getItem('wingpay-remembered')) {
+    router.push({ name: 'Home' })
+  }
+})
 </script>
 
 
