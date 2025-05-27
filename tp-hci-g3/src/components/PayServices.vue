@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="balance-and-cards">
-    <Swiper :cards="cards" @slide-change="handleSlideChange" />
+      <Swiper @slide-change="handleSlideChange" />
   </div>
   </div>
 </template>
