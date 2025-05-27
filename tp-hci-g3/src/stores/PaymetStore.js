@@ -71,9 +71,9 @@ export const usePaymentStore = defineStore('payment', () => {
       if (!token) {
           throw new Error('No hay token de autenticación guardado.');
       }
-      console.log(uuid)
+      console.log(cardId)
       let url = `http://localhost:8080/api/payment/push?uuid=${encodeURIComponent(uuid)}`;
-      if (cardId != null) {
+      if (cardId != null && cardId !== '') {
         url += `&cardId=${encodeURIComponent(cardId)}`;
       }
       const response = await fetch(url, {

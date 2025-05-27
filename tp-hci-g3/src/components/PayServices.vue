@@ -4,12 +4,12 @@
       <h2>Pagar servicio</h2>
       <form @submit.prevent="handleSubmit" class="search-form">
         <div class="form-group">
-          <label>Código o Link del pago</label>
+          <label>Ingresar codigo de pago</label>
           <div class="input-container" :class="{ 'error': errors.search }">
             <input 
               v-model="searchQuery"
               type="text"
-              placeholder="Ingrese el código o link"
+              placeholder="codigo"
             >
           </div>
           <span class="error-message" v-if="errors.search">{{ errors.search }}</span>

@@ -4,12 +4,12 @@
       <h2>Generar cobro</h2>
       <form @submit.prevent="generatePayment" class="generate-form">
         <div class="form-group">
-          <label>Concepto</label>
-          <div class="input-container" :class="{ 'error': errors.description }">
+          <label>Detalle</label>
+          <div class="amount-input" :class="{ 'error': errors.amount }">
             <input 
               v-model="description"
               type="text"
-              placeholder="Ingrese el concepto del cobro"
+              placeholder="detalle"
             >
           </div>
           <span class="error-message" v-if="errors.description">{{ errors.description }}</span>
@@ -36,27 +36,18 @@
         <div class="info-row">
           <label>Código único:</label>
           <div class="copy-container">
-            <span>{{ currentPayment.code }}</span>
-            <button @click="copyToClipboard(currentPayment.code)" class="copy-btn">
+            <span>{{ currentPayment.uuid }}</span>
+            <button @click="copyToClipboard(currentPayment.uuid)" class="copy-btn">
               <span class="material-symbols-rounded">content_copy</span>
             </button>
           </div>
         </div>
         <div class="info-row">
-          <label>Link de pago:</label>
-          <div class="copy-container">
-            <span>{{ currentPayment.link }}</span>
-            <button @click="copyToClipboard(currentPayment.link)" class="copy-btn">
-              <span class="material-symbols-rounded">content_copy</span>
-            </button>
-          </div>
-        </div>
-        <div class="info-row">
-          <label>Monto:</label>
+          <label>Monto: </label>
           <span>${{ currentPayment.amount }}</span>
         </div>
         <div class="info-row">
-          <label>Concepto:</label>
+          <label>Concepto: </label>
           <span>{{ currentPayment.description }}</span>
         </div>
       </div>
@@ -66,7 +57,7 @@
       <h2>Pagos pendientes</h2>
       <div class="pending-list">
         <div v-for="payment in pendingPayments" :key="payment.uuid" class="pending-card">
-          <div class="payment-amount">${{ payment.amount }}</div>
+          <div class="payment-amount">Monto: ${{ payment.amount }}</div>
           <div class="payment-details">
             <div class="detail-row">
               <span>Code: {{ payment.uuid }}</span>
@@ -75,13 +66,7 @@
               </button>
             </div>
             <div class="detail-row">
-              <span class="link">{{ payment.link }}</span>
-              <button @click="copyToClipboard(payment.link)" class="copy-btn">
-                <span class="material-symbols-rounded">content_copy</span>
-              </button>
-            </div>
-            <div class="detail-row">
-              <span>{{ payment.description }}</span>
+              <span>Detalle: {{ payment.description }}</span>
             </div>
             <div class="actions">
               <button 
