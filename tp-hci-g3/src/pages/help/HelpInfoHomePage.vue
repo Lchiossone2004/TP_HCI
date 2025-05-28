@@ -6,7 +6,7 @@
         </h3>
     
         <h4 class="ans">
-            Para pagar o cobrar servicios, basta con seleccionar el botón ‘Más’ dentro de la página principal. Una vez allí, podrás seleccionar si quieres cobrar o pagar por un servicio.
+            Para pagar o cobrar servicios, basta con seleccionar el botón correspondiente dentro de la página principal. Una vez allí, podrás seleccionar si quieres cobrar o pagar por un servicio.
         </h4>
     </div>
     <div class="faq"> 

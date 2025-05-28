@@ -6,7 +6,7 @@
         </h3>
     
         <h4 class="ans">
-            Puede restablecerse desde la pantalla de inicio de sesión, haciendo clic en '¿Olvidaste tu contraseña?', ingresando el correo y siguiendo los pasos para crear una nueva contraseña.
+            Puede restablecerse desde la pantalla de inicio de sesión, haciendo clic en '¿Olvidó su contraseña?', ingresando el correo y siguiendo los pasos para crear una nueva contraseña.
         </h4>
     </div>
     <div class="faq"> 
