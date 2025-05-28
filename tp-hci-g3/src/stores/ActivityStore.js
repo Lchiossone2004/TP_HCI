@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/UserStore'
 
+// Mapa de categorías basado en palabras clave en el detalle
 const CATEGORY_MAP = {
   'servicios': {
     keywords: ['servicio', 'servicios', 'pago de servicio', 'cobro de servicio'],
@@ -38,6 +39,8 @@ export const useActivityStore = defineStore('activity', () => {
   const isLoading    = ref(false)
   const errorMessage = ref(null)
   const userStore    = useUserStore()
+
+  // Función para determinar la categoría basada en el detalle
   function getCategoryFromDescription(description) {
     if (!description) return 'otros'
     
@@ -134,7 +137,6 @@ export const useActivityStore = defineStore('activity', () => {
       isLoading.value = false
     }
   }
-  
 
   const getFilteredActivities = computed(() => (m, y) =>
     activities.value.filter(a => {
