@@ -65,14 +65,13 @@ watch(activeTab, (newTab) => {
   box-sizing: border-box;
 }
 
-.services-container {
-  max-width: 1200px;
-  margin: 0 auto;
+services-container {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
+
 
 h1 {
   font-size: var(--font-title);
