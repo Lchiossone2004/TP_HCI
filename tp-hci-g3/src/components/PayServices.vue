@@ -9,7 +9,7 @@
             <input 
               v-model="searchQuery"
               type="text"
-              placeholder="codigo"
+              placeholder="Código"
             >
           </div>
           <span class="error-message" v-if="errors.search">{{ errors.search }}</span>

@@ -273,4 +273,27 @@ const handleConfirmDelete = () => {
   background: var(--light-grey);
 }
 
+@media (max-width: 1200px) {
+  .credit-card {
+    width: 250px;
+    height: 160px;
+    padding: 1rem;
+  }
+  .card-logo{
+    height: 25px;
+  }
+  .card-number {
+    font-size: var(--font-text);
+  }
+  .value {
+    font-size: var(--font-mini);
+  }
+  .expiry {
+    font-size: var(--font-mini);
+  }
+  .card-type {
+    font-size: var(--font-mini);
+  }
+}
+
 </style>

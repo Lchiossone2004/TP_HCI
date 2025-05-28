@@ -9,7 +9,7 @@
             <input 
               v-model="description"
               type="text"
-              placeholder="detalle"
+              placeholder="Escriba el concepto o un nombre del cobro"
             >
           </div>
           <span class="error-message" v-if="errors.description">{{ errors.description }}</span>

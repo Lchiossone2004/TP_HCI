@@ -149,7 +149,7 @@ function irAServicios(tab) {
   background: var(--light-grey);
 }
   .card {
-    width: 360px;
+    min-width: 360px;
     height: 300px;
     background-color:#03192c;
     border-radius: 20px;

@@ -1,6 +1,6 @@
 <template>
   <div class="search-title">
-    <h2>Transferir a</h2>
+    <h2>Transferir a...</h2>
   </div>
 
   <div class="search-row">
@@ -26,16 +26,18 @@
     />
   </div>
 
-  <div class="search-row">
-    <select v-model="motivo" class="search-input">
-      <option disabled value="">Seleccionar motivo</option>
-      <option value="comida">Comida</option>
-      <option value="compras">Compras</option>
-      <option value="supermercado">Supermercado</option>
-      <option value="servicios">Servicios</option>
-      <option value="varios">Varios</option>
-    </select>
-  </div>
+  <div class="search-row select-wrapper">
+  <select v-model="motivo" class="search-input">
+    <option disabled value="">Seleccionar motivo</option>
+    <option value="comida">Comida</option>
+    <option value="compras">Compras</option>
+    <option value="supermercado">Supermercado</option>
+    <option value="servicios">Servicios</option>
+    <option value="varios">Varios</option>
+  </select>
+  <span class="material-symbols-rounded arrow-icon">expand_more</span>
+</div>
+
 
   <div class="search-row">
     <div class="input-wrapper">
@@ -55,25 +57,24 @@
     </span>
   </div>
 
-  <div class="search-row">
-    <select
-      v-model="cardId"
-      class="search-input"
-      @change="errors.cardId = ''"
-      :class="{ error: errors.cardId }"
-    >
-      <option disabled value="">Seleccionar un método</option>
-      <option value="balance">
-        Balance {{ accountStore.balance.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) }}
-      </option>
-      <option v-for="card in tarjetas" :key="card.id" :value="card.id">
-        {{ card.type }} - ****{{ card.number.slice(-4) }}
-      </option>
-    </select>
-    <span class="error-message" v-if="errors.cardId">
-      {{ errors.cardId }}
-    </span>
-  </div>
+  <div class="search-row select-wrapper">
+  <select
+    v-model="cardId"
+    class="search-input"
+    @change="errors.cardId = ''"
+    :class="{ error: errors.cardId }"
+  >
+    <option disabled value="">Seleccionar un método</option>
+    <option value="balance">
+      Balance {{ accountStore.balance.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) }}
+    </option>
+    <option v-for="card in tarjetas" :key="card.id" :value="card.id">
+      {{ card.type }} - ****{{ card.number.slice(-4) }}
+    </option>
+  </select>
+  <span class="material-symbols-rounded arrow-icon">expand_more</span>
+</div>
+
 
   <p v-if="mensajeExito" class="success-message">
     {{ mensajeExito }}
@@ -306,4 +307,29 @@ function resetFormulario() {
   width: 100%;
   padding-left: 3rem;
 }
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.select-wrapper select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 2.5rem; 
+  cursor: pointer;
+}
+
+.arrow-icon {
+  position: absolute;
+  right: 12px;
+  pointer-events: none;
+  font-size: 1.5rem;
+  color: #03192c;
+  user-select: none;
+}
+
 </style>

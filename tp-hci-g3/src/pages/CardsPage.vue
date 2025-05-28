@@ -107,7 +107,7 @@ onMounted(async () => {
 .cards-section {
   background: var(--dark-blue);
   border-radius: var(--general-radius);
-  padding: 2rem;
+  padding: 1.5rem;
   color: var(--white-text);
 }
 
