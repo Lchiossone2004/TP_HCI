@@ -58,6 +58,7 @@ export const useActivityStore = defineStore('activity', () => {
         
         for (let i = 0; i < results.length; i++) {
           const p = results[i]
+          if (p.pending) continue
           const metadata = p.metadata || {}
         
           const rawDate = metadata.date || p.createdAt || new Date().toISOString()
