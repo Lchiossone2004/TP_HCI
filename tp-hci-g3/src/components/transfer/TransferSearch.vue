@@ -1,6 +1,6 @@
 <template>
   <div class="search-title">
-    <h2>Transferir a</h2>
+    <h2>Transferir a...</h2>
   </div>
 
   <div class="search-row">
