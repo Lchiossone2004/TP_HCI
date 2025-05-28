@@ -76,15 +76,19 @@ const currentMonthActivities = computed(() => {
   gap: 0.5rem;
 }
 .balance-and-cards {
-  flex: 1;
+  flex: 1;   
+  min-width: 360px;
   height: 300px;
   background-color: #03192C;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 500px;
+  gap: 1rem;
+  margin-right: 0.5rem;
+  box-sizing: border-box;
 }
+
 .bottom-section {
   display: flex;
   justify-content: flex-start;
@@ -104,8 +108,8 @@ const currentMonthActivities = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  min-width: 300px;
   height: 100%;
+  margin-right: 0.5rem;
 }
 @media (max-width: 1200px) {
   .top-section,
@@ -118,8 +122,7 @@ const currentMonthActivities = computed(() => {
   .inner1,
   .inner2 {
     width: 100%;
-    max-width: 750px;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
   }
 }
 </style>

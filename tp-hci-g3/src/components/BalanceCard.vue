@@ -67,7 +67,7 @@ onMounted(() => {
 .balance-amount {
   display: flex; 
   align-items: center; 
-  align-self: center;
+  align-self: flex-start;
   margin-bottom: 3rem;
   gap: 2rem;
   font-size: var(--font-big);
@@ -94,5 +94,26 @@ onMounted(() => {
   gap: .5rem;
   font-size: var(--font-mini); 
   color: var(--green);
+}
+
+@media (max-width: 1200px) {
+  .balance-card {
+    width: 250px;
+    height: 160px;
+    padding: 0.75rem;
+  }
+  .balance-header {
+    font-size: var(--font-title);
+  }
+  .balance-amount {
+    font-size: var(--font-title);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .coin {
+    width: 50px;
+    height: 25px;
+    font-size: var(--font-mini);
+  }
 }
 </style>

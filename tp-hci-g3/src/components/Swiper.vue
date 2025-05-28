@@ -129,7 +129,6 @@ watch(activeSlide, () => {
 
 <style scoped>
 .slider-card {
-  width: 100%;
   height: 300px;
   background-color: var(--dark-blue);
   border-radius: var(--general-radius);
@@ -305,4 +304,16 @@ input:focus {
 .submit-button:hover {
   background-color: #0a4b85;
 }
+
+@media (max-width: 500px) {
+  .slider-card {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .navigation-arrows{
+    padding: 0 0.5rem;
+  }
+}
+
 </style>
