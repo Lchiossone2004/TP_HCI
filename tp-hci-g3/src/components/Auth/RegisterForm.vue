@@ -3,24 +3,55 @@
     <h2>Registrarse</h2>
     <p>¡Hola! Comience su camino con WingPay</p>
     <div class="input-with-icon">
-    <span class="material-symbols-rounded icon">id_card</span>
-    <input type="text" placeholder="Nombre" v-model="nombre" />
+      <span class="material-symbols-rounded icon">id_card</span>
+      <input 
+        type="text" 
+        placeholder="Nombre" 
+        v-model="nombre" 
+        @input="handleInput('nombre')"
+      />
     </div>
     <div class="input-with-icon">
-    <span class="material-symbols-rounded icon">id_card</span>
-    <input type="text" placeholder="Apellido" v-model="apellido" />
+      <span class="material-symbols-rounded icon">id_card</span>
+      <input 
+        type="text" 
+        placeholder="Apellido" 
+        v-model="apellido" 
+        @input="handleInput('apellido')"
+      />
     </div>
     <div class="input-with-icon">
-    <span class="material-symbols-rounded icon">calendar_month</span>
-    <input type="date" placeholder="Fecha de nacimiento" v-model="nacimiento" />
+      <span class="material-symbols-rounded icon">calendar_month</span>
+      <input 
+        type="date" 
+        placeholder="Fecha de nacimiento" 
+        v-model="nacimiento" 
+        @input="clearError"
+      />
     </div>
     <div class="input-with-icon">
-    <span class="material-symbols-rounded icon">mail</span>
-    <input type="email" placeholder="Email" v-model="email" />
+      <span class="material-symbols-rounded icon">mail</span>
+      <input 
+        type="email" 
+        placeholder="Email" 
+        v-model="email" 
+        @input="clearError"
+      />
     </div>
     <div class="input-with-icon">
-    <span class="material-symbols-rounded icon">key</span>
-    <input type="password" placeholder="Contraseña" v-model="password" />
+      <span class="material-symbols-rounded icon">key</span>
+      <input 
+        :type="showPassword ? 'text' : 'password'" 
+        placeholder="Contraseña" 
+        v-model="password" 
+        @input="clearError"
+      />
+      <span 
+        class="material-symbols-rounded right-icon" 
+        @click="togglePasswordVisibility"
+      >
+        {{ showPassword ? 'visibility' : 'visibility_off' }}
+      </span>
     </div>
 
     <p v-if="formError" class="error">{{ formError }}</p>
@@ -45,17 +76,67 @@ export default {
       nacimiento: '',
       email: '',
       password: '',
-      formError: ''
+      formError: '',
+      showPassword: false
     }
   },
   methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword
+    },
+    
+    clearError() {
+      this.formError = '';
+    },
+
+    handleInput(field) {
+      this.clearError();
+      this.capitalizeFirstLetter(field);
+    },
+    
+    capitalizeFirstLetter(field) {
+      // Solo permitir letras y espacios
+      this[field] = this[field].replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '');
+      
+      if (this[field]) {
+        this[field] = this[field].split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+      }
+    },
+    
     validarFormulario() {
-      if (!this.nombre || !this.apellido || !this.nacimiento || !this.email  || !this.password) {
+      // Reiniciar mensaje de error
+      this.formError = '';
+      
+      // Validar campos vacíos
+      if (!this.nombre || !this.apellido || !this.nacimiento || !this.email || !this.password) {
         this.formError = 'Por favor complete todos los campos.';
         return false;
       }
+      
+      // Validar formato de nombre y apellido
+      const nombreRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
+      if (!nombreRegex.test(this.nombre) || !nombreRegex.test(this.apellido)) {
+        this.formError = 'Nombre y apellido solo deben contener letras.';
+        return false;
+      }
+      
+      // Validar formato de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(this.email)) {
+        this.formError = 'Ingrese un correo electrónico válido.';
+        return false;
+      }
 
+      // Validar edad (18 años o más)
       const birthDate = new Date(this.nacimiento);
+      // Verificar que la fecha sea válida
+      if (isNaN(birthDate.getTime())) {
+        this.formError = 'Ingrese una fecha de nacimiento válida.';
+        return false;
+      }
+      
       const today = new Date();
       const age = today.getFullYear() - birthDate.getFullYear();
       const monthDiff = today.getMonth() - birthDate.getMonth();
@@ -67,42 +148,76 @@ export default {
         return false;
       }
 
+      // Validar longitud de contraseña
       if (this.password.length < 10) {
         this.formError = 'La contraseña debe tener al menos 10 caracteres.';
         return false;
       }
 
-      this.formError = ''; 
       return true;
     },
 
     async register() {
       if (!this.validarFormulario()) return;
 
-      const datosUsuario = {
-        firstName: this.nombre,
-        lastName: this.apellido,
-        birthDate: this.nacimiento,
-        email: this.email,
-        password: this.password,
-        metadata: {}
-      }
-
       try {
+        // Asegurarnos que la fecha está en el formato correcto
+        const birthDate = new Date(this.nacimiento);
+        const formattedDate = birthDate.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+        
+        const datosUsuario = {
+          firstName: this.nombre,
+          lastName: this.apellido,
+          birthDate: formattedDate,
+          email: this.email,
+          password: this.password,
+          metadata: {}
+        }
+
+        console.log('Datos a enviar:', datosUsuario); // Para debugging
+
         const userStore = useUserStore()
         const resultado = await userStore.createUser(datosUsuario)
 
         console.log('Registro exitoso:', resultado)
-        this.$router.push({ name: 'Verification' })
+        this.$router.push({ 
+          name: 'Verification',
+          params: { email: this.email }
+        })
       } catch (error) {
         console.error('Error al registrar:', error)
-        this.formError = 'Hubo un error al registrar. Intente nuevamente.';
+        
+        if (error.message === 'duplicate_email') {
+          this.formError = 'Este correo electrónico ya está registrado. Por favor utilice otro o inicie sesión.';
+        } else if (error.message === 'unverified_email') {
+          // Email no verificado, preguntar al usuario si quiere reenviar código
+          if (confirm('Ya existe una cuenta con este email, pero no ha sido verificada. ¿Desea reenviar el código de verificación?')) {
+            try {
+              const userStore = useUserStore(); // Asegurarse de tener la referencia
+              await userStore.resendVerification(this.email);
+              this.$router.push({ 
+                name: 'Verification',
+                params: { email: this.email }
+              });
+            } catch (resendError) {
+              this.formError = 'Error al reenviar el código de verificación. Intente nuevamente.';
+            }
+          } else {
+            this.formError = 'Por favor, utilice otro correo electrónico para registrarse.';
+          }
+        } else {
+          // Mensaje más específico para errores del servidor
+          if (error.message && error.message.includes('500')) {
+            this.formError = 'Error del servidor. Por favor intente más tarde o contacte a soporte.';
+          } else {
+            this.formError = 'Hubo un error al registrar. Intente nuevamente.';
+          }
+        }
       }
     }
   }
 }
 </script>
-
 
 <style scoped>
 .input-with-icon {
@@ -130,6 +245,18 @@ export default {
   left: 10px;
   font-size: var(--icon-little);
   color: var(--dark-grey-text);
+}
+
+.input-with-icon .right-icon {
+  position: absolute;
+  right: 10px;
+  font-size: var(--icon-little);
+  color: var(--black-text);
+  cursor: pointer;
+}
+
+.input-with-icon .right-icon:hover {
+  color: var(--blue-button-hover);
 }
 
 .auth-container {
