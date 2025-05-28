@@ -8,23 +8,36 @@
     </div>
     <div class="balance-amount">
       <span class="balance-value">
-        {{ visible ? formatted : '***' }}
+        {{ visible ? formattedBalance : '****' }}
       </span>
       <span class="coin">ARS</span>
     </div>
-    <div class="balance-yield">
-      <span>Rendimiento de</span>
-      <span>+24,6%</span>
-    </div>
   </div>
-  
 </template>
 
 <script setup>
-import { ref } from 'vue'
-const visible = ref(true)
-const formatted = '$205.768,63'
-function toggle() { visible.value = !visible.value }
+import { ref, computed, onMounted } from 'vue'
+import { usePaymentStore } from '@/stores/PaymetStore'
+import { useAccountStore } from '@/stores/AccountStore'
+const accountStore = useAccountStore()
+
+const visible = ref(localStorage.getItem('visible') !== null ? JSON.parse(localStorage.getItem('visible')) : true)
+
+function toggle() {
+  visible.value = !visible.value
+  localStorage.setItem('visible', JSON.stringify(visible.value))
+}
+
+const formattedBalance = computed(() => {
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    minimumFractionDigits: 2
+  }).format(accountStore.balance)
+})
+onMounted(() => {
+  accountStore.getAccountInfo()
+})
 </script>
 
 <style scoped>
@@ -38,8 +51,8 @@ function toggle() { visible.value = !visible.value }
   display: flex; 
   flex-direction: column;
   justify-content: space-between;
-  flex-shrink: 0; /* Agregamos esto para evitar que la tarjeta se encoja */
-  margin: 0 auto; /* Para centrar la tarjeta */
+  flex-shrink: 0;
+  margin: 0 auto;
 }
 .balance-header {
   display: flex; 
@@ -54,6 +67,8 @@ function toggle() { visible.value = !visible.value }
 .balance-amount {
   display: flex; 
   align-items: center; 
+  align-self: flex-start;
+  margin-bottom: 3rem;
   gap: 2rem;
   font-size: var(--font-big);
 }
@@ -81,4 +96,24 @@ function toggle() { visible.value = !visible.value }
   color: var(--green);
 }
 
+@media (max-width: 1200px) {
+  .balance-card {
+    width: 250px;
+    height: 160px;
+    padding: 0.75rem;
+  }
+  .balance-header {
+    font-size: var(--font-title);
+  }
+  .balance-amount {
+    font-size: var(--font-title);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .coin {
+    width: 50px;
+    height: 25px;
+    font-size: var(--font-mini);
+  }
+}
 </style>

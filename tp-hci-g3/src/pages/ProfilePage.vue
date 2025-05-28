@@ -1,57 +1,58 @@
 <template>
   <div class="layout">
     <main class="main-content">
+      <h1 class="header">Mi Perfil</h1>         
       <ProfileInfo 
         :perfil="perfil"
         @edit="handleEditProfile"
       />
       <ProfileActions @edit="handleEditProfile" />
-      <EditProfileModal 
+      <EditProfileModal
         v-model="showEditModal"
-        v-model:perfil="perfil"
+        :perfil="perfil"
+        @update:perfil="actualizarPerfil"
       />
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
 import ProfileInfo from '@/components/ProfileInfo.vue'
 import ProfileActions from '@/components/ProfileActions.vue'
 import EditProfileModal from '@/components/EditProfileModal.vue'
+import { useUserStore } from '@/stores/UserStore'
+import { useAccountStore } from '@/stores/AccountStore'
 
-const router = useRouter()
 const showEditModal = ref(false)
+const perfil = ref({})
 
-// Cargar datos del localStorage o usar valores por defecto
-const perfil = ref(
-  JSON.parse(localStorage.getItem('userProfile')) || {
-    nombre: 'Mateo',
-    apellido: 'Gorriti',
-    email: 'mateo.go@gmail.com',
-    dni: '40.527.004',
-    telefono: '+54 11 7385-4992',
-    avatar: '/src/assets/images/FotoPerfil.jpeg',
-    cvu: '0000003100064484890001',
-    alias: 'mateo.gorriti'
-  }
-)
-
-// Guardar cambios en localStorage cuando el perfil cambie
-watch(perfil, (newValue) => {
-  localStorage.setItem('userProfile', JSON.stringify(newValue))
-}, { deep: true })
+const userStore = useUserStore()
+const accountStore = useAccountStore()
 
 const handleEditProfile = () => {
   showEditModal.value = true
 }
 
-// Opcional: Cargar datos al montar el componente
-onMounted(() => {
-  const savedProfile = localStorage.getItem('userProfile')
-  if (savedProfile) {
-    perfil.value = JSON.parse(savedProfile)
+const actualizarPerfil = (nuevoPerfil) => {
+  perfil.value = { ...perfil.value, ...nuevoPerfil }
+}
+
+onMounted(async () => {
+  try {
+    const userData = await userStore.getUser()
+    const accountData = await accountStore.getAccountInfo()
+    perfil.value = {
+      ...userData,
+      nombre:  userData.firstName || '',
+      apellido:userData.lastName  || '',
+      email:   userData.email     || '',
+      alias:   accountData.alias  || '',
+      cvu:     accountData.cvu    || '',
+      avatar:  '/src/assets/images/avatars/default-profile-picture.png'
+    }
+  } catch (error) {
+    console.error('Error cargando datos del perfil:', error)
   }
 })
 </script>
@@ -64,19 +65,13 @@ onMounted(() => {
   background-color: var(--background-grey);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  box-sizing: border-box;
+  gap: 1rem;
 }
 
-@media (max-width: 1150px) {
-  .main-content {
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .main-content {
-    padding: 1rem;
-  }
+.header {
+  font-size: var(--font-title);
+  color: var(--black-text);
+  margin-bottom: 1rem;
 }
 </style>
+

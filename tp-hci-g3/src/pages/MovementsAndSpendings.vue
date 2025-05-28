@@ -4,7 +4,7 @@
       <div class="top-section">
         <h2 class="main-title">Movimientos y gastos</h2>
         <div class="menu-row">
-          <!-- Menú de meses -->
+      
           <div class="select-wrapper">
             <select 
               v-model="selectedMonth" 
@@ -22,7 +22,7 @@
               expand_more
             </span>
           </div>
-          <!-- Menú de años -->
+        
           <div class="select-wrapper">
             <select 
               v-model="selectedYear" 
@@ -72,12 +72,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Activity from '@/components/Activity.vue'
 import ExpensesChart from '@/components/ExpensesChart.vue'
+import { useActivityStore } from '@/stores/ActivityStore'
 
 const router = useRouter();
+const activityStore = useActivityStore();
 
 const goToHome = () => {
   router.back();
@@ -125,29 +127,23 @@ const selectedMonth = ref(new Date().getMonth())
 const selectedYear = ref(currentYear)
 const search = ref('')
 
-// Datos de ejemplo con fechas válidas
-const allActivities = ref([
-  { icon: 'shopping_bag', title: 'Prüne', subtitle: 'Hoy 19:43', amount: -57800, date: '2025-05-14T19:43:00' },
-  { icon: 'restaurant', title: 'Pedidos Ya', subtitle: 'Ayer 21:18', amount: -17550, date: '2025-05-13T21:18:00' },
-  { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '19/9 10:25', amount: 57800, date: '2025-09-19T10:25:00' },
-  { icon: 'sync_alt', title: 'Mónica Domínguez', subtitle: '17/9 15:56', amount: -1525, date: '2025-09-17T15:56:00' },
-  { icon: 'event', title: 'Mateo Gorriti', subtitle: '17/9 09:28', amount: 100000, date: '2025-09-17T09:28:00' },
-  { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '15/9 11:32', amount: 20000, date: '2025-09-15T11:32:00' },
-  { icon: 'shopping_cart', title: 'DISCO CENCOSUD', subtitle: '13/9 18:37', amount: -127845, date: '2025-09-13T18:37:00' },
-  { icon: 'sync_alt', title: 'Pablo Gomez', subtitle: '12/9 08:01', amount: 463, date: '2025-09-12T08:01:00' },
-])
 
-// Filtrado de actividades
+onMounted(() => {
+  activityStore.loadActivities()
+})
+
+
 const filteredActivities = computed(() => {
-  return allActivities.value.filter(activity => {
-    const activityDate = new Date(activity.date)
-    const matchesMonth = selectedMonth.value === -1 || activityDate.getMonth() === selectedMonth.value
-    const matchesYear = selectedYear.value === -1 || activityDate.getFullYear() === selectedYear.value
-    const matchesSearch = search.value === '' || 
-      `${activity.title} ${activity.subtitle}`.toLowerCase().includes(search.value.toLowerCase())
-    
-    return matchesMonth && matchesYear && matchesSearch
-  })
+  let activities = activityStore.getFilteredActivities(selectedMonth.value, selectedYear.value)
+  
+  if (search.value) {
+    const searchTerm = search.value.toLowerCase()
+    activities = activities.filter(activity => 
+      `${activity.title} ${activity.subtitle}`.toLowerCase().includes(searchTerm)
+    )
+  }
+  
+  return activities
 })
 </script>
 
@@ -239,10 +235,10 @@ const filteredActivities = computed(() => {
   padding: 0.5rem 2.5rem 0.5rem 1.5rem;
   border-radius: 20px;
   cursor: pointer;
-  transition: all 0.2s; /* Cambiado de background a all para animar también el width */
+  transition: all 0.2s; 
   display: flex;
-  min-width: 160px; /* Mantenemos el min-width */
-  width: 200px; /* Ancho inicial */
+  min-width: 160px;
+  width: 200px; 
 }
 
 .menu-btn:hover {
@@ -298,7 +294,6 @@ const filteredActivities = computed(() => {
 .chart-col {
   flex: 1;
   min-width: 350px;
-  max-width: 750px;
   display: flex;
   flex-direction: column;
   gap: 1rem;

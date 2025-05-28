@@ -1,26 +1,39 @@
 <template>
   <div class="credit-card" :class="cardTypeClass">
     <div class="card-header">
+  <div class="left-section">
+    <template v-if="cardBrand">
       <img 
-        :src="getCardLogo(card.number)" 
-        :alt="getCardType(card.number)" 
-        :class="['card-logo', `card-logo-${getCardType(card.number).toLowerCase()}`]"
+        :src="getCardLogo(props.card.number)" 
+        :alt="cardBrand" 
+        :class="['card-logo', `card-logo-${cardBrand}`]"
       />
-      <button class="delete-btn" @click="showConfirmDelete = true">
-        <span class="material-symbols-rounded">delete</span>
-      </button>
-    </div>
+    </template>
+    <template v-else>
+      <span class="material-symbols-rounded generic-icon">credit_card</span>
+    </template>
+
+    <span class="card-type">{{ props.card.type }}</span>
+  </div>
+
+  <button class="delete-btn" @click="showConfirmDelete = true">
+    <span class="material-symbols-rounded">delete</span>
+  </button>
+</div>
+
+
+
     <div class="card-number">
       •••• •••• •••• {{ card.number.slice(-4) }}
     </div>
     <div class="card-footer">
       <div class="card-holder">
-        <span class="value">{{ card.name }}</span>
-        <span class="expiry">{{ card.expiry }}</span>
+        <span class="value">{{ card.fullName }}</span>
+        <span class="expiry">{{ card.expirationDate }}</span>
       </div>
     </div>
 
-    <!-- Confirmation Modal -->
+    
     <Modal v-model="showConfirmDelete" title="Confirmar eliminación">
       <div class="confirm-delete">
         <p>¿Está seguro que desea eliminar esta tarjeta?</p>
@@ -55,27 +68,37 @@ const props = defineProps({
 const emit = defineEmits(['delete'])
 const showConfirmDelete = ref(false)
 
+const cardBrand = computed(() => {
+  const type = getCardType(props.card.number)
+  return type ? type.toLowerCase() : null
+})
+
+
+
 const getCardType = (number) => {
+  if (!number) return null
   const firstDigit = number[0]
   if (firstDigit === '4') return 'visa'
   if (firstDigit === '5') return 'mastercard'
   if (firstDigit === '3') return 'amex'
-  return 'TARJETA'
+  return null
 }
+
 
 const getCardLogo = (number) => {
   const firstDigit = number[0]
-  // Usar directamente las imágenes importadas
   if (firstDigit === '4') return visaLogo
   if (firstDigit === '5') return mastercardLogo
   if (firstDigit === '3') return amexLogo
-  return '' // o una imagen por defecto si la tienes
+  return '' 
 }
 
 const cardTypeClass = computed(() => {
   const type = getCardType(props.card.number)
-  return `card-${type}`
+  return type ? `card-${type}` : 'card-generic'
 })
+
+
 
 const handleConfirmDelete = () => {
   emit('delete')
@@ -84,6 +107,12 @@ const handleConfirmDelete = () => {
 </script>
 
 <style scoped>
+.card-generic {
+  background: linear-gradient(135deg, #ffffff, #6a6a6a);
+
+}
+
+
 .credit-card {
   border-radius: var(--general-radius);
   padding: 1.5rem;
@@ -120,7 +149,6 @@ const handleConfirmDelete = () => {
   height: 30px;
   object-fit: contain;
 }
-
 .card-logo-mastercard {
   height: 40px;
   margin-top: -5px;
@@ -142,6 +170,26 @@ const handleConfirmDelete = () => {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.card-type {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.7);
+  position: relative;
+  top: -2px;
 }
 
 .delete-btn:hover {
@@ -223,6 +271,29 @@ const handleConfirmDelete = () => {
 
 .cancel-btn:hover {
   background: var(--light-grey);
+}
+
+@media (max-width: 1200px) {
+  .credit-card {
+    width: 250px;
+    height: 160px;
+    padding: 1rem;
+  }
+  .card-logo{
+    height: 25px;
+  }
+  .card-number {
+    font-size: var(--font-text);
+  }
+  .value {
+    font-size: var(--font-mini);
+  }
+  .expiry {
+    font-size: var(--font-mini);
+  }
+  .card-type {
+    font-size: var(--font-mini);
+  }
 }
 
 </style>

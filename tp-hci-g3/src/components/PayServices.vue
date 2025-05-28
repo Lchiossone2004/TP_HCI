@@ -1,122 +1,94 @@
 <template>
-    <div class="pay-services">
-        <div class="payment-form">
-        <h2>Pagar servicio</h2>
-        <form @submit.prevent="handleSubmit" class="search-form">
-            <div class="form-group">
-            <label>ID o Link del pago</label>
-            <div class="input-container" :class="{ 'error': errors.search }">
-                <input 
-                v-model="searchQuery"
-                type="text"
-                placeholder="Ingrese el ID o link del pago"
-                >
-            </div>
-            <span class="error-message" v-if="errors.search">{{ errors.search }}</span>
-            </div>
-            <button type="submit" class="search-btn">Buscar</button>
-        </form>
+  <div class="pay-services">
+    <div class="payment-form">
+      <h2>Pagar servicio</h2>
+      <form @submit.prevent="handleSubmit" class="search-form">
+        <div class="form-group">
+          <label>Ingresar código de pago</label>
+          <div class="input-container" :class="{ 'error': errors.search }">
+            <input 
+              v-model="searchQuery"
+              type="text"
+              placeholder="Código"
+            >
+          </div>
+          <span class="error-message" v-if="errors.search">{{ errors.search }}</span>
+        </div>
+        <button type="submit" class="search-btn">Pagar</button>
+      </form>
 
-        <div v-if="paymentFound" class="payment-details">
-            <h3>Detalles del pago</h3>
-            <div class="detail-row">
-            <label>Monto:</label>
-            <span class="amount">${{ paymentFound.amount }}</span>
-            </div>
-            <div class="detail-row">
-            <label>ID:</label>
-            <div class="info-value-container">
-                <span class="payment-text">{{ paymentFound.id }}</span>
-            </div>
-            </div>
-            <button @click="showConfirmPayment = true" class="pay-btn">Pagar ahora</button>
-        </div>
-
-        <div v-if="error && !errors.search" :class="['notification-message', { 'success': isSuccess, 'error': !isSuccess }]">
-            {{ error }}
-        </div>
-        </div>
-
-        <!-- Modal de confirmación -->
-        <Modal v-model="showConfirmPayment" title="Confirmar pago">
-        <div class="confirm-payment">
-            <p>¿Está seguro que desea realizar este pago?</p>
-            <div class="payment-summary">
-            <div class="summary-row">
-                <span>Monto:</span>
-                <span class="amount">${{ paymentFound?.amount }}</span>
-            </div>
-            <div class="summary-row">
-                <span>ID:</span>
-                <span class="payment-text">{{ paymentFound?.id }}</span>
-            </div>
-            </div>
-            <div class="button-group">
-            <button @click="confirmPayment" class="confirm-btn">
-                Confirmar
-            </button>
-            <button @click="showConfirmPayment = false" class="cancel-btn">
-                Cancelar
-            </button>
-            </div>
-        </div>
-        </Modal>
+      <div v-if="error" :class="['notification-message', { 'success': isSuccess, 'error': !isSuccess }]">
+        {{ error }}
+      </div>
     </div>
+    <div class="balance-and-cards">
+      <Swiper @slide-change="handleSlideChange" />
+  </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'  // Added computed import
-import Modal from './Modal.vue'
+import { ref, computed } from 'vue'
+import BalanceCard from './BalanceCard.vue'
+import { useAccountStore } from '@/stores/AccountStore'
+import { usePaymentStore } from '@/stores/PaymetStore'
+import Swiper from '@/components/Swiper.vue';
 
-const isSuccess = computed(() => error.value === 'Pago procesado exitosamente')
+const accountStore = useAccountStore()
+const paymentStore = usePaymentStore()
+const cardNum = ref('')
 const searchQuery = ref('')
-const paymentFound = ref(null)
 const error = ref('')
 const errors = ref({
   search: ''
 })
 
-const showConfirmPayment = ref(false)
-
-const confirmPayment = () => {
-  processPayment()
-  showConfirmPayment.value = false
+const handleSlideChange = (cardId) => {
+  cardNum.value = cardId
 }
 
-const searchPayment = () => {
-  const pendingPayments = JSON.parse(localStorage.getItem('pendingPayments') || '[]')
-  const payment = pendingPayments.find(p => 
-    p.id === searchQuery.value || p.link === searchQuery.value
-  )
+const isSuccess = computed(() => error.value === 'Pago procesado exitosamente!')
 
-  if (payment) {
-    paymentFound.value = payment
-    error.value = ''
-  } else {
-    paymentFound.value = null
-    error.value = 'No se encontró el pago especificado'
-  }
-}
-
-const processPayment = () => {
-  const pendingPayments = JSON.parse(localStorage.getItem('pendingPayments') || '[]')
-  const updatedPayments = pendingPayments.filter(p => p.id !== paymentFound.value.id)
-  localStorage.setItem('pendingPayments', JSON.stringify(updatedPayments))
-  
-  paymentFound.value = null
-  searchQuery.value = ''
-  error.value = 'Pago procesado exitosamente'
-}
-
-const handleSubmit = () => {
+const handleSubmit = async () => {
   errors.value.search = ''
-  
+  error.value = ''
+
   if (!searchQuery.value.trim()) {
-    errors.value.search = 'Campo vacío, debe ingresar un valor'
+    errors.value.search = 'Debe ingresar un código o URL.'
     return
   }
-  
-  searchPayment()
+
+  try {
+    let code = searchQuery.value
+
+    if (code.includes('?')) {
+      const urlParams = new URLSearchParams(code.split('?')[1])
+      code = urlParams.get('code')
+    }
+
+    if (!code) {
+      error.value = 'Código inválido.'
+      return
+    }
+
+    const payment = await paymentStore.makePayment(code,cardNum.value)
+
+    if (!payment) {
+      error.value = 'No se encontró el pago.'
+      return
+    }
+
+    if (accountStore.balance < payment.amount) {
+      error.value = 'Saldo insuficiente.'
+      return
+    }
+    error.value = 'Pago procesado exitosamente!'
+    searchQuery.value = ''
+
+  } catch (err) {
+    error.value = err.message || 'Error al procesar el pago.'
+    console.error('Error:', err)
+  }
 }
 </script>
 
@@ -125,15 +97,24 @@ const handleSubmit = () => {
   width: 100%;
   max-width: min(600px, 100%);
   margin: 0 auto;
-}
 
+}
+.balance-container {
+  background: var(--dark-blue);
+  border-radius: var(--general-radius);
+  padding: 2rem;
+  margin-top: 2rem;
+  color: var(--white-text);
+}
 .payment-form {
   background: white;
   border-radius: var(--general-radius);
   padding: 2rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
+.title {
+  margin-bottom: 1rem;
+}
 .search-form {
   margin-top: 1.5rem;
 }
@@ -289,4 +270,15 @@ input:focus {
   background: var(--red-danger);
 }
 
+.balance-and-cards {
+  flex: 1;
+  height: 300px;
+  background-color: #03192C;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3rem;
+  min-width: 500px;
+}
 </style>

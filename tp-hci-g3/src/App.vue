@@ -20,11 +20,16 @@ export default {
   setup() {
     const route = useRoute()
     const showSidebar = computed(() => {
-      return route.path !== '/' && route.name !== 'notfound'
+      return route.path !== '/' && 
+             route.name !== 'notfound' && 
+             route.name !== 'Verification' && 
+             route.name !== 'PasswordRecovery' &&
+             !(route.name === 'HelpPage') 
+             
     })
     const showHeader = computed(() => {
-      // Don't show header on login page
-      return route.path !== '/' && route.name !== 'notfound'
+      
+      return route.path !== '/' && route.name !== 'notfound' && route.name !== 'Verification'  && route.name !== 'PasswordRecovery' && !(route.name === 'HelpPage')
     })
 
     return {

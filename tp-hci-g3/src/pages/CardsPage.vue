@@ -5,14 +5,12 @@
       <div class="cards-section">
         <div class="section-header">
           <h2>Dinero en cuenta</h2>
-          <ShowInfoButton>
             <button class="add-money-btn">
-              <span class="material-symbols-rounded">add</span>
+              <span class="material-symbols-rounded" @click="handleEnterMoney">add</span>
               Ingresar dinero
             </button>
-          </ShowInfoButton>
         </div>
-        <div class="balance-container">
+        <div>
           <BalanceCard />
         </div>
       </div>
@@ -28,61 +26,63 @@
           </AddCardButton>
         </div>
         <div class="cards-container">
-          <div v-if="!cards.length" class="no-cards-message">
+          <div v-if="!cardStore.tarjetas.length" class="no-cards-message">
             No hay tarjetas vinculadas
           </div>
           <div v-else class="cards-grid">
             <Cards
-              v-for="(card, index) in cards"
+              v-for="card in cardStore.tarjetas"
               :key="card.id"
               :card="card"
-              @delete="handleDeleteCard(index)"
+              @delete="handleDeleteCard(card.id)"
             />
           </div>
-        </div>
+        </div>    
       </div>    
-    </main>
+    
+    <EnterMoneyModal v-model="mostrarModal" />
+  </main>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
+import { onMounted } from 'vue'
 import BalanceCard from '@/components/BalanceCard.vue'
 import Cards from '@/components/Cards.vue'
 import AddCardButton from '@/components/AddCardButton.vue'
-import ShowInfoButton from '@/components/ShowInfoButton.vue'
+import EnterMoneyModal from '@/components/EnterMoneyModal.vue'
+import { useCardStore } from '@/stores/CardStore'
 
-const showMyInfoModal = ref(false)
-const cards = ref([])
+const cardStore = useCardStore()
+const mostrarModal = ref(false)
 
-const accountInfo = ref({
-  cvu: '0000003100064484890001',
-  alias: 'mateo.gorriti'
-})
-
-const handleAddCard = (newCard) => {
-  cards.value.push(newCard)
-  localStorage.setItem('userCards', JSON.stringify(cards.value))
-}
-
-const handleDeleteCard = (index) => {
-  cards.value.splice(index, 1)
-  localStorage.setItem('userCards', JSON.stringify(cards.value))
-}
-
-const copyToClipboard = async (text) => {
+const handleAddCard = async (newCard) => {
   try {
-    await navigator.clipboard.writeText(text)
-    // Aquí podrías añadir una notificación de éxito
-  } catch (err) {
-    console.error('Error al copiar:', err)
+    newCard.number = newCard.number.replace(/\s+/g, '')
+    await cardStore.addCard(newCard)
+    await cardStore.getCards()
+  } catch (error) {
+    console.error('Error al agregar tarjeta:', error)
+  }
+}
+const handleEnterMoney = () => {
+  mostrarModal.value = true
+}
+const handleDeleteCard = async (id) => {
+  try {
+    await cardStore.deleteCard(id)
+    await cardStore.getCards()
+  } catch (error) {
+    console.error('Error al eliminar tarjeta:', error)
   }
 }
 
-onMounted(() => {
-  const savedCards = localStorage.getItem('userCards')
-  if (savedCards) {
-    cards.value = JSON.parse(savedCards)
+onMounted(async () => {
+  try {
+    await cardStore.getCards()
+  } catch (error) {
+    console.error('Error al cargar tarjetas:', error)
   }
 })
 </script>
@@ -107,7 +107,7 @@ onMounted(() => {
 .cards-section {
   background: var(--dark-blue);
   border-radius: var(--general-radius);
-  padding: 2rem;
+  padding: 1.5rem;
   color: var(--white-text);
 }
 

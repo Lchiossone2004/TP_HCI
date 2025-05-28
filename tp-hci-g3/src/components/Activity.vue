@@ -2,17 +2,21 @@
   <div class="activity-card-outer">
     <div class="header-activity-card">
       <span>{{ title }}</span>
-      <button v-if="onClickMore" class="more-activities" @click="onClickMore">
+      <button
+        v-if="onClickMore"
+        type="button"
+        class="more-activities"
+        @click="onClickMore"
+      >
         <span class="material-symbols-rounded arrow">chevron_right</span>
       </button>
     </div>
 
-    <div v-if="filteredActivities.length > 0">
-      <div 
-        v-for="(item, index) in filteredActivities" 
-        :key="index" 
+    <ul v-if="filteredActivities.length" class="activity-list">
+      <li
+        v-for="(item, index) in filteredActivities"
+        :key="index"
         class="activity-item"
-        @click="handleClick(item)"
       >
         <div class="icon-wrapper">
           <span class="material-symbols-rounded icon">{{ item.icon }}</span>
@@ -23,18 +27,18 @@
             <div class="date-col">{{ item.subtitle }}</div>
           </div>
         </div>
-        <div 
+        <div
           class="amount"
-          :class="{ positive: item.amount > 0, negative: item.amount < 0 }"
+          :class="{ negative: item.amount < 0, positive: item.amount >= 0 }"
         >
-          {{ formatAmount(item.amount) }}
+          {{ formatAmount(item) }}
         </div>
-      </div>
-    </div>
+      </li>
+    </ul>
+
     <div v-else class="no-activity">No hay actividad</div>
   </div>
 </template>
-
 
 <script setup>
 import { computed } from 'vue'
@@ -62,24 +66,18 @@ const props = defineProps({
   }
 })
 
-
-function formatAmount(value) {
-  const formatted = Math.abs(value).toLocaleString('es-AR')
-  return (value > 0 ? '+' : '-') + '$' + formatted
+function formatAmount(item) {
+  return `${item.amount < 0 ? '-' : '+'}${item.formattedAmount}`
 }
 
-function handleClick(item) {
-  console.log('Actividad clickeada:', item)
-}
-
-const filteredActivities = computed(() => {
-  return props.activities.filter(activity => {
-    const activityDate = new Date(activity.date)
-    const matchesMonth = props.month === -1 || activityDate.getMonth() === props.month
-    const matchesYear = props.year === -1 || activityDate.getFullYear() === props.year
-    return matchesMonth && matchesYear
+const filteredActivities = computed(() =>
+  props.activities.filter(activity => {
+    const d = new Date(activity.date)
+    const okMonth = props.month === -1 || d.getMonth() === props.month
+    const okYear  = props.year  === -1 || d.getFullYear() === props.year
+    return okMonth && okYear
   })
-})
+)
 </script>
 
 <style scoped>
@@ -102,7 +100,7 @@ const filteredActivities = computed(() => {
 }
 
 .more-activities {
-  background-color: transparent;
+  background: transparent;
   border: none;
   cursor: pointer;
   padding: 0;
@@ -113,17 +111,18 @@ const filteredActivities = computed(() => {
   color: #1f1f1f;
 }
 
+.activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
 .activity-item {
   display: flex;
   align-items: center;
   padding: 0.75rem;
   border-radius: 12px;
-  cursor: pointer;
   transition: background-color 0.2s;
-}
-
-.activity-item:hover {
-  background-color: #f5f5f5;
 }
 
 .icon-wrapper {
@@ -160,7 +159,6 @@ const filteredActivities = computed(() => {
 .title {
   color: var(--black-text);
   font-size: var(--font-text);
-  text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -169,7 +167,6 @@ const filteredActivities = computed(() => {
 .date-col {
   font-size: var(--font-mini);
   color: var(--dark-grey-text);
-  text-align: left;
   margin-top: 0.1rem;
 }
 
@@ -194,31 +191,15 @@ const filteredActivities = computed(() => {
   padding: 2rem 0;
 }
 
-
 @media (max-width: 500px) {
   .info {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.1rem;
   }
-  
-  .main-info {
-    width: 100%;
-    align-items: flex-start;
-  }
-  
-  .title {
-    width: 100%;
-    text-align: left;
-    font-size: var(--font-text);
-    margin-bottom: 0.1rem;
-  }
-  
+  .title,
   .date-col {
     width: 100%;
-    text-align: left;
-    font-size: var(--font-mini);
-    margin-top: 0;
   }
 }
 </style>

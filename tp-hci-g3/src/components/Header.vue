@@ -1,11 +1,10 @@
 <template>
-  <div :class="['header', { 'special-header': isActivityPage }]">
+  <div class="header">
     <button v-if="!isHomePage" @click="goBack" class="back-btn">
       <span class="material-symbols-rounded">arrow_back</span>
       Volver
     </button>
     <div class="top-icons">
-      <span v-if="isHomePage" class="material-symbols-rounded icon">notifications</span>
       <span class="material-symbols-rounded icon" @click="goToHelp">help</span>
     </div>
   </div>
@@ -22,21 +21,19 @@ export default {
     const router = useRouter()
 
     const isHomePage = computed(() => route.name === 'Home')
-    const isActivityPage = computed(() => route.name === 'Actividad')
 
     const goBack = () => {
       router.go(-1)
     }
     const goToHelp = () => {
-  router.push({
-    path: '/help',
-    query: { from: route.name }
-  })
-}
+      router.push({
+        path: '/help',
+        query: { from: route.name }
+      })
+    }
 
     return {
       isHomePage,
-      isActivityPage,
       goBack,
       goToHelp
     }
@@ -61,10 +58,6 @@ export default {
   transition: background-color 0.3s ease;
 }
 
-.special-header {
-  background-color: var(--background-grey);
-}
-
 .top-icons {
   display: flex;
   gap: 1.5rem;
@@ -72,7 +65,7 @@ export default {
 }
 
 .top-icons .material-symbols-rounded {
-  font-size: var(--font-subtitle);
+  font-size: var(--font-title);
   cursor: pointer;
   color: var(--black-text);
   transition: color 0.2s ease;

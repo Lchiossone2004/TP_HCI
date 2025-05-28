@@ -1,51 +1,83 @@
 <template>
   <Modal v-model="show" title="Datos de mi cuenta">
     <div class="edit-form">
-      <div v-for="(value, key) in editableFields" :key="key" class="form-field">
+      
+    
+      <div class="form-field">
+        <label>Nombre</label>
+        <div class="field-value">{{ editableFields.firstName }}</div>
+      </div>
+
+      <div class="form-field">
+        <label>Apellido</label>
+        <div class="field-value">{{ editableFields.lastName }}</div>
+      </div>
+
+      <div class="form-field">
+        <label>Email</label>
+        <div class="field-value">{{ editableFields.email }}</div>
+      </div>
+
+      <div class="form-field">
+        <label>CVU</label>
+        <div class="field-value">
+          {{ editableFields.cvu }}
+          <span class="material-symbols-rounded copy-icon" @click="copyToClipboard(editableFields.cvu)">
+            content_copy
+          </span>
+        </div>
+      </div>
+
+
+      <div class="form-field">
         <div class="field-header">
-          <label>{{ labels[key] }}</label>
+          <label>Alias</label>
           <button 
-            v-if="!editingField[key]" 
+            v-if="!editingField.alias" 
             class="edit-button"
-            @click="startEditing(key)"
+            @click="startEditing('alias')"
           >
             <span class="material-symbols-rounded">edit</span>
           </button>
           <button 
             v-else 
             class="save-button"
-            @click="saveField(key)"
+            @click="saveField('alias')"
           >
             <span class="material-symbols-rounded">check</span>
           </button>
         </div>
         <input
-          v-if="editingField[key]"
-          v-model="editableFields[key]"
-          :type="inputTypes[key]"
+          v-if="editingField.alias"
+          v-model="editableFields.alias"
+          type="text"
           class="edit-input"
-          @keyup.enter="saveField(key)"
+          @keyup.enter="saveField('alias')"
         />
         <div v-else class="field-value">
-          {{ value }}
-          <span v-if="key === 'cvu' || key === 'alias'" 
-                class="material-symbols-rounded copy-icon" 
-                @click="copyToClipboard(value)">
+          {{ editableFields.alias }}
+          <span class="material-symbols-rounded copy-icon" @click="copyToClipboard(editableFields.alias)">
             content_copy
           </span>
         </div>
       </div>
-    </div>
     <div class="buttons-container">
       <button class="submit-button" @click="saveChanges">Guardar cambios</button>
       <button class="cancel-button" @click="closeModal">Cancelar</button>
     </div>
+  </div>
   </Modal>
 </template>
 
+
+
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import Modal from './Modal.vue'
+import { useAccountStore } from '@/stores/AccountStore'
+
+import { watch } from 'vue'
+const accountStore = useAccountStore()
 
 const props = defineProps({
   modelValue: Boolean,
@@ -62,27 +94,36 @@ const show = computed({
   set: (value) => emit('update:modelValue', value)
 })
 
-const labels = {
-  dni: 'DNI',
-  nombre: 'Nombre',
-  apellido: 'Apellido',
-  email: 'Email',
-  telefono: 'Número',
-  cvu: 'CVU',
-  alias: 'Alias'
+const editableFields = ref({
+  firstName: '',
+  lastName: '',
+  email: '',
+  cvu: '',
+  alias: ''
+})
+
+
+watch(() => props.perfil, (newPerfil) => {
+  if (newPerfil) {
+    editableFields.value.firstName = newPerfil.firstName || newPerfil.nombre || ''
+    editableFields.value.lastName = newPerfil.lastName || newPerfil.apellido || ''
+    editableFields.value.email = newPerfil.email || ''
+    editableFields.value.alias = newPerfil.alias || ''
+    editableFields.value.cvu = accountStore.cvu || ''
+  }
+}, { immediate: true }) 
+
+const resetFields = () => {
+  editableFields.value = {
+    firstName: props.perfil.firstName || props.perfil.nombre || '',
+    lastName: props.perfil.lastName || props.perfil.apellido || '',
+    email: props.perfil.email || '',
+    alias: props.perfil.alias || '',
+    cvu: accountStore.cvu || ''
+  }
 }
 
-const inputTypes = {
-  dni: 'text',
-  nombre: 'text',
-  apellido: 'text',
-  email: 'email',
-  telefono: 'tel',
-  cvu: 'text',
-  alias: 'text'
-}
 
-const editableFields = ref({ ...props.perfil })
 const editingField = ref({})
 
 const startEditing = (field) => {
@@ -93,15 +134,31 @@ const saveField = (field) => {
   editingField.value[field] = false
 }
 
-const saveChanges = () => {
-  emit('update:perfil', { ...editableFields.value })
+const saveChanges = async () => {
+  try {
+    const { alias } = editableFields.value
+    await accountStore.updateAlias(alias)
+
+    emit('update:perfil', {
+      ...props.perfil,
+      alias
+    })
+
+    show.value = false
+    alert('Perfil actualizado correctamente')
+  } catch (error) {
+    console.error('ERROR al guardar cambios:', error)
+    alert('Hubo un error al guardar los cambios')
+  }
+}
+
+
+
+const closeModal = () => {
+  resetFields()
   show.value = false
 }
 
-const closeModal = () => {
-  editableFields.value = { ...props.perfil }
-  show.value = false
-}
 
 const copyToClipboard = async (text) => {
   try {
@@ -110,7 +167,19 @@ const copyToClipboard = async (text) => {
     console.error('Failed to copy text: ', err)
   }
 }
+
+onMounted(async () => {
+  try {
+    await accountStore.getAccountInfo()
+    editableFields.value.alias = accountStore.alias
+    editableFields.value.cvu = accountStore.cvu
+  } catch (err) {
+    console.error('No se pudo cargar alias/cvu:', err)
+  }
+})
 </script>
+
+
 
 <style scoped>
 .edit-form {
@@ -185,11 +254,11 @@ const copyToClipboard = async (text) => {
 }
 
 .submit-button {
-  background-color: var(--dark-blue);
+  background-color: var(--blue-button);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: var(--button-radius);
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -199,7 +268,7 @@ const copyToClipboard = async (text) => {
   color: var(--dark-blue);
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: var(--button-radius);
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -209,17 +278,20 @@ const copyToClipboard = async (text) => {
 }
 
 .cancel-button:hover {
-  background-color: #d1d5db;
+  background-color: var(--button-grey-hover);
 }
 
 .copy-icon {
+  color: var(--dark-blue);
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  padding: 0.2rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  gap: 0.5rem;
 }
 
 .copy-icon:hover {
-  background-color: var(--button-grey-hover);
+  color: var(--blue-button-hover);
 }
+
+
 </style>

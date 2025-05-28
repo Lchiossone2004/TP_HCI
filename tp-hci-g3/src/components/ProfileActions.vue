@@ -11,15 +11,12 @@
       <span class="material-symbols-rounded arrow">chevron_right</span>
     </button>
 
-    <!-- Modal para Administrar dinero -->
     <Modal v-model="showMoneyModal" title="Administrar dinero">
       <div class="money-actions">
-        <ShowInfoButton>
-          <button class="money-action-btn">
-            <span class="material-symbols-rounded">add</span>
-            <span>Ingresar dinero</span>
-          </button>
-        </ShowInfoButton>
+        <button class="money-action-btn" @click="handleEnterMoney">
+          <span class="material-symbols-rounded">add</span>
+          <span>Ingresar dinero</span>
+        </button>
         <button class="money-action-btn" @click="handleTransfer">
           <span class="material-symbols-rounded">sync_alt</span>
           <span>Transferir</span>
@@ -34,6 +31,8 @@
         </button>
       </div>
     </Modal>
+
+    <EnterMoneyModal v-model="mostrarModal" />
   </div>
 </template>
 
@@ -41,12 +40,13 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Modal from './Modal.vue'
-import ShowInfoButton from './ShowInfoButton.vue'
+import EnterMoneyModal from './EnterMoneyModal.vue'
 
 const router = useRouter()
 const emit = defineEmits(['edit'])
-const showMoneyModal = ref(false)
 
+const showMoneyModal = ref(false)
+const mostrarModal = ref(false)
 
 const actions = [
   { label: 'Datos de mi cuenta', icon: 'person', action: 'edit' },
@@ -69,28 +69,25 @@ const handleClick = (action) => {
 
 const handleEnterMoney = () => {
   showMoneyModal.value = false
+  mostrarModal.value = true
 }
 
 const handleTransfer = () => {
-  router.push({ name: 'Transfer' })
+  showMoneyModal.value = false 
+  router.push('/transfer').catch(err => {
+    console.error('Error de navegación:', err)
+  })
 }
 
 const handleCollect = () => {
-  router.push({ 
-    name: 'Servicios',
-    query: { tab: 'collect' }
-  })
+  router.push({ name: 'Servicios', query: { tab: 'collect' } }).catch(console.error)
   showMoneyModal.value = false
 }
 
 const handlePay = () => {
-  router.push({ 
-    name: 'Servicios',
-    query: { tab: 'pay' }
-  })
+  router.push({ name: 'Servicios', query: { tab: 'pay' } }).catch(console.error)
   showMoneyModal.value = false
 }
-
 </script>
 
 <style scoped>
@@ -99,9 +96,9 @@ const handlePay = () => {
   border-radius: var(--general-radius);
   padding: 1rem;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  box-sizing: border-box;
+  margin: 0 auto;           /* Nuevo: centrar */
+  box-sizing: border-box;   /* Nuevo */
+  margin-bottom: 1rem;      /* Nuevo: separación vertical */
 }
 
 .action-button {
@@ -166,15 +163,4 @@ const handlePay = () => {
 .money-action-btn .material-symbols-rounded {
   color: var(--dark-blue);
 }
-
-@media (max-width: 768px) {
-  .actions-container {
-    padding: 1rem;
-  }
-
-  .action-button {
-    padding: 1rem;
-  }
-}
 </style>
-  

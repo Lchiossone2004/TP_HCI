@@ -1,7 +1,7 @@
 <template>
   <div class="contact-list">
     <div v-for="contact in contacts" :key="contact.id" class="contact-item">
-      <div class="contact-info" @click="$emit('select', contact)">  <!-- Asegurarse de emitir el contacto completo -->
+      <div class="contact-info" @click="$emit('select', contact)">  
         <img :src="contact.avatar" :alt="contact.name" class="avatar">
         <div class="info">
           <span class="name">{{ contact.name }}</span>
@@ -14,7 +14,7 @@
         @click.stop="$emit('toggleFavorite', contact.id)"
       >
         <span class="material-symbols-rounded">
-          {{ isFavorite(contact.id) ? 'star' : 'star_outline' }}
+          {{ isFavorite(contact.id) ? 'stars' : 'star' }}
         </span>
       </button>
     </div>
@@ -95,17 +95,16 @@ defineEmits(['select', 'toggleFavorite'])
 }
 
 .favorite-btn {
-  background: none;
-  border: none;
-  padding: 0.5rem;
+  color: var(--black-text);
+  font-size: var(--font-text);
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  color: var(--dark-blue);
-  border-radius: 50%;
-  transition: background-color 0.2s;
+  gap: 0.5rem;
 }
 
 .favorite-btn:hover {
-  background-color: var(--light-grey);
+  color: var(--blue-button-hover);
 }
 
 .favorite-btn .material-symbols-rounded {

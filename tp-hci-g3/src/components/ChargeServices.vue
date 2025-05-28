@@ -4,18 +4,41 @@
       <h2>Generar cobro</h2>
       <form @submit.prevent="generatePayment" class="generate-form">
         <div class="form-group">
-            <label>Monto a cobrar</label>
-            <div class="amount-input" :class="{ 'error': errors.amount }">
+          <label>Detalle</label>
+          <div class="amount-input" :class="{ 'error': errors.description }">
+            <input 
+              v-model="description"
+              type="text"
+              placeholder="Escriba el concepto o un nombre del cobro"
+            >
+          </div>
+          <span class="error-message" v-if="errors.description">{{ errors.description }}</span>
+        </div>
+        <div class="form-group">
+          <label>Monto a cobrar</label>
+          <div class="amount-input" :class="{ 'error': errors.amount }">
             <span class="currency">$</span>
             <input 
-                v-model="amount"
-                type="number"
-                min="1"
-                step="0.01"
-                placeholder="0.00"
+              v-model="amount"
+              type="number"
+              min="1"
+              step="0.01"
+              placeholder="0.00"
             >
-            </div>
-            <span class="error-message" v-if="errors.amount">{{ errors.amount }}</span>
+          </div>
+          <span class="error-message" v-if="errors.amount">{{ errors.amount }}</span>
+        </div>
+        <div class="form-group">
+          <label>Motivo del pago</label>
+          <div class="select-container" :class="{ 'error': errors.reason }">
+            <select v-model="reason">
+              <option value="" disabled>Seleccione un motivo</option>
+              <option v-for="option in paymentReasons" :key="option" :value="option">
+                {{ option }}
+              </option>
+            </select>
+          </div>
+          <span class="error-message" v-if="errors.reason">{{ errors.reason }}</span>
         </div>
         <button type="submit" class="submit-btn">Generar cobro</button>
       </form>
@@ -23,22 +46,25 @@
       <div v-if="currentPayment" class="payment-info">
         <h3>Información del cobro</h3>
         <div class="info-row">
-          <label>ID del pago:</label>
+          <label>Código único:</label>
           <div class="copy-container">
-            <span>{{ currentPayment.id }}</span>
-            <button @click="copyToClipboard(currentPayment.id)" class="copy-btn">
+            <span>{{ currentPayment.uuid }}</span>
+            <button @click="copyToClipboard(currentPayment.uuid)" class="copy-btn">
               <span class="material-symbols-rounded">content_copy</span>
             </button>
           </div>
         </div>
         <div class="info-row">
-          <label>Link de pago:</label>
-          <div class="copy-container">
-            <span>{{ currentPayment.link }}</span>
-            <button @click="copyToClipboard(currentPayment.link)" class="copy-btn">
-              <span class="material-symbols-rounded">content_copy</span>
-            </button>
-          </div>
+          <label>Monto: </label>
+          <span>${{ currentPayment.amount }}</span>
+        </div>
+        <div class="info-row">
+          <label>Concepto: </label>
+          <span>{{ currentPayment.description }}</span>
+        </div>
+        <div class="info-row">
+          <label>Motivo: </label>
+          <span>{{ currentPayment.reason }}</span>
         </div>
       </div>
     </div>
@@ -46,84 +72,193 @@
     <div class="pending-section">
       <h2>Pagos pendientes</h2>
       <div class="pending-list">
-        <div v-for="payment in pendingPayments" :key="payment.id" class="pending-card">
-          <div class="payment-amount">${{ payment.amount }}</div>
+        <div v-for="payment in pendingPayments" :key="payment.uuid" class="pending-card">
+          <div class="payment-amount">Monto: ${{ payment.amount }}</div>
           <div class="payment-details">
             <div class="detail-row">
-              <span>ID: {{ payment.id }}</span>
-              <button @click="copyToClipboard(payment.id)" class="copy-btn">
+              <span>Code: {{ payment.uuid }}</span>
+              <button @click="copyToClipboard(payment.uuid)" class="copy-btn">
                 <span class="material-symbols-rounded">content_copy</span>
               </button>
             </div>
             <div class="detail-row">
-              <span class="link">{{ payment.link }}</span>
-              <button @click="copyToClipboard(payment.link)" class="copy-btn">
-                <span class="material-symbols-rounded">content_copy</span>
+              <span>Detalle: {{ payment.description }}</span>
+            </div>
+            <div class="detail-row">
+              <span>Motivo: {{ payment.detalle }}</span>
+            </div>
+            <div class="actions">
+              <button 
+                @click="deletePendingPayment(payment)"
+                class="delete-btn"
+                :disabled="isDeleting"
+              >
+                <span class="material-symbols-rounded">delete</span>
+                {{ isDeleting && paymentToDelete?.id === payment.id ? 'Eliminando...' : 'Eliminar' }}
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <v-snackbar
+      v-model="showSnackbar"
+      :color="snackbarColor"
+      :timeout="3000"
+      location="top"
+    >
+      {{ snackbarText }}
+    </v-snackbar>
   </div>
+  <Modal v-model="showDeleteDialog" title="Confirmar eliminación">
+  <div class="confirm-delete">
+    <p>¿Está seguro que desea eliminar este cobro?</p>
+    <p class="payment-info">Monto: ${{ paymentToDelete?.amount }} - {{ paymentToDelete?.description }}</p>
+    <div class="button-group">
+      <button class="delete-confirm-btn" @click="confirmDelete" :disabled="isDeleting">
+        {{ isDeleting ? 'Eliminando...' : 'Eliminar' }}
+      </button>
+      <button class="cancel-btn" @click="showDeleteDialog = false">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</Modal>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { usePaymentStore } from '@/stores/PaymetStore'
+import Modal from './Modal.vue'
 
-const amount = ref('')
-const errors = ref({
-  amount: ''
-})
+const paymentStore = usePaymentStore()
+const loading = ref(false)
 const currentPayment = ref(null)
 const pendingPayments = ref([])
+const amount = ref('')
+const description = ref('')
+const reason = ref('') // Nuevo ref para el motivo
+const showSnackbar = ref(false)
+const snackbarText = ref('')
+const snackbarColor = ref('success')
+const showDeleteDialog = ref(false)
+const isDeleting = ref(false)
+const paymentToDelete = ref(null)
 
-const generatePayment = () => {
-  errors.value.amount = ''
+const paymentReasons = [
+  'comida',
+  'compras',
+  'supermercado',
+  'servicios',
+  'varios'
+]
+
+const errors = ref({
+  amount: '',
+  description: '',
+  reason: ''
+})
+
+const showNotification = (text, color = 'success') => {
+  snackbarText.value = text
+  snackbarColor.value = color
+  showSnackbar.value = true
+}
+
+const deletePendingPayment = (payment) => {
+  paymentToDelete.value = payment
+  showDeleteDialog.value = true
+}
+
+const confirmDelete = async () => {
+  if (!paymentToDelete.value) return
+  
+  isDeleting.value = true
+  try {
+    await paymentStore.deleteServicePayment(paymentToDelete.value.id)
+    showNotification('Cobro eliminado exitosamente')
+    await loadPendingPayments()
+  } catch (error) {
+    console.error('Error al eliminar el cobro:', error)
+    showNotification(
+      'Error al eliminar el cobro. Por favor intente nuevamente.',
+      'error'
+    )
+  } finally {
+    isDeleting.value = false
+    showDeleteDialog.value = false
+    paymentToDelete.value = null
+  }
+}
+
+const generatePayment = async () => {
+  errors.value = { amount: '', description: '', reason: '' }
   
   if (!amount.value) {
-    errors.value.amount = 'Campo vacío, debe ingresar un valor'
+    errors.value.amount = 'Campo requerido'
+    return
+  }
+  if (!description.value) {
+    errors.value.description = 'Campo requerido'
+    return
+  }
+  if (!reason.value) { 
+    errors.value.reason = 'Campo requerido'
     return
   }
 
-  const newPayment = {
-    id: generateId(),
-    amount: parseFloat(amount.value),
-    link: generateLink(),
-    timestamp: Date.now()
+  loading.value = true
+  try {
+    const payment = await paymentStore.generateServicePayment(
+      amount.value,
+      description.value,
+      reason.value
+    )
+    
+    currentPayment.value = payment
+    amount.value = ''
+    description.value = ''
+    reason.value = '' 
+    await loadPendingPayments()
+    
+    showNotification('Cobro generado exitosamente')
+  } catch (error) {
+    console.error('Error:', error)
+    showNotification(
+      'Error al generar el cobro. Por favor intente nuevamente.',
+      'error'
+    )
+  } finally {
+    loading.value = false
   }
-  
-  currentPayment.value = newPayment
-  pendingPayments.value.push(newPayment)
-  amount.value = ''
-  
-  localStorage.setItem('pendingPayments', JSON.stringify(pendingPayments.value))
-}
-
-const generateId = () => {
-  return 'PAY-' + Math.random().toString(36).substr(2, 9).toUpperCase()
-}
-
-const generateLink = () => {
-  const baseUrl = window.location.origin
-  return `${baseUrl}/pay/${generateId()}`
 }
 
 const copyToClipboard = async (text) => {
   try {
     await navigator.clipboard.writeText(text)
+    showNotification('Copiado al portapapeles')
   } catch (err) {
     console.error('Error al copiar:', err)
+    showNotification('Error al copiar al portapapeles', 'error')
   }
 }
 
-onMounted(() => {
-  const saved = localStorage.getItem('pendingPayments')
-  if (saved) {
-    pendingPayments.value = JSON.parse(saved)
+const loadPendingPayments = async () => {
+  try {
+    const payments = await paymentStore.getPendingServicePayments()
+    pendingPayments.value = payments
+  } catch (error) {
+    console.error('Error loading payments:', error)
+    showNotification(
+      'Error al cargar los pagos pendientes',
+      'error'
+    )
   }
-})
+}
+
+onMounted(loadPendingPayments)
 </script>
+
 
 <style scoped>
 .collect-services {
@@ -252,6 +387,93 @@ input {
   font-size: 0.9rem;
 }
 
+.success-message {
+  background-color: var(--green);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: var(--icon-radius);
+  margin-top: 1rem;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--red-danger);
+  color: white;
+  border: none;
+  border-radius: var(--button-radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.delete-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.delete-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.confirm-delete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.payment-info {
+  color: var(--dark-grey-text);
+  font-size: var(--font-text);
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.delete-confirm-btn, .cancel-btn {
+  padding: 0.75rem 2rem;
+  border-radius: var(--button-radius);
+  border: none;
+  font-size: var(--font-text);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-confirm-btn {
+  background: var(--red-danger);
+  color: var(--white-text);
+}
+
+.delete-confirm-btn:hover:not(:disabled) {
+  background: var(--red-button);
+}
+
+.delete-confirm-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background: var(--background-grey);
+  color: var(--dark-blue);
+}
+
+.cancel-btn:hover {
+  background: var(--light-grey);
+}
+
 @media (max-width: 1300px) {
   .collect-services {
     grid-template-columns: 1fr;
@@ -260,6 +482,35 @@ input {
   .generate-section, .pending-section {
     margin-bottom: 1rem;
   }
+}
+
+.select-container {
+  background: var(--background-grey);
+  border-radius: var(--icon-radius);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.select-container.error {
+  border-color: var(--red-danger);
+}
+
+.select-container select {
+  background: transparent;
+  border: none;
+  width: 100%;
+  font-size: var(--font-text);
+  color: var(--dark-grey-text);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select-container select:focus {
+  outline: none;
 }
 
 </style>

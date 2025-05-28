@@ -15,7 +15,7 @@
           @click.stop="$emit('toggleFavorite', transfer.id)"
         >
           <span class="material-symbols-rounded">
-            {{ isFavorite(transfer.id) ? 'star' : 'star_outline' }}
+            {{ isFavorite(transfer.id) ? 'stars' : 'star' }}
           </span>
         </button>
       </li>
@@ -109,17 +109,16 @@ const isFavorite = (id) => props.favoriteIds.has(id)
 }
 
 .favorite-btn {
-  background: none;
-  border: none;
-  padding: 0.5rem;
+  color: var(--black-text);
+  font-size: var(--font-text);
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  color: var(--dark-blue);
-  border-radius: 50%;
-  transition: background-color 0.2s;
+  gap: 0.5rem;
 }
 
 .favorite-btn:hover {
-  background-color: var(--light-grey);
+  color: var(--blue-button-hover);
 }
 
 .favorite-btn .material-symbols-rounded {

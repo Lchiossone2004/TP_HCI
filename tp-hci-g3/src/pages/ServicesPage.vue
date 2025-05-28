@@ -29,26 +29,22 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import ChargeServices from '@/components/ChargeServices.vue'
+import { useRoute, useRouter } from 'vue-router'
 import PayServices from '@/components/PayServices.vue'
-
+import ChargeServices from '@/components/ChargeServices.vue'
 
 const route = useRoute()
-const activeTab = ref('collect')
+const router = useRouter()
+const activeTab = ref('collect') // valor por defecto
 
-// Establecer pestaña activa basada en el query parameter
 onMounted(() => {
   if (route.query.tab) {
     activeTab.value = route.query.tab
   }
 })
 
-// Actualizar pestaña cuando cambie la URL
-watch(() => route.query.tab, (newTab) => {
-  if (newTab) {
-    activeTab.value = newTab
-  }
+watch(activeTab, (newTab) => {
+  router.replace({ query: { ...route.query, tab: newTab } })
 })
 
 </script>
@@ -69,14 +65,13 @@ watch(() => route.query.tab, (newTab) => {
   box-sizing: border-box;
 }
 
-.services-container {
-  max-width: 1200px;
-  margin: 0 auto;
+services-container {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
+
 
 h1 {
   font-size: var(--font-title);

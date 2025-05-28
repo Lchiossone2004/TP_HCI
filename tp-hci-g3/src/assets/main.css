@@ -5,23 +5,20 @@ body, html, #app {
 
 :root{
 
-  /* font sizes */
+
   --font-login: 45px;
   --font-big: 30px;
   --font-title: 25px;
   --font-subtitle: 20px;
   --font-text: 17px;
   --font-mini: 14px;
-
-  /* icon sizes */
+  
   --icon-big: 35px;
   --icon-mid: 25px;
   --icon-little: 20px;
 
-  /* icon wrapper */
   --icon-wrapper:35px;
 
-  /* colors */
   --white-inputs: #ffffff;
   --white-text: #f0f0f0;
 
@@ -38,10 +35,11 @@ body, html, #app {
 
   --red-danger: #ff4d4d;
   --red-button: #9e0000;
+  --red-error-message: #dc3545;
   --green: #00a862;
 
 
-  /* radius */
+
   --general-radius: 20px;
   --icon-radius: 10px;
   --icon-radius-mini: 4px;

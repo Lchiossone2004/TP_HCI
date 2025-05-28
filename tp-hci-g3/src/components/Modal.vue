@@ -57,6 +57,10 @@ defineEmits(['update:modelValue']);
 }
 
 .modal-content {
+  position: fixed;
+  top: 50%;
+  left: calc(21vw + (79vw / 2));
+  transform: translate(-50%, -50%);
   background-color: var(--white-inputs);
   border-radius: var(--general-radius);
   padding: 1.5rem;
@@ -64,8 +68,9 @@ defineEmits(['update:modelValue']);
   max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
-  position: relative;
+  box-sizing: border-box;
 }
+
 
 .modal-header {
   display: flex;
@@ -114,4 +119,11 @@ defineEmits(['update:modelValue']);
   font-size: 0.9rem;
   margin: 0.5rem 0 0 0;
 }
+@media (max-height: 500px) {
+  .modal-overlay {
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+}
+
 </style> 

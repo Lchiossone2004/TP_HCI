@@ -34,32 +34,25 @@ import { ref, watch, computed, onMounted } from 'vue'
 import BalanceCard from './BalanceCard.vue'
 import Cards from './Cards.vue'
 import AddCard from './AddCard.vue'
+import { useCardStore } from '@/stores/CardStore'
 
-const props = defineProps({
-  cards: { type: Array, default: () => [] }
-})
-const emit = defineEmits(['update:cards'])
-
+const cardStore = useCardStore()
 const activeSlide = ref(0)
-const cardsInternal = ref([...props.cards])
-
-watch(() => props.cards, (val) => {
-  cardsInternal.value = [...val]
-})
+const emit = defineEmits(['slide-change'])
 
 const slides = computed(() => {
-  const cardComponents = cardsInternal.value.map((card, index) => ({
+  const cardComponents = cardStore.tarjetas.map((card, index) => ({
     type: Cards,
     props: {
       card,
-      onDelete: () => handleDeleteCard(index)
+      onDelete: () => handleDeleteCard(card.id) 
     }
   }))
-
+  
   return [
     { type: BalanceCard },
     ...cardComponents,
-    { 
+    {
       type: AddCard,
       props: {
         'onAdd-card': handleAddCard
@@ -68,28 +61,47 @@ const slides = computed(() => {
   ]
 })
 
-watch(cardsInternal, (updated) => {
-  emit('update:cards', updated)
-  if (activeSlide.value >= slides.value.length) {
-    activeSlide.value = slides.value.length - 1
-  }
-  localStorage.setItem('userCards', JSON.stringify(updated))
-}, { deep: true })
+const handleAddCard = async (newCard) => {
+  try {
 
-onMounted(() => {
-  const savedCards = localStorage.getItem('userCards')
-  if (savedCards) {
-    cardsInternal.value = JSON.parse(savedCards)
+    newCard.number = newCard.number.replace(/\s+/g, '')
+    
+    await cardStore.addCard(newCard)
+    
+    console.log('Tarjeta agregada exitosamente')
+  } catch (error) {
+    console.error('Error al agregar tarjeta:', error)
+  }
+}
+
+const handleDeleteCard = async (cardId) => {
+  try {
+
+    await cardStore.deleteCard(cardId)
+    
+    if (activeSlide.value >= slides.value.length) {
+      activeSlide.value = slides.value.length - 1
+    }
+    
+    console.log('Tarjeta eliminada exitosamente')
+  } catch (error) {
+    console.error('Error al eliminar tarjeta:', error)
+  }
+}
+
+onMounted(async () => {
+  try {
+    await cardStore.getCards()
+  } catch (error) {
+    console.error('Error al cargar tarjetas:', error)
   }
 })
 
-const handleAddCard = (newCard) => {
-  cardsInternal.value.push(newCard)
-}
-
-const handleDeleteCard = (index) => {
-  cardsInternal.value.splice(index, 1)
-}
+watch(() => cardStore.tarjetas, () => {
+  if (activeSlide.value >= slides.value.length) {
+    activeSlide.value = Math.max(0, slides.value.length - 1)
+  }
+}, { deep: true })
 
 const nextSlide = () => {
   if (activeSlide.value < slides.value.length - 1) activeSlide.value++
@@ -98,12 +110,25 @@ const nextSlide = () => {
 const previousSlide = () => {
   if (activeSlide.value > 0) activeSlide.value--
 }
+
+const cardIdActual = computed(() => {
+  // El slide 0 es el BalanceCard, y el último es AddCard
+  // Por lo tanto, las tarjetas están entre el índice 1 y slides.length - 2
+  const index = activeSlide.value - 1
+  if (index >= 0 && index < cardStore.tarjetas.length) {
+    return cardStore.tarjetas[index]?.id
+  }
+  return null
+})
+
+watch(activeSlide, () => {
+  emit('slide-change', cardIdActual.value)
+})
 </script>
 
 
 <style scoped>
 .slider-card {
-  width: 100%;
   height: 300px;
   background-color: var(--dark-blue);
   border-radius: var(--general-radius);
@@ -279,4 +304,16 @@ input:focus {
 .submit-button:hover {
   background-color: #0a4b85;
 }
+
+@media (max-width: 500px) {
+  .slider-card {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .navigation-arrows{
+    padding: 0 0.5rem;
+  }
+}
+
 </style>

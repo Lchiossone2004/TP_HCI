@@ -33,21 +33,12 @@
           </div>
           </template>
       <template v-else>
-        <!-- Vista principal de transferencias -->
+       
         <div class="transfer-main-view">
           <div class="left-section">
-            <div class="search-section panel">
-              <h2>Transferir a</h2>
-              <div class="search-container">
-                <input
-                  v-model="searchQuery"
-                  class="search-input"
-                  placeholder="Buscar por alias, CVU, CBU, teléfono o nombre..."
-                  @input="handleSearch"
-                />
-                <span class="material-symbols-rounded search-icon">search</span>
-              </div>
-            </div>
+           <div class="search-section panel">
+            <TransferSearch @search="handleSearch" />
+          </div>
             
             <div class="recent-transfers-section">
               <div class="panel">
@@ -100,21 +91,21 @@ function getAvatar(n) {
 
 const transferenciasRecientes = ref([
   { id: 1, name: 'Pablo Gomez', alias: '@pablog', avatar: getAvatar(1), amount: '$1200' },
-  { id: 2, name: 'Mónica Domínguez', alias: '@monica', avatar: getAvatar(2), amount: '$850' },
+  { id: 2, name: 'Mónica Domínguez', alias: '@monica', avatar: getAvatar(5), amount: '$850' },
   { id: 3, name: 'Josefina Grimolti', alias: '@josefina', avatar: getAvatar(4), amount: '$430' },
-  { id: 4, name: 'Juan Perez', alias: '@juanp', avatar: getAvatar(3), amount: '$2500' },
+  { id: 4, name: 'Juan Perez', alias: '@juanp', avatar: getAvatar(2), amount: '$2500' },
   { id: 5, name: 'Micaela Trevi', alias: '@micaela', avatar: getAvatar(1), amount: '$1800' },
   { id: 6, name: 'Guillermo Rivas', alias: '@guillermo', avatar: getAvatar(2), amount: '$950' },
   { id: 7, name: 'Flor Margalo', alias: '@flor', avatar: getAvatar(4), amount: '$3200' },
-  { id: 8, name: 'Lucas Martinez', alias: '@lucas', avatar: getAvatar(3), amount: '$1500' }
+  { id: 8, name: 'Lucas Martinez', alias: '@lucas', avatar: getAvatar(1), amount: '$1500' }
 ].slice(0, 15))
 
 const searchQuery = ref('')
 const selectedContact = ref(null)
-const favoriteIds = ref(new Set()) // Guardar IDs de favoritos
+const favoriteIds = ref(new Set()) 
 const balance = ref(205768.63)
 
-// Contactos con información adicional
+
 const allContacts = [
   { 
     id: 1, 
@@ -128,7 +119,7 @@ const allContacts = [
     id: 2, 
     name: 'Mónica Domínguez', 
     alias: '@monica', 
-    avatar: getAvatar(2),
+    avatar: getAvatar(5),
     cvu: '0000003100064484890003',
     phone: '+5491145678902'
   },
@@ -144,7 +135,7 @@ const allContacts = [
     id: 4, 
     name: 'Juan Perez', 
     alias: '@juanp', 
-    avatar: getAvatar(3),
+    avatar: getAvatar(2),
     cvu: '0000003100064484890005',
     phone: '+5491145678904'
   },
@@ -176,7 +167,7 @@ const allContacts = [
     id: 8, 
     name: 'Lucas Martinez', 
     alias: '@lucas', 
-    avatar: getAvatar(3),
+    avatar: getAvatar(1),
     cvu: '0000003100064484890009',
     phone: '+5491145678908'
   }
@@ -208,7 +199,7 @@ function toggleFavorite(contactId) {
   localStorage.setItem('favoriteContacts', JSON.stringify([...newFavorites]))
 }
 
-// Cargar favoritos al montar
+
 onMounted(() => {
   const saved = localStorage.getItem('favoriteContacts')
   if (saved) {
@@ -220,9 +211,8 @@ function getFullContact(contactId) {
   return allContacts.find(c => c.id === contactId)
 }
 
-// Actualizar el handler de selección
+
 function handleContactSelect(contact) {
-  // Siempre buscar la información completa del contacto
   const fullContact = getFullContact(contact.id)
   selectedContact.value = fullContact || contact
 }
@@ -232,7 +222,6 @@ function handleSearch(event) {
 }
 
 function onTransfer({ to, amount }) {
-  // Actualizar transferencias recientes
   const newTransfer = {
     id: to.id,
     name: to.name,
@@ -272,7 +261,7 @@ function onTransfer({ to, amount }) {
   color: var(--black-text);
 }
 
-/* Panel común para todas las secciones */
+
 .panel {
   background-color: var(--white-inputs);
   border-radius: var(--general-radius);
@@ -286,7 +275,7 @@ function onTransfer({ to, amount }) {
   margin-bottom: 1rem;
 }
 
-/* Vista principal de transferencias */
+
 .transfer-main-view {
   display: flex;
   gap: 1rem;
@@ -309,7 +298,6 @@ function onTransfer({ to, amount }) {
   margin-bottom: 1rem;
 }
 
-/* Vista de detalle de transferencia */
 .transfer-detail-view {
   display: flex;
   gap: 1rem;

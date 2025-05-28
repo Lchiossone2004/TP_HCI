@@ -21,7 +21,7 @@ defineEmits(['add-card'])
   background-color: var(--dark-blue);
   border: 3px solid var(--white-text);
   border-radius: var(--general-radius);
-  width: 360px;
+  width: 360px; 
   height: 200px;
   display: flex;
   flex-direction: column;
@@ -54,5 +54,22 @@ defineEmits(['add-card'])
   font-size: var(--font-mini);
   text-align: center;
   color: var(--white-text);
+}
+
+@media (max-width: 1200px) {
+  .add-card {
+    width: 250px;
+    height: 160px;
+  }
+  .add-button {
+    height: 30px;
+    width: 30px;
+  }
+  .icon {
+    font-size: var(--icon-small);
+  }
+  .add-label {
+    font-size: var(--font-tiny);
+  }
 }
 </style>

@@ -1,7 +1,6 @@
-// src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from './pages/HomePage.vue'
-import AuthView from './pages/AuthView.vue'
+import AuthView from './pages/Auth/AuthView.vue'
 import ProfilePage from './pages/ProfilePage.vue'
 import MovementsAndSpendings from './pages/MovementsAndSpendings.vue'
 
@@ -10,6 +9,16 @@ const routes = [
     path: '/',
     name: 'Auth',
     component: AuthView
+  },
+  {
+    path: '/passwordRecovery',
+    name: 'PasswordRecovery',
+    component: () => import('@/pages/Auth/PasswordRecoveryPage.vue')
+  },
+  {
+    path: '/verification',
+    name: 'Verification',
+    component: () => import('@/pages/Auth/VerificationPage.vue')
   },
   {
     path: '/home',
@@ -34,7 +43,7 @@ const routes = [
   {
     path: '/help',
     name: 'HelpPage',
-    component: () => import('@/views/help/HelpPage.vue')
+    component: () => import('@/pages/help/HelpPage.vue')
   },
   {
     path: '/:pathMatch(.*)*',
@@ -51,23 +60,25 @@ const routes = [
     name: 'Servicios',
     component: () => import('@/pages/ServicesPage.vue')
   },
+  
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes
 })
+const publicRoutes = ['Auth', 'Verification', 'PasswordRecovery', 'HelpPage']
 
-// Guard global para verificar autenticación
+
+
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('email') || sessionStorage.getItem('email')
-
-  if (to.name !== 'Auth' && !isAuthenticated) {
-    next({ name: 'Auth' })
-  } else {
-    next()
+  const token = localStorage.getItem('auth-token')
+  if (!token && !publicRoutes.includes(to.name)) {
+    return next({ name: 'Auth' })
   }
+  next()
 })
+
 
 export default router
 
