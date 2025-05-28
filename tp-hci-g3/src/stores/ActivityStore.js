@@ -2,11 +2,53 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/UserStore'
 
+const CATEGORY_MAP = {
+  'servicios': {
+    keywords: ['servicio', 'servicios', 'pago de servicio', 'cobro de servicio'],
+    color: '#FF6B6B'
+  },
+  'transporte': {
+    keywords: ['taxi', 'uber', 'subte', 'colectivo', 'transporte', 'viaje'],
+    color: '#4ECDC4'
+  },
+  'alimentacion': {
+    keywords: ['comida', 'restaurante', 'cena', 'almuerzo', 'desayuno', 'café', 'mercado', 'supermercado'],
+    color: '#FFD93D'
+  },
+  'entretenimiento': {
+    keywords: ['cine', 'teatro', 'concierto', 'show', 'entrada', 'evento'],
+    color: '#95E1D3'
+  },
+  'salud': {
+    keywords: ['médico', 'farmacia', 'medicamento', 'consulta', 'salud'],
+    color: '#FF8B94'
+  },
+  'educacion': {
+    keywords: ['curso', 'libro', 'material', 'educación', 'estudio'],
+    color: '#6C5CE7'
+  },
+  'otros': {
+    keywords: [],
+    color: '#A8E6CF'
+  }
+}
+
 export const useActivityStore = defineStore('activity', () => {
   const activities   = ref([])
   const isLoading    = ref(false)
   const errorMessage = ref(null)
   const userStore    = useUserStore()
+  function getCategoryFromDescription(description) {
+    if (!description) return 'otros'
+    
+    const lowerDesc = description.toLowerCase()
+    for (const [category, data] of Object.entries(CATEGORY_MAP)) {
+      if (data.keywords.some(keyword => lowerDesc.includes(keyword))) {
+        return category
+      }
+    }
+    return 'otros'
+  }
 
   /**
    * @param {{ page?: number, direction?: string, pending?: boolean|null,
@@ -106,12 +148,38 @@ export const useActivityStore = defineStore('activity', () => {
     activities.value.slice(0, limit)
   )
 
+  // Nuevo computed para obtener gastos por categoría
+  const getExpensesByCategory = computed(() => (month = -1, year = -1) => {
+    const filteredActivities = getFilteredActivities.value(month, year)
+    const expensesByCategory = {}
+    
+    filteredActivities.forEach(activity => {
+      if (activity.amount < 0) { // Solo gastos (montos negativos)
+        const category = activity.category
+        if (!expensesByCategory[category]) {
+          expensesByCategory[category] = {
+            amount: 0,
+            color: activity.categoryColor
+          }
+        }
+        expensesByCategory[category].amount += Math.abs(activity.amount)
+      }
+    })
+    
+    return Object.entries(expensesByCategory).map(([category, data]) => ({
+      category,
+      amount: data.amount,
+      color: data.color
+    }))
+  })
+
   return {
     activities,
     isLoading,
     errorMessage,
     loadActivities,
     getFilteredActivities,
-    getRecentActivities
+    getRecentActivities,
+    getExpensesByCategory
   }
 })

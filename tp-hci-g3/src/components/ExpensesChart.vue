@@ -17,7 +17,7 @@
         </div>
         <div v-if="!simple" class="custom-legend">
           <div v-for="(cat, i) in categories" :key="cat.key" class="legend-row">
-            <span class="legend-color" :style="{ backgroundColor: chartColors[i] }"></span>
+            <span class="legend-color" :style="{ backgroundColor: cat.color }"></span>
             <span class="legend-label">{{ cat.label }}</span>
           </div>
         </div>
@@ -37,6 +37,7 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import { Chart } from 'chart.js/auto'
+import { useActivityStore } from '@/stores/ActivityStore'
 
 const props = defineProps({
   activities: {
@@ -65,6 +66,7 @@ const props = defineProps({
   }
 })
 
+const activityStore = useActivityStore()
 const chartRef = ref(null)
 let chartInstance = null
 
@@ -139,6 +141,7 @@ const totalExpenses = computed(() =>
   categories.value.reduce((sum, cat) => sum + cat.amount, 0)
 )
 
+
 const totalExpensesFormatted = computed(() =>
   totalExpenses.value.toLocaleString('es-AR')
 )
@@ -156,7 +159,7 @@ function renderChart() {
       labels: categories.value.map(c => c.label),
       datasets: [{
         data: categories.value.map(c => c.amount),
-        backgroundColor: chartColors,
+        backgroundColor: categories.value.map(c => c.color),
         borderWidth: 0
       }]
     },
