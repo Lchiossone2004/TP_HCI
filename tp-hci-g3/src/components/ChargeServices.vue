@@ -156,7 +156,7 @@ const paymentReasons = [
 const errors = ref({
   amount: '',
   description: '',
-  reason: '' // Nuevo error para el motivo
+  reason: ''
 })
 
 const showNotification = (text, color = 'success') => {
@@ -177,7 +177,6 @@ const confirmDelete = async () => {
   try {
     await paymentStore.deleteServicePayment(paymentToDelete.value.id)
     showNotification('Cobro eliminado exitosamente')
-    // Recargar la lista de pagos pendientes
     await loadPendingPayments()
   } catch (error) {
     console.error('Error al eliminar el cobro:', error)
@@ -193,10 +192,8 @@ const confirmDelete = async () => {
 }
 
 const generatePayment = async () => {
-  // Reset errors
   errors.value = { amount: '', description: '', reason: '' }
   
-  // Validations
   if (!amount.value) {
     errors.value.amount = 'Campo requerido'
     return
@@ -205,14 +202,13 @@ const generatePayment = async () => {
     errors.value.description = 'Campo requerido'
     return
   }
-  if (!reason.value) { // Validación para el motivo
+  if (!reason.value) { 
     errors.value.reason = 'Campo requerido'
     return
   }
 
   loading.value = true
   try {
-    // Pasar el motivo a la función generateServicePayment
     const payment = await paymentStore.generateServicePayment(
       amount.value,
       description.value,
@@ -220,12 +216,9 @@ const generatePayment = async () => {
     )
     
     currentPayment.value = payment
-    // Limpiar formulario
     amount.value = ''
     description.value = ''
-    reason.value = '' // Limpiar el motivo también
-    
-    // Actualizar lista de pagos pendientes
+    reason.value = '' 
     await loadPendingPayments()
     
     showNotification('Cobro generado exitosamente')
