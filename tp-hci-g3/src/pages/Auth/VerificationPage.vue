@@ -161,13 +161,19 @@ async resendVerificationEmail() {
     const success = await userStore.resendVerification(this.email);
 
     if (!success) {
-      this.errorMessage = 'No se pudo reenviar el código. Verifica el correo electrónico e intenta nuevamente.';
+      this.resendMessage = 'No se pudo reenviar el código. Verifica el correo electrónico e intenta nuevamente.';
+      this.resendSuccess = false;
+    } else {
+      this.resendMessage = 'El correo de verificación fue enviado exitosamente.';
+      this.resendSuccess = true;
     }
   } catch (error) {
     console.error('Error al reenviar verificación:', error);
-    this.errorMessage = 'Ocurrió un error al reenviar el código. Intenta nuevamente.';
+    this.resendMessage = 'Ocurrió un error al reenviar el código. Intenta nuevamente.';
+    this.resendSuccess = false;
   }
 }
+
   }
 };
 </script>
