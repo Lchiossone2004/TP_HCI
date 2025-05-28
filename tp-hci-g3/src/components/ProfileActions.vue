@@ -11,15 +11,12 @@
       <span class="material-symbols-rounded arrow">chevron_right</span>
     </button>
 
-  
     <Modal v-model="showMoneyModal" title="Administrar dinero">
       <div class="money-actions">
-        
-          <button class="money-action-btn" @click="handleEnterMoney">
-            <span class="material-symbols-rounded">add</span>
-            <span>Ingresar dinero</span>
-          </button>
-        
+        <button class="money-action-btn" @click="handleEnterMoney">
+          <span class="material-symbols-rounded">add</span>
+          <span>Ingresar dinero</span>
+        </button>
         <button class="money-action-btn" @click="handleTransfer">
           <span class="material-symbols-rounded">sync_alt</span>
           <span>Transferir</span>
@@ -35,7 +32,6 @@
       </div>
     </Modal>
 
-    
     <EnterMoneyModal v-model="mostrarModal" />
   </div>
 </template>
@@ -84,28 +80,15 @@ const handleTransfer = () => {
 }
 
 const handleCollect = () => {
-  console.log('Navigating to collect services')
-  router.push({ 
-    name: 'Servicios',
-    query: { tab: 'collect' }
-  }).catch(err => {
-    console.error('Navigation error:', err)
-  })
+  router.push({ name: 'Servicios', query: { tab: 'collect' } }).catch(console.error)
   showMoneyModal.value = false
 }
 
 const handlePay = () => {
-  console.log('Navigating to pay services')
-  router.push({ 
-    name: 'Servicios',
-    query: { tab: 'pay' }
-  }).catch(err => {
-    console.error('Navigation error:', err)
-  })
+  router.push({ name: 'Servicios', query: { tab: 'pay' } }).catch(console.error)
   showMoneyModal.value = false
 }
 </script>
-
 
 <style scoped>
 .actions-container {
@@ -113,9 +96,9 @@ const handlePay = () => {
   border-radius: var(--general-radius);
   padding: 1rem;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  box-sizing: border-box;
+  margin: 0 auto;           /* Nuevo: centrar */
+  box-sizing: border-box;   /* Nuevo */
+  margin-bottom: 1rem;      /* Nuevo: separación vertical */
 }
 
 .action-button {
@@ -180,15 +163,4 @@ const handlePay = () => {
 .money-action-btn .material-symbols-rounded {
   color: var(--dark-blue);
 }
-
-@media (max-width: 768px) {
-  .actions-container {
-    padding: 1rem;
-  }
-
-  .action-button {
-    padding: 1rem;
-  }
-}
 </style>
-  
