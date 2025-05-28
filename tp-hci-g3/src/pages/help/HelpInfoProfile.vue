@@ -6,7 +6,7 @@
         </h3>
     
         <h4 class="ans">
-            Para editar tu alias, debes seleccionar el botón ‘Mis datos’ en la pestaña ‘Mi perfil’, en el menú lateral izquierdo.
+            Para editar tu alias, debes seleccionar el botón ‘Mis datos’ en la pestaña 'Perfil’, en el menú lateral izquierdo.
         </h4>
     </div>
     <div class="faq"> 
