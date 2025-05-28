@@ -33,37 +33,18 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import { Chart } from 'chart.js/auto'
 import { useActivityStore } from '@/stores/ActivityStore'
 
 const props = defineProps({
-  activities: {
-    type: Array,
-    default: () => []
-  },
-  month: {
-    type: Number,
-    default: new Date().getMonth()
-  },
-  year: {
-    type: Number,
-    default: new Date().getFullYear()
-  },
-  simple: {
-    type: Boolean,
-    default: false
-  },
-  title: {
-    type: String,
-    default: ''
-  },
-  onClickMore: {
-    type: Function,
-    default: null
-  }
+  activities: Array,
+  month: Number,
+  year: Number,
+  simple: Boolean,
+  title: String,
+  onClickMore: Function
 })
 
 const activityStore = useActivityStore()
@@ -81,19 +62,24 @@ const categoryMap = [
 ]
 
 const defaultData = computed(() => {
-  if (props.activities.length > 0) return props.activities
+  if (props.activities?.length > 0) return props.activities
+  const date = `${props.year}-${String(props.month + 1).padStart(2, '0')}-01`
   return [
-    { icon: 'restaurant', title: 'Comida', amount: -30000, detalle: 'comida', date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` },
-    { icon: 'shopping_cart', title: 'Supermercado', amount: -25000, detalle: 'supermercado', date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` },
-    { icon: 'shopping_bag', title: 'Shopping', amount: -20000, detalle: 'compras', date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` },
-    { icon: 'list', title: 'Varios', amount: -15000, detalle: 'otros', date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` },
-    { icon: 'receipt_long', title: 'Servicios', amount: -10000, detalle: 'servicios', date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` }
+    { icon: 'restaurant', title: 'Comida', amount: -30000, detalle: 'comida', date },
+    { icon: 'shopping_cart', title: 'Supermercado', amount: -25000, detalle: 'supermercado', date },
+    { icon: 'shopping_bag', title: 'Shopping', amount: -20000, detalle: 'compras', date },
+    { icon: 'list', title: 'Varios', amount: -15000, detalle: 'otros', date },
+    { icon: 'receipt_long', title: 'Servicios', amount: -10000, detalle: 'servicios', date }
   ]
 })
 
 const categories = computed(() => {
-  const result = categoryMap.map(cat => ({ ...cat, amount: 0 }))
-  const activitiesToProcess = props.activities.length > 0 ? props.activities : defaultData.value
+  const result = categoryMap.map((cat, index) => ({
+    ...cat,
+    amount: 0,
+    color: chartColors[index % chartColors.length]
+  }))
+  const activitiesToProcess = props.activities?.length > 0 ? props.activities : defaultData.value
 
   activitiesToProcess.forEach(activity => {
     const activityDate = new Date(activity.date)
@@ -106,14 +92,12 @@ const categories = computed(() => {
       const title = activity.title?.toLowerCase() || ''
       let found = false
 
-      // 1. Buscar coincidencia directa por key usando detalle
       const directCategory = result.find(c => c.key === detalle)
       if (directCategory) {
         directCategory.amount += Math.abs(activity.amount)
         found = true
       }
 
-      // 2. Si no se encontró por key, buscar por coincidencia parcial
       if (!found) {
         for (const cat of result) {
           if (cat.match.some(m =>
@@ -128,19 +112,18 @@ const categories = computed(() => {
         }
       }
 
-      // 3. Si aún no se encontró, agregar a "varios"
       if (!found) {
         result.find(c => c.key === 'varios').amount += Math.abs(activity.amount)
       }
     }
   })
+
   return result
 })
 
 const totalExpenses = computed(() =>
   categories.value.reduce((sum, cat) => sum + cat.amount, 0)
 )
-
 
 const totalExpensesFormatted = computed(() =>
   totalExpenses.value.toLocaleString('es-AR')
