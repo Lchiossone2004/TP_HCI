@@ -33,63 +33,92 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import { Chart } from 'chart.js/auto'
 import { useActivityStore } from '@/stores/ActivityStore'
 
 const props = defineProps({
-  activities: {
-    type: Array,
-    default: () => []
-  },
-  month: {
-    type: Number,
-    default: new Date().getMonth()
-  },
-  year: {
-    type: Number,
-    default: new Date().getFullYear()
-  },
-  simple: {
-    type: Boolean,
-    default: false
-  },
-  title: {
-    type: String,
-    default: ''
-  },
-  onClickMore: {
-    type: Function,
-    default: null
-  }
+  activities: Array,
+  month: Number,
+  year: Number,
+  simple: Boolean,
+  title: String,
+  onClickMore: Function
 })
 
 const activityStore = useActivityStore()
 const chartRef = ref(null)
 let chartInstance = null
 
-const categoryIcons = {
-  'servicios': 'receipt_long',
-  'transporte': 'directions_bus',
-  'alimentacion': 'restaurant',
-  'entretenimiento': 'movie',
-  'salud': 'local_hospital',
-  'educacion': 'school',
-  'otros': 'list'
-}
+const chartColors = ['#1E3A8A', '#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE']
+
+const categoryMap = [
+  { key: 'comida', label: 'Comida', icon: 'restaurant', match: ['restaurant', 'pedidos ya'] },
+  { key: 'compras', label: 'Compras', icon: 'shopping_bag', match: ['shopping_bag', 'compras'] },
+  { key: 'supermercado', label: 'Supermercado', icon: 'shopping_cart', match: ['shopping_cart', 'supermercado'] },
+  { key: 'servicios', label: 'Servicios', icon: 'receipt_long', match: ['event', 'servicio', 'factura'] },
+  { key: 'varios', label: 'Varios', icon: 'list', match: [] }
+]
+
+const defaultData = computed(() => {
+  if (props.activities?.length > 0) return props.activities
+  const date = `${props.year}-${String(props.month + 1).padStart(2, '0')}-01`
+  return [
+    { icon: 'restaurant', title: 'Comida', amount: -30000, detalle: 'comida', date },
+    { icon: 'shopping_cart', title: 'Supermercado', amount: -25000, detalle: 'supermercado', date },
+    { icon: 'shopping_bag', title: 'Shopping', amount: -20000, detalle: 'compras', date },
+    { icon: 'list', title: 'Varios', amount: -15000, detalle: 'otros', date },
+    { icon: 'receipt_long', title: 'Servicios', amount: -10000, detalle: 'servicios', date }
+  ]
+})
 
 const categories = computed(() => {
-  const expensesByCategory = activityStore.getExpensesByCategory(props.month, props.year)
-  
-  return expensesByCategory.map(({ category, amount, color }) => ({
-    key: category,
-    label: category.charAt(0).toUpperCase() + category.slice(1),
-    amount,
-    color,
-    icon: categoryIcons[category] || 'list'
+  const result = categoryMap.map((cat, index) => ({
+    ...cat,
+    amount: 0,
+    color: chartColors[index % chartColors.length]
   }))
+  const activitiesToProcess = props.activities?.length > 0 ? props.activities : defaultData.value
+
+  activitiesToProcess.forEach(activity => {
+    const activityDate = new Date(activity.date)
+    const matchesMonth = props.month === -1 || activityDate.getMonth() === props.month
+    const matchesYear = props.year === -1 || activityDate.getFullYear() === props.year
+
+    if (activity.amount < 0 && matchesMonth && matchesYear) {
+      const detalle = activity.detalle?.toLowerCase() || ''
+      const icon = activity.icon?.toLowerCase() || ''
+      const title = activity.title?.toLowerCase() || ''
+      let found = false
+
+      const directCategory = result.find(c => c.key === detalle)
+      if (directCategory) {
+        directCategory.amount += Math.abs(activity.amount)
+        found = true
+      }
+
+      if (!found) {
+        for (const cat of result) {
+          if (cat.match.some(m =>
+            icon.includes(m) ||
+            title.includes(m) ||
+            detalle.includes(m)
+          )) {
+            cat.amount += Math.abs(activity.amount)
+            found = true
+            break
+          }
+        }
+      }
+
+      if (!found) {
+        result.find(c => c.key === 'varios').amount += Math.abs(activity.amount)
+      }
+    }
+  })
+
+  return result
 })
 
 const totalExpenses = computed(() =>

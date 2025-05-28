@@ -49,6 +49,7 @@ const recentActivities = computed(() => {
 const currentMonthActivities = computed(() => {
   return activityStore.getFilteredActivities(currentMonth.value, currentYear.value);
 });
+
 </script>
 
 <style scoped>
