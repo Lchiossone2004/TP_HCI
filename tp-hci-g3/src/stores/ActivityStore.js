@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/UserStore'
 
+// Mapa de categorías basado en palabras clave en el detalle
 const CATEGORY_MAP = {
   'servicios': {
     keywords: ['servicio', 'servicios', 'pago de servicio', 'cobro de servicio'],
@@ -38,6 +39,8 @@ export const useActivityStore = defineStore('activity', () => {
   const isLoading    = ref(false)
   const errorMessage = ref(null)
   const userStore    = useUserStore()
+
+  // Función para determinar la categoría basada en el detalle
   function getCategoryFromDescription(description) {
     if (!description) return 'otros'
     
@@ -89,6 +92,8 @@ export const useActivityStore = defineStore('activity', () => {
   
       for (let i = 0; i < results.length; i++) {
         const p = results[i]
+        if (p.pending) continue
+
         const metadata = Array.isArray(p.metadata) ? p.metadata : []
         const dateObj = metadata.find(m => m.date) || { date: p.createdAt || new Date().toISOString() }
         if (!metadata.find(m => m.date)) metadata.push(dateObj)
@@ -104,7 +109,8 @@ export const useActivityStore = defineStore('activity', () => {
         const signedAmount = isPayer ? -rawAmount : rawAmount
         const title = p.description ? p.description : isPayer ? 'Pago' : 'Cobro'
         const icon = p.method === 'CARD' ? 'credit_card' : 'account_balance'
-
+        
+        // Determinar la categoría
         const category = getCategoryFromDescription(p.description)
         const categoryColor = CATEGORY_MAP[category].color
   
@@ -136,7 +142,6 @@ export const useActivityStore = defineStore('activity', () => {
       isLoading.value = false
     }
   }
-  
 
   const getFilteredActivities = computed(() => (m, y) =>
     activities.value.filter(a => {
