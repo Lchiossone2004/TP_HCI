@@ -88,24 +88,6 @@ function clearMessages() {
     try {
       await store.agregarTransaccion(monto.value, 'ingreso');
       
-      const nuevaActividad = {
-        id: Date.now(),
-        title: 'Ingreso de dinero',
-        subtitle: new Date().toLocaleDateString('es-AR', {
-          day: '2-digit', month: '2-digit', year: 'numeric'
-        }),
-        date: new Date().toISOString(),
-        amount: monto.value,
-        formattedAmount: monto.value.toLocaleString('es-AR', {
-          style: 'currency', currency: 'ARS', minimumFractionDigits: 2, maximumFractionDigits: 2
-        }),
-        icon: 'upload', 
-        payerId: null,
-        receiverId: null
-      }
-      activityStore.activities.unshift(nuevaActividad)
-      
-
       mensajeExito.value = 'Ingreso realizado con éxito!'
       monto.value = 0
       setTimeout(() => {
