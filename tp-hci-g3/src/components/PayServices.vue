@@ -4,7 +4,7 @@
       <h2>Pagar servicio</h2>
       <form @submit.prevent="handleSubmit" class="search-form">
         <div class="form-group">
-          <label>Ingresar codigo de pago</label>
+          <label>Ingresar código de pago</label>
           <div class="input-container" :class="{ 'error': errors.search }">
             <input 
               v-model="searchQuery"
@@ -47,14 +47,14 @@ const handleSlideChange = (cardId) => {
   cardNum.value = cardId
 }
 
-const isSuccess = computed(() => error.value === 'Pago procesado exitosamente')
+const isSuccess = computed(() => error.value === 'Pago procesado exitosamente!')
 
 const handleSubmit = async () => {
   errors.value.search = ''
   error.value = ''
 
   if (!searchQuery.value.trim()) {
-    errors.value.search = 'Debe ingresar un código o URL'
+    errors.value.search = 'Debe ingresar un código o URL.'
     return
   }
 
@@ -67,26 +67,26 @@ const handleSubmit = async () => {
     }
 
     if (!code) {
-      error.value = 'Código inválido'
+      error.value = 'Código inválido.'
       return
     }
 
     const payment = await paymentStore.makePayment(code,cardNum.value)
 
     if (!payment) {
-      error.value = 'No se encontró el pago'
+      error.value = 'No se encontró el pago.'
       return
     }
 
     if (accountStore.balance < payment.amount) {
-      error.value = 'Saldo insuficiente, por favor ingrese dinero'
+      error.value = 'Saldo insuficiente.'
       return
     }
-    error.value = 'Pago procesado exitosamente'
+    error.value = 'Pago procesado exitosamente!'
     searchQuery.value = ''
 
   } catch (err) {
-    error.value = err.message || 'Error al procesar el pago'
+    error.value = err.message || 'Error al procesar el pago.'
     console.error('Error:', err)
   }
 }
