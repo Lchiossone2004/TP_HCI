@@ -96,26 +96,48 @@ export const useUserStore = defineStore('user', () => {
           throw error; 
         }
       }
-      async function sendRecoveryCode(email) {
-        try {
-          const response = await fetch(`http://localhost:8080/api/user/reset-password?email=${email}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
+
+  async function sendRecoveryCode(email) {
+    try {
+      const response = await fetch(`http://localhost:8080/api/user/reset-password?email=${email}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       
-          if (!response.ok) {
-            console.error(`Error sending code: ${response.status}`);
-            return false;
-          }
+      // Capturar el cuerpo de la respuesta para análisis
+      const responseText = await response.text();
+      console.log('Respuesta completa reset-password:', responseText);
       
-          return true;
-        } catch (error) {
-          console.error('Error en sendRecoveryCode:', error);
-          return false;
+      if (!response.ok) {
+        // Analizar la respuesta para determinar el tipo de error
+        if (response.status === 404 || 
+            response.status === 401 || 
+            responseText.includes('not found') || 
+            responseText.includes('doesn\'t exist') ||
+            responseText.includes('no existe') ||
+            responseText.includes('not registered') ||
+            responseText.includes('invalid')) {
+          throw new Error('email_not_found');
         }
+        
+        throw new Error(`Error al enviar código: ${response.status}`);
       }
+      
+      // Si llegamos aquí, todo está bien
+      return true;
+    } catch (error) {
+      console.error('Error en sendRecoveryCode:', error);
+      
+      // Asegurarse de que los errores de red también se manejen como corresponde
+      if (error.message === 'Failed to fetch' || !navigator.onLine) {
+        throw new Error('network_error');
+      }
+      
+      throw error; // Propagar el error para manejar los mensajes en el componente
+    }
+  }
       
       async function changePassword(code, password) {
         try {
@@ -192,16 +214,24 @@ export const useUserStore = defineStore('user', () => {
             'Content-Type': 'application/json'
           },
         });
-    
+        
+        // Incluso si la API devuelve un error, podemos intentar
+        // determinar si el problema es que la cuenta ya está verificada
         if (!response.ok) {
-          console.error(`Error reenviando verificación: ${response.status}`);
+          const errorText = await response.text();
+          console.error(`Error reenviando verificación: ${response.status} - ${errorText}`);
+          
+          if (errorText.includes('already verified') || errorText.includes('not found')) {
+            throw new Error('account_already_verified');
+          }
+          
           return false;
         }
-    
+        
         return true;
       } catch (error) {
         console.error('Error al reenviar el email:', error);
-        return false;
+        throw error;
       }
     }
   

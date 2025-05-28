@@ -10,29 +10,66 @@
     <div class="reset-container">
       <h2>Recuperar Contraseña</h2>
 
-      
+      <!-- Paso 1: Solicitar email -->
       <div v-if="step === 1">
         <p>Ingrese su email para recibir un código de verificación.</p>
-        <input type="email" v-model="email" placeholder="Tu correo electrónico" required />
-        <button @click="sendCode">Enviar código</button>
+        <div class="input-container">
+          <input 
+            type="email" 
+            v-model="email" 
+            placeholder="Tu correo electrónico"
+            :class="{ 'input-error': emailError }"
+            @input="validateEmail"
+            required
+          />
+          <p v-if="emailError" class="error-message">{{ emailError }}</p>
+        </div>
+        <button @click="sendCode" :disabled="!isValidEmail">Enviar código</button>
       </div>
 
-      
+      <!-- Paso 2: Ingresar código y nueva contraseña -->
       <div v-if="step === 2">
         <p>Ingrese el código recibido y su nueva contraseña</p>
-        <input type="text" v-model="code" placeholder="Código de verificación" required />
-        <input type="password" v-model="newPassword" placeholder="Nueva contraseña" required />
-        <button @click="resetPassword">Actualizar contraseña</button>
+        <div class="input-container">
+          <input 
+            type="text" 
+            v-model="code" 
+            placeholder="Código de verificación"
+            :class="{ 'input-error': codeError }"
+            @input="clearCodeError"
+            required
+          />
+          <p v-if="codeError" class="error-message">{{ codeError }}</p>
+        </div>
+
+        <div class="input-container">
+          <input 
+            :type="showPassword ? 'text' : 'password'" 
+            v-model="newPassword" 
+            placeholder="Nueva contraseña"
+            :class="{ 'input-error': passwordError }"
+            @input="validatePassword"
+            required
+          />
+          <span 
+            class="material-symbols-rounded password-toggle" 
+            @click="togglePasswordVisibility"
+          >
+            {{ showPassword ? 'visibility' : 'visibility_off' }}
+          </span>
+          <p v-if="passwordError" class="error-message">{{ passwordError }}</p>
+        </div>
+        <button @click="resetPassword" :disabled="!isValidReset">Actualizar contraseña</button>
       </div>
 
-      
+      <!-- Paso 3: Confirmación de éxito -->
       <div v-if="step === 3">
         <p class="success">¡Contraseña actualizada con éxito!</p>
         <button @click="$router.push('/')">Volver al inicio de sesión</button>
       </div>
 
-     
-      <p v-if="error" class="error">{{ error }}</p>
+      <!-- Mensaje general de error -->
+      <p v-if="generalError" class="error">{{ generalError }}</p>
     </div>
   </div>
 </template>
@@ -40,7 +77,6 @@
 <script>
 import { useUserStore } from '@/stores/UserStore';
 import { useRouter, useRoute } from 'vue-router'
-
 
 export default {
   setup() {
@@ -51,10 +87,10 @@ export default {
     }
     const goToHelp = () => {
       router.push({
-    path: '/help',
-    query: { from: route.name }
-  })
-} 
+        path: '/help',
+        query: { from: route.name }
+      })
+    } 
     return {
       goBack,
       goToHelp
@@ -66,30 +102,125 @@ export default {
       code: '',
       newPassword: '',
       step: 1, 
-      error: ''
+      emailError: '',
+      codeError: '',
+      passwordError: '',
+      generalError: '',
+      showPassword: false
     };
   },
-  methods: {
-    async sendCode() {
-    const userStore = useUserStore();
-    this.error = ''; // Limpiar error anterior
-    const success = await userStore.sendRecoveryCode(this.email);
-    if (success) {
-      this.step = 2;
-    } else {
-      this.error = 'No se pudo enviar el código. Verificá el correo ingresado.';
+  computed: {
+    isValidEmail() {
+      return this.email && !this.emailError;
+    },
+    isValidReset() {
+      return this.code && this.newPassword && !this.codeError && !this.passwordError;
     }
   },
-  async resetPassword() {
-    const userStore = useUserStore();
-    this.error = ''; // Limpiar error anterior
-    const success = await userStore.changePassword(this.code, this.newPassword);
-    if (success) {
-      this.step = 3;
-    } else {
-      this.error = 'El código es inválido o hubo un error al actualizar la contraseña.';
+  methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    },
+    
+    validateEmail() {
+      this.emailError = '';
+      this.generalError = '';
+      
+      if (!this.email.trim()) {
+        this.emailError = 'El email es obligatorio';
+        return;
+      }
+      
+      // Validar formato de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(this.email)) {
+        this.emailError = 'Ingrese un correo electrónico válido';
+      }
+    },
+    
+    clearCodeError() {
+      this.codeError = '';
+      this.generalError = '';
+      
+      if (!this.code.trim()) {
+        this.codeError = 'El código es obligatorio';
+      }
+    },
+    
+    validatePassword() {
+      this.passwordError = '';
+      this.generalError = '';
+      
+      if (!this.newPassword) {
+        this.passwordError = 'La contraseña es obligatoria';
+        return;
+      }
+      
+      if (this.newPassword.length < 10) {
+        this.passwordError = 'La contraseña debe tener al menos 10 caracteres';
+      }
+    },
+    
+    async sendCode() {
+      // Validar campos
+      this.validateEmail();
+      if (this.emailError) return;
+      
+      // Limpiar errores previos
+      this.generalError = '';
+      
+      try {
+        const userStore = useUserStore();
+        const result = await userStore.sendRecoveryCode(this.email);
+        
+        // Si llegamos aquí, el código fue enviado exitosamente
+        this.step = 2;
+      } catch (error) {
+        console.error('Error completo al solicitar código:', error);
+        
+        // Manejar los distintos tipos de error
+        if (error.message === 'email_not_found') {
+          this.generalError = 'El email no existe en nuestra base de datos. Intente de nuevo.';
+        } else if (error.message === 'network_error') {
+          this.generalError = 'Error de conexión. Por favor, verifica tu conexión a internet.';
+        } else if (error.message && error.message.includes('401')) {
+          this.generalError = 'El email no existe en nuestra base de datos. Intente de nuevo.';
+        } else if (error.message && error.message.includes('404')) {
+          this.generalError = 'El email no existe en nuestra base de datos. Intente de nuevo.';
+        } else {
+          this.generalError = 'No se pudo enviar el código. Intente nuevamente más tarde.';
+        }
+      }
+    },
+    
+    async resetPassword() {
+      // Validar campos
+      this.clearCodeError();
+      this.validatePassword();
+      
+      if (!this.code.trim()) {
+        this.codeError = 'El código es obligatorio';
+      }
+      
+      if (this.codeError || this.passwordError) return;
+      
+      // Limpiar errores previos
+      this.generalError = '';
+      
+      try {
+        const userStore = useUserStore();
+        const success = await userStore.changePassword(this.code, this.newPassword);
+        
+        if (success) {
+          this.step = 3;
+        } else {
+          this.generalError = 'El código es inválido o hubo un error al actualizar la contraseña.';
+        }
+      } catch (error) {
+        console.error('Error al resetear contraseña:', error);
+        this.generalError = 'Error al actualizar la contraseña. Verifique el código e intente nuevamente.';
+      }
     }
-  }
   }
 };
 </script>
@@ -144,17 +275,19 @@ export default {
 }
 
 .icon {
-  cursor: default;
+  cursor: pointer;
   color: white;
+  font-size: var(--icon-little);
 }
 
 .page-background {
   min-height: 100vh;
-  background-color: #03192c; 
+  background-color: var(--dark-blue);
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
+  font-family: 'Nunito', sans-serif;
 }
 
 .reset-container {
@@ -162,48 +295,114 @@ export default {
   min-height: 300px;
   width: 100%;
   padding: 30px;
-  border-radius: 12px;
+  border-radius: var(--general-radius);
   background-color: #fff; 
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   text-align: center;
-  font-size: 20px;
+  font-size: var(--font-text);
+}
+
+.reset-container h2 {
+  font-size: var(--font-title);
+  color: var(--black-text);
+  margin-bottom: 1.5rem;
+}
+
+.reset-container p {
+  color: var(--dark-grey-text);
+  margin-bottom: 1.5rem;
+}
+
+.input-container {
+  position: relative;
+  margin-bottom: 1.5rem;
 }
 
 input {
   display: block;
   width: 100%;
-  padding: 12px;
-  margin: 10px 0;
+  padding: 12px 15px;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  margin-top: 2rem;
-  margin-bottom: 3rem;
+  border-radius: var(--icon-radius);
+  font-size: var(--font-text);
+  background-color: var(--white-inputs);
+  transition: border 0.2s ease-in-out;
+}
+
+input:focus {
+  border-color: var(--blue-link);
+  outline: none;
+}
+
+.input-error {
+  border-color: var(--red-error-message);
+}
+
+.error-message {
+  color: var(--red-error-message);
+  font-size: var(--font-mini);
+  margin-top: 0.3rem;
+  text-align: left;
+  font-weight: normal;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--dark-grey-text);
+  cursor: pointer;
+  font-size: var(--icon-little);
 }
 
 button {
   width: 100%;
   padding: 12px;
-  background-color: #03192c;
+  background-color: var(--blue-button);
   color: white;
   font-weight: bold;
   border: none;
-  border-radius: 20px;
+  border-radius: var(--button-radius);
   cursor: pointer;
+  font-size: var(--font-text);
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: var(--blue-button-hover);
+}
+
+button:disabled {
+  background-color: var(--light-grey);
+  cursor: not-allowed;
 }
 
 .error {
-  color: red;
-  margin-top: 10px;
+  color: var(--red-error-message);
+  margin-top: 1rem;
+  font-size: var(--font-text);
 }
 
 .success {
-  color: green;
+  color: var(--green);
   font-weight: bold;
-  margin-top: 3rem;
-  margin-bottom: 3rem;
+  margin: 2rem 0;
+  font-size: var(--font-subtitle);
+}
+
+@media (max-width: 768px) {
+  .reset-container {
+    padding: 20px;
+  }
+  
+  .reset-container h2 {
+    font-size: calc(var(--font-title) * 0.9);
+  }
+  
+  button {
+    padding: 10px;
+    font-size: calc(var(--font-text) * 0.9);
+  }
 }
 </style>

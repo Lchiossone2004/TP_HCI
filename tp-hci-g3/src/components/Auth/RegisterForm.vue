@@ -161,20 +161,16 @@ export default {
       if (!this.validarFormulario()) return;
 
       try {
-        // Asegurarnos que la fecha está en el formato correcto
-        const birthDate = new Date(this.nacimiento);
-        const formattedDate = birthDate.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-        
         const datosUsuario = {
           firstName: this.nombre,
           lastName: this.apellido,
-          birthDate: formattedDate,
+          birthDate: this.nacimiento,
           email: this.email,
           password: this.password,
           metadata: {}
         }
 
-        console.log('Datos a enviar:', datosUsuario); // Para debugging
+        console.log('Datos a enviar:', datosUsuario);
 
         const userStore = useUserStore()
         const resultado = await userStore.createUser(datosUsuario)
@@ -187,31 +183,43 @@ export default {
       } catch (error) {
         console.error('Error al registrar:', error)
         
-        if (error.message === 'duplicate_email') {
-          this.formError = 'Este correo electrónico ya está registrado. Por favor utilice otro o inicie sesión.';
-        } else if (error.message === 'unverified_email') {
-          // Email no verificado, preguntar al usuario si quiere reenviar código
-          if (confirm('Ya existe una cuenta con este email, pero no ha sido verificada. ¿Desea reenviar el código de verificación?')) {
+        // Detectar si el error contiene información sobre email duplicado o en uso
+        const errorMsg = error.message || '';
+        
+        // Comprobación específica para "Email already in use" que es lo que está devolviendo la API
+        if (errorMsg.includes('already in use') || errorMsg.includes('duplicate') || errorMsg.includes('already exists')) {
+          // Mostrar un mensaje con opciones claras al usuario
+          if (confirm('Este email ya está registrado pero podría no estar verificado. ¿Desea intentar reenviar el código de verificación?')) {
             try {
-              const userStore = useUserStore(); // Asegurarse de tener la referencia
-              await userStore.resendVerification(this.email);
-              this.$router.push({ 
-                name: 'Verification',
-                params: { email: this.email }
-              });
+              const userStore = useUserStore();
+              const result = await userStore.resendVerification(this.email);
+              
+              if (result) {
+                // Si el reenvío fue exitoso, redirigir a la página de verificación
+                this.$router.push({ 
+                  name: 'Verification',
+                  params: { email: this.email }
+                });
+                return;
+              } else {
+                // Si el reenvío falló pero no lanzó un error, puede ser que la cuenta esté verificada
+                this.formError = 'No se pudo reenviar el código. Es posible que esta cuenta ya esté verificada, intente iniciar sesión.';
+              }
             } catch (resendError) {
-              this.formError = 'Error al reenviar el código de verificación. Intente nuevamente.';
+              // Analizar el error específico
+              if (resendError.message === 'account_already_verified') {
+                this.formError = 'Esta cuenta ya está verificada. Por favor, inicie sesión o recupere su contraseña si la olvidó.';
+              } else {
+                this.formError = 'Error al reenviar el código de verificación. Intente nuevamente más tarde.';
+              }
             }
           } else {
-            this.formError = 'Por favor, utilice otro correo electrónico para registrarse.';
+            // Usuario no quiere reenviar el código
+            this.formError = 'Por favor, utilice otro correo electrónico para registrarse o inicie sesión si ya tiene cuenta.';
           }
         } else {
-          // Mensaje más específico para errores del servidor
-          if (error.message && error.message.includes('500')) {
-            this.formError = 'Error del servidor. Por favor intente más tarde o contacte a soporte.';
-          } else {
-            this.formError = 'Hubo un error al registrar. Intente nuevamente.';
-          }
+          // Otros errores
+          this.formError = 'Hubo un error al registrar. Intente nuevamente.';
         }
       }
     }
