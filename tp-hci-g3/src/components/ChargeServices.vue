@@ -30,7 +30,7 @@
         </div>
         <div class="form-group">
           <label>Motivo del pago</label>
-          <div :class="{ 'error': errors.reason }">
+          <div class="select-container" :class="{ 'error': errors.reason }">
             <select v-model="reason">
               <option value="" disabled>Seleccione un motivo</option>
               <option v-for="option in paymentReasons" :key="option" :value="option">
@@ -489,6 +489,35 @@ input {
   .generate-section, .pending-section {
     margin-bottom: 1rem;
   }
+}
+
+.select-container {
+  background: var(--background-grey);
+  border-radius: var(--icon-radius);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.select-container.error {
+  border-color: var(--red-danger);
+}
+
+.select-container select {
+  background: transparent;
+  border: none;
+  width: 100%;
+  font-size: var(--font-text);
+  color: var(--dark-grey-text);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select-container select:focus {
+  outline: none;
 }
 
 </style>
