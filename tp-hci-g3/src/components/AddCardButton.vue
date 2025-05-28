@@ -142,6 +142,16 @@ const validateForm = () => {
   if (!newCard.value.expirationDate) {
     errors.value.expirationDate = 'Campo obligatorio'
     isValid = false
+  } else {
+    const [month, year] = newCard.value.expirationDate.split('/').map(Number)
+    const currentDate = new Date()
+    const currentYear = currentDate.getFullYear() % 100
+    const currentMonth = currentDate.getMonth() + 1
+
+    if (year < currentYear || (year === currentYear && month < currentMonth)) {
+      errors.value.expirationDate = 'La tarjeta ha vencido'
+      isValid = false
+    }
   }
   if (!newCard.value.cvv) {
     errors.value.cvv = 'Campo obligatorio'
