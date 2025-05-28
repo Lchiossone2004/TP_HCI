@@ -2,11 +2,11 @@
     <div>
         <div class="faq">
         <h3>
-            ¿Cómo puedo editar los datos de mi perfil?
+            ¿Cómo puedo editar mi alias?
         </h3>
     
         <h4 class="ans">
-            Para editar los datos de tu perfil, debes seleccionar el botón ‘Editar perfil’ en la pestaña ‘Mi perfil’, en el menú lateral izquierdo.
+            Para editar tu alias, debes seleccionar el botón ‘Mis datos’ en la pestaña ‘Mi perfil’, en el menú lateral izquierdo.
         </h4>
     </div>
     <div class="faq"> 

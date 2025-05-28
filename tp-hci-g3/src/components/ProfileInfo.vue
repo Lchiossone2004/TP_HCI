@@ -2,7 +2,7 @@
   <div class="profile-container">
     <div class="profile-header">
       <button class="edit-btn" @click="$emit('edit')">
-        Editar perfil
+        Mis datos
       </button>
     </div>
     

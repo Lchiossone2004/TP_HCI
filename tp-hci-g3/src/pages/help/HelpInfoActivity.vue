@@ -6,16 +6,7 @@
         </h3>
     
         <h4 class="ans">
-            Para visualizar tu actividad reciente, puedes acceder a la pestaña 'Actividad' en el menú lateral izquierdo. Allí podrás encontrar todas tus transferencias pasadas, tanto realizadas como recibidas, seleccionando el mes y año deseado. También puedes utilizar la barra de búsqueda para encontrar la fecha deseada.
-        </h4>
-    </div>
-    <div class="faq"> 
-        <h3>
-            ¿Cómo puedo ver todas las transferencias que hice a una persona?
-        </h3>
-    
-        <h4 class="ans">
-            Para ver todas las transferencias que realizaste o recibiste de una misma persona, simplemente introduce su nombre, CBU, CVU, alias o número de teléfono en la barra de búsqueda de la pestaña ‘Actividad’, en el menú lateral izquierdo.
+            Para visualizar tu actividad reciente, puedes acceder a la pestaña 'Actividad' en el menú lateral izquierdo. Allí podrás encontrar todas tus transferencias pasadas, tanto realizadas como recibidas, seleccionando el mes y año deseado. 
         </h4>
     </div>
     <div class="faq"> 
