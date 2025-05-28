@@ -111,22 +111,25 @@ export default {
   align-items: center;
 }
 .error {
-  font-size: medium;
+  font-size: var(--font-text);
+  color: var(--red-error-message);
+  margin-top: 0.5rem;
+
 }
 .input-with-icon input {
   padding-left: 2.5rem;
   height: 40px;
   width: 100%;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: var(--icon-radius);
   padding-right: 1rem;
 }
 
 .input-with-icon .icon {
   position: absolute;
   left: 10px;
-  font-size: 20px;
-  color: #666;
+  font-size: var(--icon-little);
+  color: var(--dark-grey-text);
 }
 
 .auth-container {
@@ -228,28 +231,5 @@ button:hover {
   input {
     margin: 0.75rem 0;
   }
-}
-
-@media (max-width: 992px) {
-  .auth-container {
-    padding: 1rem;
-  }
-
-  h2 {
-    font-size: calc(var(--font-login) * 0.75);
-  }
-
-  p {
-    font-size: calc(var(--font-title) * 0.85);
-    margin-bottom: 1.5rem;
-  }
-
-  button {
-    width: 60%;
-  }
-}
-.error {
-  color: red;
-  margin-top: 10px;
 }
 </style>

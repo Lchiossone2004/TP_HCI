@@ -186,14 +186,6 @@ const handleAddCard = () => {
 const formatCardNumber = (event) => {
   // Nuevo: extraer solo dígitos
   let digits = event.target.value.replace(/\D/g, '')
-  // Nuevo: primer dígito debe ser 3, 4 o 5
-  if (digits.length > 0 && !['3','4','5'].includes(digits[0])) {
-    errors.value.number = 'El número debe empezar con 3, 4 o 5'
-    newCard.value.number = ''
-    return
-  } else {
-    errors.value.number = ''
-  }
   // Nuevo: agrupar de a 4 dígitos
   const grouped = digits.match(/.{1,4}/g)?.join(' ') || ''
   newCard.value.number = grouped
@@ -306,7 +298,7 @@ input:focus {
 }
 
 .submit-button {
-  background: var(--dark-blue);
+  background: var(--blue-button);
   color: var(--white-text);
 }
 
@@ -320,7 +312,7 @@ input:focus {
 }
 
 .cancel-button:hover {
-  background: var(--light-grey);
+  background: var(--button-grey-hover);
 }
 
 .error {

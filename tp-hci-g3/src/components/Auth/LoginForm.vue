@@ -4,41 +4,54 @@
     <p>Es bueno verte de nuevo</p>
     
     <div class="input-with-icon">
-  <span class="material-symbols-rounded icon">mail</span>
-  <input type="email" placeholder="Email" v-model="email" />
-  </div>
+      <span class="material-symbols-rounded icon">mail</span>
+      <input
+        type="email"
+        placeholder="Email"
+        v-model="email"
+      />
+    </div>
 
-  <div class="input-with-icon">
-  <span class="material-symbols-rounded icon">key</span>
-  <input 
-      :type="showPassword ? 'text' : 'password'" 
-      placeholder="Contraseña" 
-      v-model="password" 
-    />
-    <span 
-      class="material-symbols-rounded right-icon" 
-      @click="togglePasswordVisibility"
+    <div class="input-with-icon">
+      <span class="material-symbols-rounded icon">key</span>
+      <input 
+        :type="showPassword ? 'text' : 'password'" 
+        placeholder="Contraseña" 
+        v-model="password" 
+      />
+      <span 
+        class="material-symbols-rounded right-icon" 
+        @click="togglePasswordVisibility"
+      >
+        {{ showPassword ? 'visibility' : 'visibility_off' }}
+      </span>
+    </div>
+
+    <!-- Mensaje de error: si es fallo de credencial, se aplica la clase "small" -->
+    <p
+      v-if="errorMessage"
+      :class="['error', { small: isAuthError }]"
     >
-      {{ showPassword ? 'visibility' : 'visibility_off' }}
-    </span>
-  </div>
-
-
-    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+      {{ errorMessage }}
+    </p>
 
     <div class="row-remember">
       <div class="remember-label">
         <input type="checkbox" v-model="remember" />
         <span>Recordar siempre</span>
       </div>
-      <a href="#" class="forgot-link" @click="forgotPassword">¿Olvidó su contraseña?</a>
+      <a href="#" class="forgot-link" @click.prevent="forgotPassword">
+        ¿Olvidó su contraseña?
+      </a>
     </div>
 
     <button @click="login">Aceptar</button>
 
     <div class="row-register">
       <span class="register-text">¿No tiene una cuenta?</span>
-      <a href="#" class="register-link" @click="$emit('switch')">Regístrese</a>
+      <a href="#" class="register-link" @click.prevent="$emit('switch')">
+        Regístrese
+      </a>
     </div>
   </div>
 </template>
@@ -48,9 +61,10 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/UserStore'
 
 export default {
+  name: 'LoginForm',
   setup() {
-    const router = useRouter();
-    return { router };
+    const router = useRouter()
+    return { router }
   },
   data() {
     return {
@@ -58,37 +72,53 @@ export default {
       password: '',
       remember: false,
       errorMessage: '',
+      isAuthError: false,    // <-- nuevo
       showPassword: false,
-    };
+    }
   },
   methods: {
     togglePasswordVisibility() {
-      this.showPassword = !this.showPassword;
+      this.showPassword = !this.showPassword
     },
+
+    validarFormulario() {
+      if (!this.email.trim() || !this.password) {
+        this.errorMessage = 'Por favor complete todos los campos.'
+        this.isAuthError = false
+        return false
+      }
+      this.errorMessage = ''
+      return true
+    },
+
     async login() {
-  const userStore = useUserStore();
+      if (!this.validarFormulario()) return
 
-  try {
-    await userStore.logIn(this.email, this.password);
-    this.errorMessage = '';
+      const userStore = useUserStore()
+      try {
+        await userStore.logIn(this.email, this.password)
+        this.errorMessage = ''
+        this.isAuthError = false
 
-    if (this.remember) {
-      localStorage.setItem('wingpay-remembered', 'true');
-    } else {
-      localStorage.removeItem('wingpay-remembered');
+        if (this.remember) {
+          localStorage.setItem('wingpay-remembered', 'true')
+        } else {
+          localStorage.removeItem('wingpay-remembered')
+        }
+
+        this.router.push({ name: 'Home' })
+      } catch (error) {
+        console.error('Error al iniciar sesión:', error)
+        this.errorMessage = 'Email o contraseña incorrectos.'
+        this.isAuthError = true 
+      }
+    },
+
+    forgotPassword() {
+      this.router.push({ name: 'PasswordRecovery' })
     }
-
-    this.router.push({ name: 'Home' }); 
-  } catch (error) {
-    console.error('Error al iniciar sesión:', error);
-    this.errorMessage = 'Email o contraseña incorrectos.';
-  }
-},
-async forgotPassword() {
-  this.router.push({ name: 'PasswordRecovery' });
   }
 }
-};
 </script>
 
 <style scoped>
@@ -103,7 +133,7 @@ async forgotPassword() {
   height: 40px;
   width: 100%;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: var(--icon-radius);
   padding-right: 1rem;
 }
 
@@ -111,17 +141,17 @@ async forgotPassword() {
   position: absolute;
   left: 10px;
   font-size: 20px;
-  color: #666;
+  color: var(--dark-grey-text);
 }
 .input-with-icon .right-icon {
   position: absolute;
   right: 10px;
-  font-size: 20px;
-  color: black;
+  font-size: var(--icon-little);
+  color: var(--black-text);
   cursor: pointer;
 }
 .input-with-icon .right-icon:hover {
-  color: navy;
+  color: var(--blue-button-hover);
 }
 
 
@@ -243,6 +273,12 @@ button:hover {
   text-decoration: underline;
 }
 
+.error {
+  color: var(--red-error-message);
+  margin-top: 10px;
+  font-size: var(--font-text)
+}
+
 @media (max-width: 1200px) {
   .auth-container {
     padding: 1.5rem 1rem;
@@ -270,44 +306,5 @@ button:hover {
   }
 }
 
-@media (max-width: 992px) {
-  .auth-container {
-    padding: 1rem;
-    max-width: 350px;
-  }
 
-  h2 {
-    font-size: calc(var(--font-login) * 0.75);
-  }
-
-  p {
-    font-size: calc(var(--font-title) * 0.85);
-    margin-bottom: 1.5rem;
-  }
-
-  button {
-    width: 60%;
-  }
-
-  .row-remember {
-    flex-direction: column; 
-    gap: 0.5rem;
-    align-items: flex-start;
-  }
-
-  .forgot-link {
-    align-self: flex-start;
-  }
-}
-
-@media (max-width: 768px) {
-  .auth-container {
-    max-width: 300px;
-  }
-}
-
-.error {
-  color: red;
-  margin-top: 10px;
-}
 </style>

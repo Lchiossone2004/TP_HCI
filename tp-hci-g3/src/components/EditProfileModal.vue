@@ -254,11 +254,11 @@ onMounted(async () => {
 }
 
 .submit-button {
-  background-color: var(--dark-blue);
+  background-color: var(--blue-button);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: var(--button-radius);
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -268,7 +268,7 @@ onMounted(async () => {
   color: var(--dark-blue);
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: var(--button-radius);
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -278,7 +278,7 @@ onMounted(async () => {
 }
 
 .cancel-button:hover {
-  background-color: #d1d5db;
+  background-color: var(--button-grey-hover);
 }
 
 .copy-icon {
