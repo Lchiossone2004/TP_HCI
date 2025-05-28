@@ -44,7 +44,7 @@ onMounted(() => {
 })
 
 watch(activeTab, (newTab) => {
-  router.push({ query: { ...route.query, tab: newTab } })
+  router.replace({ query: { ...route.query, tab: newTab } })
 })
 
 </script>

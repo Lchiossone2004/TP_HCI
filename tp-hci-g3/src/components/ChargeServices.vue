@@ -5,7 +5,7 @@
       <form @submit.prevent="generatePayment" class="generate-form">
         <div class="form-group">
           <label>Detalle</label>
-          <div class="amount-input" :class="{ 'error': errors.amount }">
+          <div class="amount-input" :class="{ 'error': errors.description }">
             <input 
               v-model="description"
               type="text"
@@ -27,6 +27,18 @@
             >
           </div>
           <span class="error-message" v-if="errors.amount">{{ errors.amount }}</span>
+        </div>
+        <div class="form-group">
+          <label>Motivo del pago</label>
+          <div class="select-container" :class="{ 'error': errors.reason }">
+            <select v-model="reason">
+              <option value="" disabled>Seleccione un motivo</option>
+              <option v-for="option in paymentReasons" :key="option" :value="option">
+                {{ option }}
+              </option>
+            </select>
+          </div>
+          <span class="error-message" v-if="errors.reason">{{ errors.reason }}</span>
         </div>
         <button type="submit" class="submit-btn">Generar cobro</button>
       </form>
@@ -50,6 +62,10 @@
           <label>Concepto: </label>
           <span>{{ currentPayment.description }}</span>
         </div>
+        <div class="info-row">
+          <label>Motivo: </label>
+          <span>{{ currentPayment.reason }}</span>
+        </div>
       </div>
     </div>
 
@@ -67,6 +83,9 @@
             </div>
             <div class="detail-row">
               <span>Detalle: {{ payment.description }}</span>
+            </div>
+            <div class="detail-row">
+              <span>Motivo: {{ payment.detalle }}</span>
             </div>
             <div class="actions">
               <button 
@@ -118,6 +137,7 @@ const currentPayment = ref(null)
 const pendingPayments = ref([])
 const amount = ref('')
 const description = ref('')
+const reason = ref('') // Nuevo ref para el motivo
 const showSnackbar = ref(false)
 const snackbarText = ref('')
 const snackbarColor = ref('success')
@@ -125,9 +145,18 @@ const showDeleteDialog = ref(false)
 const isDeleting = ref(false)
 const paymentToDelete = ref(null)
 
+const paymentReasons = [
+  'comida',
+  'compras',
+  'supermercado',
+  'servicios',
+  'varios'
+]
+
 const errors = ref({
   amount: '',
-  description: ''
+  description: '',
+  reason: '' // Nuevo error para el motivo
 })
 
 const showNotification = (text, color = 'success') => {
@@ -165,7 +194,7 @@ const confirmDelete = async () => {
 
 const generatePayment = async () => {
   // Reset errors
-  errors.value = { amount: '', description: '' }
+  errors.value = { amount: '', description: '', reason: '' }
   
   // Validations
   if (!amount.value) {
@@ -176,18 +205,25 @@ const generatePayment = async () => {
     errors.value.description = 'Campo requerido'
     return
   }
+  if (!reason.value) { // Validación para el motivo
+    errors.value.reason = 'Campo requerido'
+    return
+  }
 
   loading.value = true
   try {
+    // Pasar el motivo a la función generateServicePayment
     const payment = await paymentStore.generateServicePayment(
       amount.value,
-      description.value
+      description.value,
+      reason.value
     )
     
     currentPayment.value = payment
     // Limpiar formulario
     amount.value = ''
     description.value = ''
+    reason.value = '' // Limpiar el motivo también
     
     // Actualizar lista de pagos pendientes
     await loadPendingPayments()
@@ -229,6 +265,7 @@ const loadPendingPayments = async () => {
 
 onMounted(loadPendingPayments)
 </script>
+
 
 <style scoped>
 .collect-services {
@@ -452,6 +489,35 @@ input {
   .generate-section, .pending-section {
     margin-bottom: 1rem;
   }
+}
+
+.select-container {
+  background: var(--background-grey);
+  border-radius: var(--icon-radius);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.select-container.error {
+  border-color: var(--red-danger);
+}
+
+.select-container select {
+  background: transparent;
+  border: none;
+  width: 100%;
+  font-size: var(--font-text);
+  color: var(--dark-grey-text);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select-container select:focus {
+  outline: none;
 }
 
 </style>

@@ -105,7 +105,8 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   }
 
-  async function transferViaEmail(email, cardId, motivo, monto) {
+  async function transferViaEmail(email, cardId, motivo, monto,detalle) {
+    console.log(detalle)
     try {
       const token = localStorage.getItem('auth-token');
       const accountStore = useAccountStore();
@@ -132,7 +133,7 @@ export const usePaymentStore = defineStore('payment', () => {
         body: JSON.stringify({
           description: motivo || "Transferencia",
           amount: monto,
-          metadata: {},
+          metadata: {detalle},
         })
       });
   
@@ -151,7 +152,7 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   }
 
-  async function transferViaCVU(cvu, cardId, motivo, monto){
+  async function transferViaCVU(cvu, cardId, motivo, monto,detalle){
     try{
       const token = localStorage.getItem('auth-token');
       const accountStore = useAccountStore();
@@ -178,7 +179,7 @@ export const usePaymentStore = defineStore('payment', () => {
           body: JSON.stringify({
             description: motivo || "Transferencia",
             amount: monto,
-            metadata: {}
+            metadata: {detalle}
           })
       });
 
@@ -198,7 +199,7 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   }
 
-  async function transferViaAlias(alias, cardId, motivo, monto){
+  async function transferViaAlias(alias, cardId, motivo, monto,detalle){
     try{
       const token = localStorage.getItem('auth-token');
       const accountStore = useAccountStore();
@@ -225,7 +226,7 @@ export const usePaymentStore = defineStore('payment', () => {
           body: JSON.stringify({
             description: motivo || "Transferencia",
             amount: monto,
-            metadata: {}
+            metadata: {detalle}
           })
       });
 
@@ -272,7 +273,7 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   }
 
-  async function generateServicePayment(amount, description) {
+  async function generateServicePayment(amount, description,motivo) {
     try {
     
       const uniqueCode = Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -286,7 +287,7 @@ export const usePaymentStore = defineStore('payment', () => {
         amount: parseFloat(amount),
         description,
         metadata: {
-          type: 'service',
+          detalle: motivo,
           code: uniqueCode,
           link: paymentLink,
           createdAt: new Date().toISOString()
@@ -337,13 +338,9 @@ export const usePaymentStore = defineStore('payment', () => {
       }
 
       const data = await response.json();
-      const payments = data.results.filter(
-        payment => payment.metadata?.type === 'service'
-      ).map(payment => ({
+      const payments = data.results.map(payment => ({
         ...payment,
-        code: payment.metadata?.code,
-        link: payment.metadata?.link,
-        type: 'service'
+        detalle: payment.metadata?.detalle
       }));
 
       pendingPayments.value = payments;
