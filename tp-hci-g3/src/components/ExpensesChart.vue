@@ -17,7 +17,7 @@
         </div>
         <div v-if="!simple" class="custom-legend">
           <div v-for="(cat, i) in categories" :key="cat.key" class="legend-row">
-            <span class="legend-color" :style="{ backgroundColor: chartColors[i] }"></span>
+            <span class="legend-color" :style="{ backgroundColor: cat.color }"></span>
             <span class="legend-label">{{ cat.label }}</span>
           </div>
         </div>
@@ -37,6 +37,7 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import { Chart } from 'chart.js/auto'
+import { useActivityStore } from '@/stores/ActivityStore'
 
 const props = defineProps({
   activities: {
@@ -65,64 +66,36 @@ const props = defineProps({
   }
 })
 
+const activityStore = useActivityStore()
 const chartRef = ref(null)
 let chartInstance = null
 
-const chartColors = ['#1E3A8A', '#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE']
-
-
-const categoryMap = [
-  { key: 'comida', label: 'Comida', icon: 'restaurant', match: ['restaurant', 'Pedidos Ya'] },
-  { key: 'compras', label: 'Compras', icon: 'shopping_bag', match: ['shopping_bag'] },
-  { key: 'supermercado', label: 'Supermercado', icon: 'shopping_cart', match: ['shopping_cart', 'supermercado'] },
-  { key: 'servicios', label: 'Servicios', icon: 'receipt_long', match: ['event', 'servicio', 'factura'] },
-  { key: 'varios', label: 'Varios', icon: 'list', match: [] }
-]
-
-const defaultData = computed(() => {
-  if (props.activities.length > 0) return props.activities
-  return [
-    { icon: 'restaurant', title: 'Comida', amount: -30000, date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` },
-    { icon: 'shopping_cart', title: 'Supermercado', amount: -25000, date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` },
-    { icon: 'shopping_bag', title: 'Shopping', amount: -20000, date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` },
-    { icon: 'list', title: 'Varios', amount: -15000, date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` },
-    { icon: 'receipt_long', title: 'Servicios', amount: -10000, date: `${props.year}-${String(props.month + 1).padStart(2, '0')}-01` }
-  ]
-})
-
+const categoryIcons = {
+  'servicios': 'receipt_long',
+  'transporte': 'directions_bus',
+  'alimentacion': 'restaurant',
+  'entretenimiento': 'movie',
+  'salud': 'local_hospital',
+  'educacion': 'school',
+  'otros': 'list'
+}
 
 const categories = computed(() => {
-  const result = categoryMap.map(cat => ({ ...cat, amount: 0 }))
-  const activitiesToProcess = props.activities.length > 0 ? props.activities : defaultData.value
-
-  activitiesToProcess.forEach(activity => {
-    const activityDate = new Date(activity.date)
-    const matchesMonth = props.month === -1 || activityDate.getMonth() === props.month
-    const matchesYear = props.year === -1 || activityDate.getFullYear() === props.year
-
-    if (activity.amount < 0 && matchesMonth && matchesYear) {
-      let found = false
-      for (const cat of result) {
-        if (cat.match.some(m => 
-          activity.icon?.toLowerCase().includes(m) || 
-          activity.title?.toLowerCase().includes(m)
-        )) {
-          cat.amount += Math.abs(activity.amount)
-          found = true
-          break
-        }
-      }
-      if (!found) {
-        result.find(c => c.key === 'varios').amount += Math.abs(activity.amount)
-      }
-    }
-  })
-  return result
+  const expensesByCategory = activityStore.getExpensesByCategory(props.month, props.year)
+  
+  return expensesByCategory.map(({ category, amount, color }) => ({
+    key: category,
+    label: category.charAt(0).toUpperCase() + category.slice(1),
+    amount,
+    color,
+    icon: categoryIcons[category] || 'list'
+  }))
 })
 
 const totalExpenses = computed(() =>
   categories.value.reduce((sum, cat) => sum + cat.amount, 0)
 )
+
 const totalExpensesFormatted = computed(() =>
   totalExpenses.value.toLocaleString('es-AR')
 )
@@ -140,7 +113,7 @@ function renderChart() {
       labels: categories.value.map(c => c.label),
       datasets: [{
         data: categories.value.map(c => c.amount),
-        backgroundColor: chartColors,
+        backgroundColor: categories.value.map(c => c.color),
         borderWidth: 0
       }]
     },
