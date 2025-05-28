@@ -73,9 +73,15 @@ const publicRoutes = ['Auth', 'Verification', 'PasswordRecovery', 'HelpPage']
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('auth-token')
-  if (!token && !publicRoutes.includes(to.name)) {
+
+  if (publicRoutes.includes(to.name)) {
+    return next()
+  }
+
+  if (!token) {
     return next({ name: 'Auth' })
   }
+
   next()
 })
 

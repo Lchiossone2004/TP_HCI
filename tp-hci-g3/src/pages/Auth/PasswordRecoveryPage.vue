@@ -65,21 +65,31 @@ export default {
       email: '',
       code: '',
       newPassword: '',
-      step: 1, // 1 = email, 2 = código y nueva contraseña, 3 = éxito
+      step: 1, 
       error: ''
     };
   },
   methods: {
-    sendCode(){
-      const userStore = useUserStore()
-      userStore.sendRecoveryCode(this.email)
-      this.step = 2 
-    },
-    resetPassword(){
-      const userStore = useUserStore()
-      userStore.changePassword(this.code, this.newPassword)
-      this.step = 3
+    async sendCode() {
+    const userStore = useUserStore();
+    this.error = ''; // Limpiar error anterior
+    const success = await userStore.sendRecoveryCode(this.email);
+    if (success) {
+      this.step = 2;
+    } else {
+      this.error = 'No se pudo enviar el código. Verificá el correo ingresado.';
     }
+  },
+  async resetPassword() {
+    const userStore = useUserStore();
+    this.error = ''; // Limpiar error anterior
+    const success = await userStore.changePassword(this.code, this.newPassword);
+    if (success) {
+      this.step = 3;
+    } else {
+      this.error = 'El código es inválido o hubo un error al actualizar la contraseña.';
+    }
+  }
   }
 };
 </script>

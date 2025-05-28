@@ -74,132 +74,137 @@ export const useUserStore = defineStore('user', () => {
   }
   
 
-  async function logIn(email, password) {
+    async function logIn(email, password) {
+        try {
+          const response = await fetch("http://localhost:8080/api/user/login", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password }) 
+          });
+      
+          if (!response.ok) {
+            throw new Error(`Error en login: ${response.status}`);
+          }
+      
+          const data = await response.json();
+          localStorage.setItem('auth-token', data.token);
+          return data;
+        } catch (error) {
+          console.error('Error en logIn:', error);
+          throw error; 
+        }
+      }
+      async function sendRecoveryCode(email) {
+        try {
+          const response = await fetch(`http://localhost:8080/api/user/reset-password?email=${email}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+      
+          if (!response.ok) {
+            console.error(`Error sending code: ${response.status}`);
+            return false;
+          }
+      
+          return true;
+        } catch (error) {
+          console.error('Error en sendRecoveryCode:', error);
+          return false;
+        }
+      }
+      
+      async function changePassword(code, password) {
+        try {
+          const response = await fetch("http://localhost:8080/api/user/change-password", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ code, password }),
+          });
+      
+          if (!response.ok) {
+            console.error(`Error cambiando password: ${response.status}`);
+            return false;
+          }
+      
+          return true;
+        } catch (error) {
+          console.error('Error en changePassword:', error);
+          return false;
+        }
+      }      
+    async function getUser(){
+        try{
+            const token = localStorage.getItem('auth-token');
+
+            if (!token) {
+                throw new Error('No hay token de autenticación guardado.');
+            }
+            const response = await fetch("http://localhost:8080/api/user", {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer ' + token
+                }
+              });
+            const data = await response.json();
+            return data;
+        }
+        catch(error){
+            console.error('Error al obtener el usuario:', error);
+        }
+    }
+
+    async function verifyUser(code) {
       try {
-        const response = await fetch("http://localhost:8080/api/user/login", {
+        const response = await fetch(`http://localhost:8080/api/user/verify?code=${code}`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+    
+        if (!response.ok) {
+          const errorBody = await response.text();
+          console.error(`Error del servidor: ${response.status} - ${errorBody}`);
+          return false;
+        }
+    
+        const result = await response.json();
+        console.log('Verificación exitosa:', result);
+        return true;
+      } catch (error) {
+        console.error('Error verificando email:', error);
+        return false;
+      }
+    }
+
+    async function resendVerification(email) {
+      try {
+        const response = await fetch(`http://localhost:8080/api/user/resend-verification?email=${email}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ email, password }) 
         });
     
         if (!response.ok) {
-          throw new Error(`Error en login: ${response.status}`);
+          console.error(`Error reenviando verificación: ${response.status}`);
+          return false;
         }
     
-        const data = await response.json();
-        localStorage.setItem('auth-token', data.token);
-        return data;
+        return true;
       } catch (error) {
-        console.error('Error en logIn:', error);
-        throw error; 
+        console.error('Error al reenviar el email:', error);
+        return false;
       }
     }
-
-    async function sendRecoveryCode(email){
-      try {
-          const response = await fetch(`http://localhost:8080/api/user/reset-password?email=${email}`, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-                },
-          })
-          if (!response.ok) {
-              throw new Error(`Error sending code: ${response.status}`);
-            }
-      }
-      catch(error){
-          console.error('Error en sendReocveryCode:', error);
-          throw error; 
-      }
-    }
-      
-    async function changePassword(code, password) {
-      try {
-          const response = await fetch("http://localhost:8080/api/user/change-password", {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ code: code, password: password })
-          })
-          if (!response.ok) {
-              throw new Error(`Error cambiando password: ${response.status}`);
-            }
-      }
-      catch(error){
-          console.error('Error en changePassword:', error);
-          throw error; 
-      }
-    }
-
-  async function getUser(){
-      try{
-          const token = localStorage.getItem('auth-token');
-
-          if (!token) {
-              throw new Error('No hay token de autenticación guardado.');
-          }
-          const response = await fetch("http://localhost:8080/api/user", {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-              }
-            });
-          const data = await response.json();
-          return data;
-      }
-      catch(error){
-          console.error('Error al obtener el usuario:', error);
-      }
-  }
-
-  async function verifyUser(code) {
-    try {
-      const response = await fetch(`http://localhost:8080/api/user/verify?code=${code}`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        const errorBody = await response.text();
-        throw new Error(`Error del servidor: ${response.status} - ${errorBody}`);
-      }
-
-      const result = await response.json();
-      console.log('Verificación exitosa:', result);
-      return result;
-    } catch(error) {
-      console.error('Error verificando email:', error);
-      throw error; // Propagar el error para que se pueda manejar en el componente
-    }
-  }
-
-  async function resendVerification(email) {
-    try {
-      const response = await fetch(`http://localhost:8080/api/user/resend-verification?email=${email}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      });
-      
-      if (!response.ok) {
-        const errorBody = await response.text();
-        throw new Error(`Error del servidor: ${response.status} - ${errorBody}`);
-      }
-      
-      const result = await response.json();
-      return result;
-    } catch(error) {
-      console.error('Error al reenviar el email:', error);
-      throw error; // Propagar el error para que se pueda manejar en el componente
-    }
-  }
+  
     
   async function getDefaultAccountData() {
     const token = localStorage.getItem('auth-token')

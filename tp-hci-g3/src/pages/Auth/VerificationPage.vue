@@ -127,71 +127,47 @@ export default {
     },
     
     async verifyCode() {
-      // Validar que el campo no esté vacío
-      if (!this.code.trim()) {
-        this.codeFieldError = true;
-        return;
-      }
-      
-      try {
-        const userStore = useUserStore();
-        const result = await userStore.verifyUser(this.code);
-        
-        if (result && result.success) {
-          this.$router.push('/home');
-        } else {
-          this.errorMessage = 'Código incorrecto. Por favor, verifica e intenta nuevamente.';
-        }
-      } catch (error) {
-        console.error('Error completo:', error);
-        
-        // Mensajes específicos basados en el mensaje de error
-        if (error && error.message) {
-          if (error.message.includes('Invalid code')) {
-            this.errorMessage = 'Código incorrecto. Por favor, verifica e intenta nuevamente.';
-          } else if (error.message.includes('expired')) {
-            this.errorMessage = 'El código ha expirado. Por favor, solicita un nuevo código.';
-          } else {
-            this.errorMessage = 'Error al verificar el código. Intenta nuevamente.';
-          }
-        } else {
-          this.errorMessage = 'Error al verificar el código. Intenta nuevamente.';
-        }
-      }
-    },
-    
-    async resendVerificationEmail() {
-      // Validar que el campo no esté vacío
-      if (!this.email.trim()) {
-        this.emailFieldError = true;
-        return;
-      }
-      
-      const userStore = useUserStore();
-      this.resendMessage = '';
-      this.resendSuccess = false;
+  // Validar que el campo no esté vacío
+  if (!this.code.trim()) {
+    this.codeFieldError = true;
+    return;
+  }
 
-      try {
-        const result = await userStore.resendVerification(this.email);
-        
-        if (result && result.success) {
-          this.resendMessage = 'Correo de verificación reenviado con éxito.';
-          this.resendSuccess = true;
-        } else {
-          this.resendMessage = 'No se pudo reenviar el código. Verifica que sea el mismo email usado en el registro.';
-          this.resendSuccess = false;
-        }
-      } catch (error) {
-        console.error('Error completo:', error);
-        
-        if (error.message && error.message.includes('not found')) {
-          this.resendMessage = 'Este email no está registrado o ya fue verificado.';
-        } else {
-          this.resendMessage = 'Error al reenviar el correo. Intenta nuevamente.';
-        }
-        this.resendSuccess = false;
-      }
+  try {
+    const userStore = useUserStore();
+    const success = await userStore.verifyUser(this.code);
+
+    if (success) {
+      this.$router.push('/home');
+    } else {
+      this.errorMessage = 'Código incorrecto. Por favor, verifica e intenta nuevamente.';
     }
+  } catch (error) {
+    console.error('Error completo:', error);
+    this.errorMessage = 'Error al verificar el código. Intenta nuevamente.';
+  }
+}
+,
+    
+async resendVerificationEmail() {
+  // Validar que el campo no esté vacío
+  if (!this.email.trim()) {
+    this.emailFieldError = true;
+    return;
+  }
+
+  try {
+    const userStore = useUserStore();
+    const success = await userStore.resendVerification(this.email);
+
+    if (!success) {
+      this.errorMessage = 'No se pudo reenviar el código. Verifica el correo electrónico e intenta nuevamente.';
+    }
+  } catch (error) {
+    console.error('Error al reenviar verificación:', error);
+    this.errorMessage = 'Ocurrió un error al reenviar el código. Intenta nuevamente.';
+  }
+}
   }
 };
 </script>
