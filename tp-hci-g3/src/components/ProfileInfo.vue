@@ -51,24 +51,25 @@ const copyToClipboard = async (text) => {
 }
 </script>
 
-
 <style scoped>
-  .profile-container {
-    background-color: var(--dark-blue);
-    border-radius: var(--general-radius);
-    color: var(--white-text);
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    overflow: hidden;
-  }
-  .profile-header {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding: 1rem;
-  }
-  .icon {
+.profile-container {
+  background-color: var(--dark-blue);
+  border-radius: var(--general-radius);
+  color: var(--white-text);
+  width: 100%;
+  margin: 0 auto;             
+  overflow: hidden;
+  box-sizing: border-box;     
+}
+
+.profile-header {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.icon {
   color: var(--white-text);
   display: flex;
   align-items: center;
@@ -80,100 +81,97 @@ const copyToClipboard = async (text) => {
   color: var(--blue-button-hover);
 }
 
-  .edit-btn {
-    background: transparent;
-    border: 2px solid var(--white-text);
-    color: var(--white-text);
-    border-radius: var(--button-radius);
-    padding: 0.5rem 1.5rem;
-    font-size: var(--font-text);
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+.edit-btn {
+  background: transparent;
+  border: 2px solid var(--white-text);
+  color: var(--white-text);
+  border-radius: var(--button-radius);
+  padding: 0.5rem 1.5rem;
+  font-size: var(--font-text);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-  .edit-btn:hover {
-    background: var(--white-text);
-    color: var(--dark-blue);
-  }
+.edit-btn:hover {
+  background: var(--white-text);
+  color: var(--dark-blue);
+}
 
-  .profile-content {
+.profile-content {
   display: flex;
   padding: 2rem;
-  gap: 4rem;
+  gap: 2rem;                  /* Nuevo: espacio reducido */
   width: 100%;
   box-sizing: border-box;
 }
 
-  .profile-image {
-    background: #073259;
-    padding: 2rem;
-    border-radius: var(--general-radius);
-    text-align: center;
-    width: 400px;
-    min-width: 300px;
-    flex-shrink: 0; 
-  }
+.profile-image {
+  background: #073259;
+  padding: 2rem;
+  border-radius: var(--general-radius);
+  text-align: center;
+  width: 400px;
+  max-width: 100%;            /* Nuevo: asegurar responsividad */
+  min-width: 300px;
+  flex-shrink: 0; 
+}
 
-  .profile-image img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 1rem;
-  }
+.profile-image img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
 
-  .profile-image h2 {
-    font-size: var(--font-big);
-    margin: 1rem 0;
-  }
+.profile-image h2 {
+  font-size: var(--font-big);
+  margin: 1rem 0;
+}
 
-  .profile-image h3 {
-    color: var(--light-grey);
-    text-decoration: none;
-    font-size: var(--font-text);
-  }
+.profile-image h3 {
+  color: var(--light-grey);
+  font-size: var(--font-text);
+}
 
-  .profile-details {
-    flex: 1;
-    display: flex;
+.profile-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+  gap: 2rem;
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.detail-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;         
+  font-size: var(--font-subtitle);
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .profile-content {
     flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    text-align: left;
-    gap: 2rem;
-    padding: 1rem;
+    align-items: center;
+    gap: 1rem;           
+    padding: 1rem;         
+  }
+  .profile-image {
     width: 100%;
-    box-sizing: border-box;
+    max-width: 300px;      
+    padding: 1rem;         
   }
-
-  .detail-row {
-    display: flex;
-    gap: 1rem;
-    font-size: var(--font-subtitle);
-    width: 100%;
-    max-width: 600px; 
+  .profile-image h2 {
+    font-size: 1.5rem;     
   }
-
-  .detail-row span:first-child {
-    font-weight: bold;
-    min-width: 100px;
+  .profile-image h3 {
+    font-size: 0.875rem;
   }
-
-  @media (max-width: 1150px) {
-    .profile-content {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .profile-image {
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .profile-details {
-      width: 100%;
-      align-items: center;
-      flex-direction: column;
-    }
-  }
+}
 </style>

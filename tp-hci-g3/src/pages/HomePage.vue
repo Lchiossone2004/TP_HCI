@@ -72,7 +72,7 @@ const currentMonthActivities = computed(() => {
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 .balance-and-cards {
   flex: 1;
@@ -117,9 +117,8 @@ const currentMonthActivities = computed(() => {
   .inner1,
   .inner2 {
     width: 100%;
-    min-width: 0;
     max-width: 750px;
-    margin: 0 auto;
+    margin-top: 1rem;
   }
 }
 </style>

@@ -21,7 +21,7 @@ defineEmits(['add-card'])
   background-color: var(--dark-blue);
   border: 3px solid var(--white-text);
   border-radius: var(--general-radius);
-  width: 360px;
+  width: 100%;
   height: 200px;
   display: flex;
   flex-direction: column;

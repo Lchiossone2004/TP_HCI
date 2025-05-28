@@ -294,7 +294,6 @@ const filteredActivities = computed(() => {
 .chart-col {
   flex: 1;
   min-width: 350px;
-  max-width: 750px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
