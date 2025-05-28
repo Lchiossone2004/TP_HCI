@@ -65,7 +65,7 @@ const from = computed(() => route.query.from || '')
       <HelpInfoActivity/>
       <h2 class="subtitle"> Realizar transferencias </h2>
       <HelpInfoTransfer/>
-      <h2 class="subtitle"> Mi perfil </h2>
+      <h2 class="subtitle"> Perfil </h2>
       <HelpInfoProfile/>
       <h2 class="subtitle"> Iniciar sesión y registro </h2>
       <HelpInfoLoginAndRegister/>
